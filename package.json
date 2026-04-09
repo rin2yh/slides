@@ -1,0 +1,12 @@
+{
+  "name": "slide",
+  "private": true,
+  "scripts": {
+    "build": "marp --input-dir slides --output dist",
+    "pdf": "marp --input-dir slides --output dist --pdf",
+    "preview": "marp --input-dir slides --preview"
+  },
+  "devDependencies": {
+    "@marp-team/marp-cli": "^4.3.1"
+  }
+}
