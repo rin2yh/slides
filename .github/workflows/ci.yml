@@ -10,39 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          fetch-depth: 0
 
       - uses: ./.github/actions/setup-node
 
-      - name: Build changed slides
+      - name: Build all slides
         run: |
           set -euo pipefail
-          BASE_REF="${{ github.base_ref || 'main' }}"
-
-          mapfile -t touched < <(git diff --name-only --diff-filter=d "origin/$BASE_REF...HEAD" -- slides)
-
-          md_changed=()
-          shared_changed=false
-          for f in "${touched[@]}"; do
-            case "$f" in
-              slides/*.md) md_changed+=("$f") ;;
-              *) shared_changed=true ;;
-            esac
-          done
-
-          if $shared_changed; then
-            echo "Shared slides/ files changed; building all decks."
-            changed=(slides/*.md)
-          else
-            changed=("${md_changed[@]}")
-          fi
-
-          if [ ${#changed[@]} -eq 0 ]; then
-            echo "No slide changes detected."
-          fi
-
-          for f in "${changed[@]}"; do
+          for f in slides/*.md; do
+            [ -e "$f" ] || continue
             name="$(basename "$f" .md)"
             echo "::group::Building $name"
             npx slidev build "$f" --out "dist/$name"
