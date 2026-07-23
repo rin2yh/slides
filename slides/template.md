@@ -1,100 +1,170 @@
 ---
 theme: default
-title: スライドテンプレート
-author: Rinrin
+title: プレゼンテーションのタイトル
 info: |
-  Slidev で書く汎用スライドテンプレート
+  デザインシステムに沿った Slidev テンプレート
 highlighter: shiki
 lineNumbers: false
 drawings:
   persist: false
-transition: slide-left
+transition: none
 mdc: true
+canvasWidth: 1920
+aspectRatio: 16/9
+fonts:
+  sans: Noto Sans JP
+  mono: JetBrains Mono
+  weights: '400,500,700,900'
+defaults:
+  hashtag: asakusago
 layout: cover
+event: Asakusa.go #8
+speaker: Rinrin
+handle: '@rin2yh'
+handleUrl: https://x.com/rin2yh
 ---
 
-# スライドタイトル
-
-サブタイトル / 発表者名
-
-<div class="pt-8 text-sm opacity-70">
-  YYYY/MM/DD
-</div>
+# プレゼンテーションのタイトルをここに
 
 ---
-layout: default
+layout: profile
+title: 自己紹介
+image: /images/icon.jpg
+facts:
+  - { label: 名前, value: Rinrin }
+  - { label: 職種, value: フルスタックエンジニア }
+  - { label: 趣味, value: アニメ、ゲーム、キーボード }
+  - { label: ひとこと, value: 何か一言を書く }
 ---
 
-# 目次
-
-1. セクション1
-2. セクション2
-3. セクション3
-
 ---
-layout: section
 ---
 
-# セクション1
+## 目次
 
-セクションの導入コピー
-
----
-layout: default
----
-
-# 見出し
-
-- 箇条書き 1
-- 箇条書き 2
-- 箇条書き 3
-
-<div class="mt-6 text-sm opacity-70">
-  補足テキスト
-</div>
+1. 1つ目のトピック
+2. 2つ目のトピック
+3. 3つ目のトピック
+4. 4つ目のトピック
 
 ---
-layout: two-cols
+no: 1
 ---
 
-# 左カラム
-
-左側の内容
-
-::right::
-
-# 右カラム
-
-右側の内容
+# セクション名
 
 ---
-layout: quote
 ---
 
-> 引用テキスト。強調したい発言や名言。
+## 見出しをここに置く
 
-<div class="mt-4 text-sm opacity-70">— 出典</div>
+本文をここに記述します。読みやすい行間と文字サイズを保ち、1スライドに詰め込みすぎないようにします。**強調したい語**はアクセント色にできます。
+
+<Lead>最も伝えたい一文をここに。</Lead>
 
 ---
-layout: default
 ---
 
-# コードスライド
+## コードで確認する
 
-```ts {all|2|3-5|all}
-function greet(name: string) {
-  const message = `Hello, ${name}`
-  return {
-    message,
-    at: new Date(),
-  }
+補足説明をここに。強調したい行はハイライトできる。
+
+```go {all|2-4|all}
+func Abs(n int) int {
+    if n < 0 {
+        return -n
+    }
+    return n
 }
 ```
 
 ---
-layout: end
 ---
 
-# ご清聴ありがとうございました
+## 端末で確認する
 
-<div class="text-sm opacity-70">Q&amp;A</div>
+<h3>コマンド</h3>
+
+```shell
+$ go test -cover
+coverage: 80.0% {badge}of statements{/badge}
+```
+
+---
+---
+
+## 表で整理・比較する
+
+素の表はそのまま Markdown で書ける。
+
+| 項目 | 説明 |
+|---|---|
+| 選択肢 A | メリットをここに |
+| 選択肢 B | 比較対象の説明をここに |
+
+アクセント行を作りたい場合は行末に `{.accent}` を付ける。
+
+| 項目 | 説明 |
+|---|---|
+| 選択肢 A | **推し**：メリットをここに | {.accent}
+| 選択肢 B | 比較対象の説明をここに |
+
+---
+---
+
+## 引用で裏づける
+
+> ここに引用文を配置します。原文の主張をそのまま示し、根拠として使います。
+
+<Caption>— 出典・著者・媒体（年）</Caption>
+
+---
+---
+
+## 図で説明する
+
+<div class="dc-figure-placeholder">
+  <div class="box"></div>
+  <span class="label">図版 / スクリーンショット</span>
+</div>
+
+---
+---
+
+## Q. 今日の問いをここに?
+
+<Lead>A. 結論をここに一文で</Lead>
+
+<Caption>要点</Caption>
+
+<div class="summary">
+  <div class="item"><span class="num">1.</span><span>要点その1をここに</span></div>
+  <div class="item"><span class="num">2.</span><span>要点その2をここに</span></div>
+  <div class="item"><span class="num">3.</span><span>要点その3をここに</span></div>
+</div>
+
+---
+layout: cover
+event: Thank you
+speaker: Rinrin
+handle: '@rin2yh'
+handleUrl: https://x.com/rin2yh
+---
+
+# ご清聴いただき、<br>ありがとうございました
+
+---
+---
+
+## 参考文献
+
+<div class="refs">
+  <div class="ref">
+    <div class="title">著者「タイトル」媒体, 年</div>
+    <a class="dc-mono" href="https://example.com" target="_blank">https://example.com</a>
+  </div>
+  <div class="ref">
+    <div class="title">著者「タイトル」媒体, 年</div>
+    <a class="dc-mono" href="https://example.com" target="_blank">https://example.com</a>
+  </div>
+</div>

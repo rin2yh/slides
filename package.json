@@ -2,13 +2,16 @@
   "name": "slides",
   "private": true,
   "scripts": {
-    "dev": "slidev slides/template.md --open",
-    "build": "slidev build slides/template.md",
-    "export": "slidev export slides/template.md"
+    "dev": "slidev --open",
+    "build": "slidev build",
+    "export": "slidev export"
   },
   "devDependencies": {
-    "@slidev/cli": "^0.50.0",
+    "@slidev/cli": "^52.18.0",
     "@slidev/theme-default": "^0.25.0",
     "vue": "^3.5.0"
+  },
+  "dependencies": {
+    "@shikijs/transformers": "^4.3.1"
   }
 }
