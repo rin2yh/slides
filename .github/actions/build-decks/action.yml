@@ -1,0 +1,37 @@
+name: Build decks
+description: Build every slides/*.md deck for GitHub Pages into dist/<deck>/
+
+# GitHub Pages のプロジェクトサイト (/<repo>/<deck>/) 前提で base と hash ルータを
+# ビルド時に焼き込む。別ホストに出すならここを変える。
+# 各デッキはバックグラウンドで並列ビルドする（1 ランナー内なのでデッキ数が
+# 極端に多いとメモリを食う点だけ注意。その規模になったら並列数を絞る）。
+runs:
+  using: composite
+  steps:
+    - name: Build all decks
+      shell: bash
+      run: |
+        set -euo pipefail
+        REPO_NAME="${GITHUB_REPOSITORY#*/}"
+        pids=()
+        decks=()
+        for f in slides/*.md; do
+          [ -e "$f" ] || continue
+          deck="$(basename "$f" .md)"
+          npm run build -- "$deck" \
+            --base "/${REPO_NAME}/${deck}/" \
+            --out "$(pwd)/dist/${deck}" \
+            --router-mode hash > "$RUNNER_TEMP/build-${deck}.log" 2>&1 &
+          pids+=("$!")
+          decks+=("$deck")
+        done
+
+        fail=0
+        for i in "${!pids[@]}"; do
+          deck="${decks[$i]}"
+          if wait "${pids[$i]}"; then status='✓'; else status='✗'; fail=1; fi
+          echo "::group::${status} ${deck}"
+          cat "$RUNNER_TEMP/build-${deck}.log"
+          echo "::endgroup::"
+        done
+        exit "$fail"

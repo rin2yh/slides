@@ -12,35 +12,31 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
-    uses: ./.github/workflows/build.yml
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
+      contents: read
       pages: write
       id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Download deck artifacts
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          pattern: deck-*
-          path: dist
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-node
+
+      - uses: ./.github/actions/build-decks
 
       - name: Assemble site index
         run: |
           set -euo pipefail
           entries=()
-          for d in dist/deck-*/; do
-            name="${d#dist/deck-}"
-            name="${name%/}"
-            mv "$d" "dist/${name}"
-            entries+=("$name")
+          for d in dist/*/; do
+            entries+=("$(basename "$d")")
           done
 
           {
