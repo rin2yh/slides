@@ -72,8 +72,11 @@ jobs:
       - name: Build all slides for GitHub Pages
         run: |
           set -euo pipefail
+          REPO_OWNER="${GITHUB_REPOSITORY%%/*}"
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
           BASE="/${REPO_NAME}"
+          # Deployed base URL, used for absolute og:url / og:image on the landing page.
+          export SITE_URL="https://${REPO_OWNER}.github.io/${REPO_NAME}/"
           OUT_ROOT="$(pwd)/dist"
           rm -rf "$OUT_ROOT"
           mkdir -p "$OUT_ROOT"
@@ -92,6 +95,8 @@ jobs:
             echo "::endgroup::"
           done
 
+          # Landing page: render its own OG card, then emit index.html with OGP tags.
+          node scripts/gen-og.mjs "$OUT_ROOT"
           node scripts/gen-index.mjs "$OUT_ROOT"
 
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
