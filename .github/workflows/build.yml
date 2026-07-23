@@ -51,6 +51,8 @@ jobs:
       - uses: ./.github/actions/setup-node
 
       - name: Build ${{ matrix.deck }}
+        # GitHub Pages のプロジェクトサイト (/<repo>/<deck>/) 前提で base と
+        # hash ルータをビルド時に焼き込む。別ホストに出すならここを変える
         run: |
           set -euo pipefail
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
