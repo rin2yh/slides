@@ -1,4 +1,3 @@
 node_modules/
 dist/
-slides/**/*.html
-slides/**/*.pdf
+.slidev/

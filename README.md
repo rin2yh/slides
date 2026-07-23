@@ -1,6 +1,6 @@
 # slides
 
-[Marp](https://marp.app/) で作成したスライド集です。
+[Slidev](https://sli.dev/) で作成したスライド集です。
 
 ## セットアップ
 
@@ -13,12 +13,33 @@ npm install
 
 | コマンド | 説明 |
 |---|---|
-| `npm run preview` | プレビューを起動 |
-| `npm run build` | HTML を `dist/` に出力 |
-| `npm run pdf` | PDF を `dist/` に出力 |
+| `npm run dev` | プレビュー起動（`slides/template.md`） |
+| `npm run build` | 静的サイトを `dist/` に出力 |
+| `npm run export` | PDF を出力（`playwright-chromium` が必要） |
 
-## スライド一覧
+別ファイルをプレビューする場合:
 
-| ファイル | 内容 |
-|---|---|
-| `slides/sreake-bukai-lt.md` | Sreake 部会 LT |
+```bash
+npx slidev slides/<file>.md --open
+```
+
+## ディレクトリ構成
+
+```
+slides/
+├── slides/
+│   ├── template.md      # Slidev テンプレート
+│   └── public/images/   # 画像置き場（/images/... で参照）
+├── package.json
+└── mise.toml
+```
+
+## 新しいスライドを作る
+
+`slides/template.md` を複製して編集。`package.json` の scripts か `npx slidev <path>` で起動。
+
+## カスタムレイアウト・コンポーネント
+
+- `slides/layouts/*.vue` は自動で layout として使える
+- `slides/components/*.vue` は Markdown 内でそのまま呼べる
+- `slides/style.css` / `slides/uno.config.ts` でグローバルスタイルを拡張

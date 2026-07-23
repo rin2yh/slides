@@ -1,12 +1,14 @@
 {
-  "name": "slide",
+  "name": "slides",
   "private": true,
   "scripts": {
-    "build": "marp --input-dir slides --output dist",
-    "pdf": "marp --input-dir slides --output dist --pdf",
-    "preview": "marp --input-dir slides --preview"
+    "dev": "slidev slides/template.md --open",
+    "build": "slidev build slides/template.md",
+    "export": "slidev export slides/template.md"
   },
   "devDependencies": {
-    "@marp-team/marp-cli": "^4.3.1"
+    "@slidev/cli": "^0.50.0",
+    "@slidev/theme-default": "^0.25.0",
+    "vue": "^3.5.0"
   }
 }
