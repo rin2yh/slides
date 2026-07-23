@@ -22,7 +22,6 @@ npm install
 例:
 
 ```bash
-npm run dev slides/template.md
 npm run dev slides/go-coverage.md
 ```
 
@@ -31,19 +30,22 @@ npm run dev slides/go-coverage.md
 ```
 slides/
 ├── slides/
-│   ├── template.md      # Slidev テンプレート
-│   ├── go-coverage.md   # 発表資料の例
-│   ├── style.css        # 共通スタイル
-│   ├── layouts/         # カスタムレイアウト
-│   ├── components/      # カスタムコンポーネント
-│   └── public/images/   # 画像置き場（/images/... で参照）
+│   ├── go-coverage.md      # 発表資料の例
+│   ├── style.css           # 共通スタイル
+│   ├── layouts/            # カスタムレイアウト
+│   ├── components/         # カスタムコンポーネント
+│   ├── public/images/      # 画像置き場（/images/... で参照）
+│   └── templates/
+│       └── template.md     # Slidev テンプレート（デプロイ対象外）
 ├── package.json
 └── mise.toml
 ```
 
+`slides/*.md`（直下のみ）が GitHub Pages のビルド対象。`templates/` はサブディレクトリなので対象外。
+
 ## 新しいスライドを作る
 
-`slides/template.md` を複製して編集し、`npm run dev slides/<file>.md` で起動。
+`slides/templates/template.md` の内容を `slides/<file>.md` にコピーして編集し、`npm run dev slides/<file>.md` で起動。
 
 ## カスタムレイアウト・コンポーネント
 
