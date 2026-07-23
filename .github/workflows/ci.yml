@@ -1,10 +1,7 @@
-# cd.yml の workflow_run はこのワークフロー名 (CI) を参照している
 name: CI
 
 on:
   pull_request:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -12,11 +9,8 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+  cancel-in-progress: true
 
 jobs:
   build:
     uses: ./.github/workflows/build.yml
-    with:
-      # PR 以外 (main への push / 手動実行) では CD が workflow_run 経由で成果物を取得する
-      upload-artifacts: ${{ github.event_name != 'pull_request' }}
