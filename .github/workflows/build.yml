@@ -54,13 +54,14 @@ jobs:
         run: |
           set -euo pipefail
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          npx slidev build "slides/${DECK}.md" \
+          npm run build -- "$DECK" \
             --base "/${REPO_NAME}/${DECK}/" \
             --out "$(pwd)/dist/${DECK}" \
             --router-mode hash
 
       - name: Upload deck artifact
         if: inputs.upload-artifacts
+        # cd.yml が `deck-` プレフィックスを前提にダウンロード・リネームする
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: deck-${{ matrix.deck }}
