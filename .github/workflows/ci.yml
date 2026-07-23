@@ -24,7 +24,7 @@ jobs:
       - uses: ./.github/actions/setup-node
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v4
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ~/.cache/ms-playwright
           key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
@@ -59,6 +59,15 @@ jobs:
           persist-credentials: false
 
       - uses: ./.github/actions/setup-node
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Chromium for OGP image generation
+        run: npx playwright-chromium install --with-deps chromium
 
       - name: Build all slides for GitHub Pages
         run: |
