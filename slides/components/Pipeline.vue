@@ -78,7 +78,7 @@ function descLines(d?: Branch['desc']): string[] {
   width: 100%;
   height: 340px;
   margin: 12px 0 6px;
-  font-family: 'Noto Sans JP', sans-serif;
+  /* font-family は .slidev-layout から継承（Latin Override 込み） */
 }
 .line {
   position: absolute;
