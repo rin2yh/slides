@@ -43,7 +43,8 @@ jobs:
             echo "::group::Building $name"
             npx slidev build "$f" \
               --base "$BASE/$name/" \
-              --out "$OUT_ROOT/$name"
+              --out "$OUT_ROOT/$name" \
+              --router-mode hash
             echo "::endgroup::"
             entries+=("$name")
           done
