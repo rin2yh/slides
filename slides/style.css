@@ -1,18 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
-/* Latin override for 和欧混植 (mixed Japanese + Latin) ----------------------
-   Noto Sans JP draws its Latin glyphs noticeably smaller than the surrounding
-   かな/漢字, so English words and bare code identifiers mixed into headings and
-   body text (Go, stmt, fn, coverage …) look shrunken and sit low next to the
-   kana. We render Latin from Inter instead, placed FIRST in the font stack:
-   the browser uses this face only for the Latin code points listed below and
-   falls back to 'Noto Sans JP' for everything else (kana/漢字), so CJK is
-   untouched. `size-adjust: 108%` scales Inter up so its cap-/x-height reads at
-   the same visual size as the kana beside it — Inter and Noto's own Latin are
-   nearly the same size, so this adjust (not the font swap) is what fixes the
-   mismatch. Tune this one number to taste: ≈104% is subtler, ≈112% larger.
-   Variable woff2 (wght 100–900) hotlinked from Google Fonts, matching the
-   @import above. */
+/* Latin override for 和欧混植: Noto Sans JP の欧文はかな・漢字より小さく見える
+   (issue #16)。Latin だけ Inter で描き、CJK は 'Noto Sans JP' にフォールバック。
+   size-adjust でかなと大きさを揃える（108%→標準, 104%→控えめ, 112%→大きめ）。 */
 @font-face {
   font-family: 'Latin Override';
   font-style: normal;
