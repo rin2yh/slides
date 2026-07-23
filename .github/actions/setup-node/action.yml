@@ -1,5 +1,10 @@
 name: Setup Node
-description: Install Node.js and npm dependencies
+description: Install Node.js and (optionally) npm dependencies
+
+inputs:
+  install:
+    description: Run `npm ci`. Set to false for jobs that only need Node itself.
+    default: 'true'
 
 runs:
   using: composite
@@ -9,5 +14,6 @@ runs:
         node-version: 24
         cache: npm
 
-    - run: npm ci
+    - if: inputs.install == 'true'
+      run: npm ci
       shell: bash
