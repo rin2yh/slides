@@ -11,20 +11,24 @@ npm install
 
 ## コマンド
 
-対象のスライドファイルを引数で渡す。
+スライド名を引数で渡す（`slides/` と `.md` は省略可）。
 
 | コマンド | 説明 |
 |---|---|
-| `npm run dev <file>` | プレビュー起動 |
-| `npm run build <file>` | 静的サイトを `dist/` に出力 |
-| `npm run export <file>` | PDF を出力（`playwright-chromium` が必要） |
+| `npm run new -- <name>` | `slides/template.md` から新規スライドを作成 |
+| `npm run dev <name>` | プレビュー起動 |
+| `npm run build <name>` | 静的サイトを `dist/` に出力 |
+| `npm run export <name>` | PDF を出力（`playwright-chromium` が必要） |
 
 例:
 
 ```bash
-npm run dev slides/template.md
-npm run dev slides/go-coverage.md
+npm run new -- go-coverage
+npm run dev go-coverage
+npm run build go-coverage
 ```
+
+フルパスを渡してもよい: `npm run dev slides/go-coverage.md`
 
 ## ディレクトリ構成
 
@@ -43,7 +47,10 @@ slides/
 
 ## 新しいスライドを作る
 
-`slides/template.md` を複製して編集し、`npm run dev slides/<file>.md` で起動。
+```bash
+npm run new -- <name>
+npm run dev <name>
+```
 
 ## カスタムレイアウト・コンポーネント
 

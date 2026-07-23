@@ -26,6 +26,11 @@
 /* Hide Slidev's "go to slide" dialog */
 #slidev-goto-dialog { display: none !important; }
 
+/* Reserve canvas space for the persistent controls bar whenever it's mounted.
+   `:has()` couples the padding to the bar's actual presence — no need to
+   enumerate the modes (presenter/overview/fullscreen) that hide the bar. */
+body:has(.dc-playbar) #page-root { padding-bottom: 60px; }
+
 .slidev-layout {
   background: var(--dc-bg);
   color: var(--dc-text);
