@@ -7,7 +7,7 @@ if (!name) {
   process.exit(1)
 }
 
-const src = 'slides/template.md'
+const src = 'slides/templates/template.md'
 const dest = join('slides', name.endsWith('.md') ? name : `${name}.md`)
 
 if (existsSync(dest)) {

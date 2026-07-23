@@ -15,7 +15,7 @@ npm install
 
 | コマンド | 説明 |
 |---|---|
-| `npm run new -- <name>` | `slides/template.md` から新規スライドを作成 |
+| `npm run new -- <name>` | `slides/templates/template.md` から新規スライドを作成 |
 | `npm run dev <name>` | プレビュー起動 |
 | `npm run build <name>` | 静的サイトを `dist/` に出力 |
 | `npm run export <name>` | PDF を出力（`playwright-chromium` が必要） |
@@ -35,15 +35,18 @@ npm run build go-coverage
 ```
 slides/
 ├── slides/
-│   ├── template.md      # Slidev テンプレート
-│   ├── go-coverage.md   # 発表資料の例
-│   ├── style.css        # 共通スタイル
-│   ├── layouts/         # カスタムレイアウト
-│   ├── components/      # カスタムコンポーネント
-│   └── public/images/   # 画像置き場（/images/... で参照）
+│   ├── go-coverage.md      # 発表資料の例
+│   ├── style.css           # 共通スタイル
+│   ├── layouts/            # カスタムレイアウト
+│   ├── components/         # カスタムコンポーネント
+│   ├── public/images/      # 画像置き場（/images/... で参照）
+│   └── templates/
+│       └── template.md     # Slidev テンプレート（デプロイ対象外）
 ├── package.json
 └── mise.toml
 ```
+
+`slides/*.md`（直下のみ）が GitHub Pages のビルド対象。`templates/` はサブディレクトリなので対象外。
 
 ## 新しいスライドを作る
 
