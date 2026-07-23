@@ -23,7 +23,7 @@ seoMeta:
 defaults:
   hashtag: asakusago
 layout: cover
-event: Asakusa.go #8
+event: 'Asakusa.go #8'
 speaker: Rinrin
 handle: '@rin2yh'
 handleUrl: https://x.com/rin2yh
