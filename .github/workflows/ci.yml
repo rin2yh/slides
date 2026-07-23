@@ -37,7 +37,6 @@ jobs:
 
   build:
     needs: decks
-    if: needs.decks.outputs.decks != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     strategy:
@@ -66,7 +65,7 @@ jobs:
         run: |
           set -euo pipefail
           REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          ./node_modules/.bin/slidev build "slides/${DECK}.md" \
+          npm run build -- "${DECK}" \
             --base "/${REPO_NAME}/${DECK}/" \
             --out "$(pwd)/dist/${DECK}" \
             --router-mode hash
