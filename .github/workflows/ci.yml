@@ -2,6 +2,8 @@ name: CI
 
 on:
   pull_request:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -9,8 +11,11 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
   build:
     uses: ./.github/workflows/build.yml
+    with:
+      # CD (workflow_run) が main push の run から成果物を取得する
+      upload-artifacts: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
