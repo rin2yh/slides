@@ -1,6 +1,9 @@
 {
   "name": "slides",
   "private": true,
+  "engines": {
+    "node": "24"
+  },
   "scripts": {
     "new": "node scripts/new.mjs",
     "dev": "node scripts/slidev.mjs dev",
