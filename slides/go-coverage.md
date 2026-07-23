@@ -1,7 +1,7 @@
 ---
 theme: default
 title: なぜGoのカバレッジはstmtとfnなのか
-info: Asakusa.go #8 発表資料
+info: 'Asakusa.go #8 発表資料'
 highlighter: shiki
 lineNumbers: false
 drawings:
@@ -14,6 +14,10 @@ fonts:
   sans: Noto Sans JP
   mono: JetBrains Mono
   weights: '400,500,700,900'
+seoMeta:
+  ogTitle: なぜGoのカバレッジはstmtとfnなのか
+  ogDescription: 'Asakusa.go #8 発表資料'
+  ogImage: auto
 defaults:
   hashtag: asakusago
 layout: cover

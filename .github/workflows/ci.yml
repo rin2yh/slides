@@ -23,6 +23,15 @@ jobs:
 
       - uses: ./.github/actions/setup-node
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Chromium for OGP image generation
+        run: npx playwright-chromium install --with-deps chromium
+
       - name: Build all slides
         run: |
           set -euo pipefail
@@ -51,6 +60,15 @@ jobs:
 
       - uses: ./.github/actions/setup-node
 
+      - name: Cache Playwright browsers
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Chromium for OGP image generation
+        run: npx playwright-chromium install --with-deps chromium
+
       - name: Build all slides for GitHub Pages
         run: |
           set -euo pipefail
@@ -64,6 +82,9 @@ jobs:
             [ -e "$f" ] || continue
             name="$(basename "$f" .md)"
             echo "::group::Building $name"
+            # slides/ is shared across decks; reset the ogImage:auto screenshot so it
+            # regenerates fresh for this deck instead of reusing the previous deck's.
+            rm -f slides/og-image.png
             npx slidev build "$f" \
               --base "$BASE/$name/" \
               --out "$OUT_ROOT/$name" \

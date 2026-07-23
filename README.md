@@ -55,6 +55,19 @@ npm run new -- <name>
 npm run dev <name>
 ```
 
+## OGP画像
+
+各スライドのヘッドマターに `seoMeta` を書くと、SNS シェア時のカード（og:image 等）が出る。
+
+```yaml
+seoMeta:
+  ogTitle: タイトル
+  ogDescription: 説明文
+  ogImage: auto
+```
+
+仕組みの詳細（`ogImage: auto` が何をするか、`ogTitle` / `ogDescription` を省略しない理由）は `.claude/rules/frontmatter.md` を参照。
+
 ## カスタムレイアウト・コンポーネント
 
 - `slides/layouts/*.vue` は自動で layout として使える
