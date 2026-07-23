@@ -12,6 +12,9 @@ paths:
   - 理由: 各スライドで同じ値を書き直さないため。変更時も 1 箇所で済む
 - `canvasWidth: 1920` / `aspectRatio: 16/9` はデザインのキャンバスサイズ。触らない
 - フォントは `Noto Sans JP` と `JetBrains Mono` の 2 系統。weight は `'400,500,700,900'`
+- OGP（SNS シェア時のカード）は `seoMeta` に `ogTitle` / `ogDescription` / `ogImage: auto` を書く
+  - `ogImage: auto` はビルド時に最初のスライドを Playwright でスクリーンショットして `og-image.png` を自動生成する（詳細は CI 設定 `.github/workflows/deploy.yml` のコメント参照）
+  - `ogTitle` / `ogDescription` は `title` / `info` と揃える
 
 ## per-slide frontmatter
 

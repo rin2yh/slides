@@ -45,6 +45,19 @@ slides/
 
 `slides/template.md` を複製して編集し、`npm run dev slides/<file>.md` で起動。
 
+## OGP画像
+
+各スライドのヘッドマターに `seoMeta` を書くと、SNS シェア時のカード（og:image 等）が出る。
+
+```yaml
+seoMeta:
+  ogTitle: タイトル
+  ogDescription: 説明文
+  ogImage: auto
+```
+
+`ogImage: auto` は `npm run build` 実行時に最初のスライドを Playwright でスクリーンショットして自動生成する（`playwright-chromium` が必要。`export` と同じ依存）。
+
 ## カスタムレイアウト・コンポーネント
 
 - `slides/layouts/*.vue` は自動で layout として使える

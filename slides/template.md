@@ -15,6 +15,10 @@ fonts:
   sans: Noto Sans JP
   mono: JetBrains Mono
   weights: '400,500,700,900'
+seoMeta:
+  ogTitle: プレゼンテーションのタイトル
+  ogDescription: デザインシステムに沿った Slidev テンプレート
+  ogImage: auto
 defaults:
   hashtag: asakusago
 layout: cover
