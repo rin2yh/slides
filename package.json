@@ -2,9 +2,10 @@
   "name": "slides",
   "private": true,
   "scripts": {
-    "dev": "slidev --open",
-    "build": "slidev build",
-    "export": "slidev export"
+    "new": "node scripts/new.mjs",
+    "dev": "node scripts/slidev.mjs dev",
+    "build": "node scripts/slidev.mjs build",
+    "export": "node scripts/slidev.mjs export"
   },
   "devDependencies": {
     "@slidev/cli": "^52.18.0",
