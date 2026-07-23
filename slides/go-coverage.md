@@ -4,6 +4,7 @@ title: なぜGoのカバレッジはstmtとfnなのか
 info: Asakusa.go #8 発表資料
 highlighter: shiki
 lineNumbers: false
+presenter: dev
 drawings:
   persist: false
 transition: none

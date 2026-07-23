@@ -5,6 +5,7 @@ info: |
   デザインシステムに沿った Slidev テンプレート
 highlighter: shiki
 lineNumbers: false
+presenter: dev
 drawings:
   persist: false
 transition: none
