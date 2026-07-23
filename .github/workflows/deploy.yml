@@ -1,0 +1,78 @@
+name: Deploy Slides to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build all slides
+        run: |
+          set -euo pipefail
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          BASE="/${REPO_NAME}"
+          OUT_ROOT="$(pwd)/dist"
+          rm -rf "$OUT_ROOT"
+          mkdir -p "$OUT_ROOT"
+
+          entries=()
+          for f in slides/*.md; do
+            [ -e "$f" ] || continue
+            name="$(basename "$f" .md)"
+            echo "::group::Building $name"
+            npx slidev build "$f" \
+              --base "$BASE/$name/" \
+              --out "$OUT_ROOT/$name"
+            echo "::endgroup::"
+            entries+=("$name")
+          done
+
+          {
+            echo '<!doctype html>'
+            echo '<html lang="ja"><head><meta charset="utf-8">'
+            echo '<title>Slides</title>'
+            echo '<style>body{font-family:system-ui,sans-serif;max-width:640px;margin:4rem auto;padding:0 1rem;line-height:1.7}a{color:#0969da}</style>'
+            echo '</head><body>'
+            echo '<h1>Slides</h1><ul>'
+            for name in "${entries[@]}"; do
+              echo "<li><a href=\"./${name}/\">${name}</a></li>"
+            done
+            echo '</ul></body></html>'
+          } > "$OUT_ROOT/index.html"
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
