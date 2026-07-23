@@ -12,9 +12,9 @@ paths:
   - 理由: 各スライドで同じ値を書き直さないため。変更時も 1 箇所で済む
 - `canvasWidth: 1920` / `aspectRatio: 16/9` はデザインのキャンバスサイズ。触らない
 - フォントは `Noto Sans JP` と `JetBrains Mono` の 2 系統。weight は `'400,500,700,900'`
-- OGP（SNS シェア時のカード）は `seoMeta` に `ogTitle` / `ogDescription` / `ogImage: auto` を書く
+- OGP（SNS シェア時のカード）は `seoMeta` に `ogTitle` / `ogDescription` / `ogImage: auto` を書く（`title` / `info` と同じ内容でよい）
   - `ogImage: auto` はビルド時に最初のスライドを Playwright でスクリーンショットして `og-image.png` を自動生成する（詳細は CI 設定 `.github/workflows/deploy.yml` のコメント参照）
-  - `ogTitle` / `ogDescription` は `title` / `info` と揃える
+  - `ogTitle` / `ogDescription` を省略しない: Slidev のフォールバックは `title` に `titleTemplate`（`%s - Slidev`）を適用した値、`info` は `JSON.stringify` でエスケープした値になり、素の `title` / `info` とは異なる文字列が SNS カードに出てしまう
 
 ## per-slide frontmatter
 

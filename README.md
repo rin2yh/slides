@@ -56,7 +56,7 @@ seoMeta:
   ogImage: auto
 ```
 
-`ogImage: auto` は `npm run build` 実行時に最初のスライドを Playwright でスクリーンショットして自動生成する（`playwright-chromium` が必要。`export` と同じ依存）。
+仕組みの詳細（`ogImage: auto` が何をするか、`ogTitle` / `ogDescription` を省略しない理由）は `.claude/rules/frontmatter.md` を参照。
 
 ## カスタムレイアウト・コンポーネント
 
