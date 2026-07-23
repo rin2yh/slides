@@ -22,8 +22,25 @@ jobs:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - id: list
-        uses: ./.github/actions/list-decks
+
+      - name: List slide decks
+        id: list
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          names=()
+          for f in slides/*.md; do
+            names+=("$(basename "$f" .md)")
+          done
+          if [ ${#names[@]} -eq 0 ]; then
+            # No decks is a contract violation for this repo — fail loudly here
+            # instead of emitting [] and letting the build matrix error cryptically.
+            echo "::error::no slide decks found under slides/*.md" >&2
+            exit 1
+          fi
+          decks="$(printf '%s\n' "${names[@]}" | jq -Rnc '[inputs]')"
+          echo "decks=$decks" >> "$GITHUB_OUTPUT"
+          echo "decks: $decks"
 
   build:
     needs: decks
