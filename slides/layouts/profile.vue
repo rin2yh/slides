@@ -1,17 +1,25 @@
 <script setup lang="ts">
-defineProps<{
+import { computed } from 'vue'
+
+const props = defineProps<{
   image?: string
   name?: string
   facts?: { label: string, value: string }[]
   hashtag?: string
 }>()
+
+const resolvedImage = computed(() => {
+  if (!props.image) return undefined
+  if (!props.image.startsWith('/')) return props.image
+  return import.meta.env.BASE_URL.replace(/\/$/, '') + props.image
+})
 </script>
 
 <template>
   <div class="slidev-layout dc-profile">
     <h2><slot name="heading">自己紹介</slot></h2>
     <div class="body">
-      <img v-if="image" class="avatar" :src="image" alt="" />
+      <img v-if="resolvedImage" class="avatar" :src="resolvedImage" alt="" />
       <div v-else class="avatar placeholder" />
       <div class="facts">
         <div v-for="f in facts" :key="f.label" class="row">
