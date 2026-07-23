@@ -1,5 +1,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
 
+/* Latin override for 和欧混植 (mixed Japanese + Latin) ----------------------
+   Noto Sans JP draws its Latin glyphs noticeably smaller than the surrounding
+   かな/漢字, so English words and bare code identifiers mixed into headings and
+   body text (Go, stmt, fn, coverage …) look shrunken and sit low next to the
+   kana. We render Latin from Inter instead, placed FIRST in the font stack:
+   the browser uses this face only for the Latin code points listed below and
+   falls back to 'Noto Sans JP' for everything else (kana/漢字), so CJK is
+   untouched. `size-adjust: 108%` scales Inter up so its cap-/x-height reads at
+   the same visual size as the kana beside it — Inter and Noto's own Latin are
+   nearly the same size, so this adjust (not the font swap) is what fixes the
+   mismatch. Tune this one number to taste: ≈104% is subtler, ≈112% larger.
+   Variable woff2 (wght 100–900) hotlinked from Google Fonts, matching the
+   @import above. */
+@font-face {
+  font-family: 'Latin Override';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('https://fonts.gstatic.com/s/inter/v20/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  size-adjust: 108%;
+}
+
 :root {
   --dc-bg: #fbfaf7;
   --dc-text: #1b1f23;
@@ -34,7 +57,7 @@ body:has(.dc-playbar) #page-root { padding-bottom: 60px; }
 .slidev-layout {
   background: var(--dc-bg);
   color: var(--dc-text);
-  font-family: 'Noto Sans JP', sans-serif;
+  font-family: 'Latin Override', 'Noto Sans JP', sans-serif;
   padding: 104px 130px;
   position: relative;
 }
