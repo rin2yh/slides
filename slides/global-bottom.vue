@@ -1,44 +1,40 @@
 <script setup lang="ts">
-import { useFullscreen } from '@vueuse/core'
-import { computed } from 'vue'
+import { useFullscreen, isClient } from '@vueuse/core'
 import { useNav } from '@slidev/client'
 
 const { next, prev, hasNext, hasPrev, currentSlideNo, total, isPlaying, isPresenter } = useNav()
-const { isFullscreen, toggle: toggleFullscreen } = useFullscreen()
-
-const visible = computed(() => isPlaying.value && !isPresenter.value)
+// Slidev's built-in `f` shortcut fullscreens `document.body`; match it so
+// our button and Slidev's shortcut share one state.
+const { isFullscreen, toggle: toggleFullscreen } = useFullscreen(isClient ? document.body : null)
 </script>
 
 <template>
   <Teleport to="body">
-    <div v-if="visible" class="dc-playbar" role="toolbar" aria-label="スライド操作">
+    <div
+      v-if="isPlaying && !isPresenter && !isFullscreen"
+      class="dc-playbar"
+      role="toolbar"
+      aria-label="スライド操作"
+    >
       <button
+        v-for="b in [
+          { disabled: !hasPrev, label: '前のスライド', d: 'M15 6l-6 6 6 6', click: prev },
+          { disabled: !hasNext, label: '次のスライド', d: 'M9 6l6 6-6 6', click: next },
+        ]"
+        :key="b.label"
         class="dc-playbar-btn"
-        :disabled="!hasPrev"
-        aria-label="前のスライド"
-        @click="prev()"
+        :disabled="b.disabled"
+        :aria-label="b.label"
+        @click="b.click()"
       >
         <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-          <path d="M15 6l-6 6 6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+          <path :d="b.d" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
         </svg>
       </button>
 
-      <div class="dc-playbar-count" aria-live="polite">
-        <span class="dc-playbar-current">{{ currentSlideNo }}</span>
-        <span class="dc-playbar-sep">/</span>
-        <span class="dc-playbar-total">{{ total }}</span>
+      <div class="dc-playbar-count dc-mono" aria-live="polite">
+        <span class="dc-playbar-current">{{ currentSlideNo }}</span> / {{ total }}
       </div>
-
-      <button
-        class="dc-playbar-btn"
-        :disabled="!hasNext"
-        aria-label="次のスライド"
-        @click="next()"
-      >
-        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-          <path d="M9 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-      </button>
 
       <span class="dc-playbar-divider" aria-hidden="true" />
 
@@ -47,11 +43,17 @@ const visible = computed(() => isPlaying.value && !isPresenter.value)
         :aria-label="isFullscreen ? 'フルスクリーンを終了' : 'フルスクリーン'"
         @click="toggleFullscreen()"
       >
-        <svg v-if="!isFullscreen" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-          <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-        </svg>
-        <svg v-else viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
-          <path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path
+            :d="isFullscreen
+              ? 'M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5'
+              : 'M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5'"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
       </button>
     </div>
@@ -70,12 +72,11 @@ const visible = computed(() => isPlaying.value && !isPresenter.value)
   gap: 4px;
   height: 40px;
   padding: 0 8px;
-  background: var(--dc-panel, #f0eee7);
-  border: 1px solid var(--dc-border, #c4ccd0);
+  background: var(--dc-panel);
+  border: 1px solid var(--dc-border);
   border-radius: 999px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  font-family: 'JetBrains Mono', monospace;
-  color: var(--dc-text-2, #3a4046);
+  color: var(--dc-text-2);
   user-select: none;
 }
 
@@ -93,8 +94,8 @@ const visible = computed(() => isPlaying.value && !isPresenter.value)
   transition: background-color 120ms ease, color 120ms ease;
 }
 .dc-playbar-btn:hover:not(:disabled) {
-  background: var(--dc-panel-accent, #e6f4f7);
-  color: var(--dc-accent, #0a7c98);
+  background: var(--dc-panel-accent);
+  color: var(--dc-accent);
 }
 .dc-playbar-btn:disabled {
   opacity: 0.35;
@@ -102,21 +103,17 @@ const visible = computed(() => isPlaying.value && !isPresenter.value)
 }
 
 .dc-playbar-count {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 4px;
   padding: 0 10px;
   font-size: 13px;
   font-variant-numeric: tabular-nums;
+  color: var(--dc-muted);
 }
-.dc-playbar-current { color: var(--dc-text, #1b1f23); font-weight: 500; }
-.dc-playbar-sep { color: var(--dc-muted-3, #9aa0a6); }
-.dc-playbar-total { color: var(--dc-muted, #7d838a); }
+.dc-playbar-current { color: var(--dc-text); font-weight: 500; }
 
 .dc-playbar-divider {
   width: 1px;
   height: 18px;
   margin: 0 4px;
-  background: var(--dc-border-2, #eae6dd);
+  background: var(--dc-border-2);
 }
 </style>

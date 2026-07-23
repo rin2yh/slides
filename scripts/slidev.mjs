@@ -17,7 +17,8 @@ if (!existsSync(file)) {
   process.exit(1)
 }
 
-const args = [sub, file, ...rest]
-if (sub === 'dev') args.push('--open')
+// `slidev` CLI has no `dev` subcommand — the entry is the first positional.
+// For `build`/`export`, keep the subcommand.
+const args = sub === 'dev' ? [file, '--open', ...rest] : [sub, file, ...rest]
 
 spawn('slidev', args, { stdio: 'inherit' }).on('exit', (code) => process.exit(code ?? 0))
