@@ -79,7 +79,6 @@ const PAGE_TITLE = 'Slides'
 const PAGE_DESC = 'Slidev で作成したスライド集です。'
 const rawSiteUrl = (process.env.SITE_URL || '').trim()
 const SITE_URL = rawSiteUrl ? rawSiteUrl.replace(/\/+$/, '') + '/' : ''
-const ogUrl = SITE_URL
 const ogImage = SITE_URL ? `${SITE_URL}og-image.png` : './og-image.png'
 
 const meta = [
@@ -87,7 +86,7 @@ const meta = [
   `<meta property="og:type" content="website">`,
   `<meta property="og:title" content="${esc(PAGE_TITLE)}">`,
   `<meta property="og:description" content="${esc(PAGE_DESC)}">`,
-  ...(ogUrl ? [`<meta property="og:url" content="${esc(ogUrl)}">`] : []),
+  ...(SITE_URL ? [`<meta property="og:url" content="${esc(SITE_URL)}">`] : []),
   `<meta property="og:image" content="${esc(ogImage)}">`,
   `<meta property="og:image:width" content="1200">`,
   `<meta property="og:image:height" content="630">`,

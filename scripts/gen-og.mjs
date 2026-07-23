@@ -78,15 +78,13 @@ mkdirSync(OUT_ROOT, { recursive: true })
 const executablePath = process.env.CHROMIUM_EXECUTABLE_PATH || undefined
 const browser = await chromium.launch({ executablePath })
 try {
-  const page = await browser.newPage({
-    viewport: { width: WIDTH, height: HEIGHT },
-    deviceScaleFactor: 1,
-  })
+  const page = await browser.newPage({ viewport: { width: WIDTH, height: HEIGHT } })
   await page.setContent(html, { waitUntil: 'networkidle' })
   // Wait for the web fonts so Japanese glyphs aren't rendered as tofu.
   await page.evaluate(() => document.fonts.ready)
   const out = join(OUT_ROOT, 'og-image.png')
-  await page.screenshot({ path: out, clip: { x: 0, y: 0, width: WIDTH, height: HEIGHT } })
+  // A non-fullPage screenshot captures exactly the viewport (WIDTH x HEIGHT).
+  await page.screenshot({ path: out })
   console.log(`generated ${out} (${WIDTH}x${HEIGHT})`)
 } finally {
   await browser.close()

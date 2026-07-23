@@ -68,11 +68,6 @@ seoMeta:
 
 仕組みの詳細（`ogImage: auto` が何をするか、`ogTitle` / `ogDescription` を省略しない理由）は `.claude/rules/frontmatter.md` を参照。
 
-一覧ページ（`index.html`）にも OGP を付けている。カード画像（1200×630 の `og-image.png`）は
-`scripts/gen-og.mjs` が Playwright でレンダリングし、`scripts/gen-index.mjs` が `og:` / `twitter:`
-メタタグを埋め込む。どちらも CI（`.github/workflows/ci.yml`）の Pages ビルドで実行される。絶対 URL は
-`SITE_URL` 環境変数（デプロイ先のベース URL）から組み立てる。
-
 ## カスタムレイアウト・コンポーネント
 
 - `slides/layouts/*.vue` は自動で layout として使える
