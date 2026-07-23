@@ -2,11 +2,6 @@ name: Build
 
 on:
   workflow_call:
-    inputs:
-      upload-artifacts:
-        description: Upload each built deck as an artifact (needed by cd.yml's Pages deploy).
-        type: boolean
-        default: false
 
 permissions:
   contents: read
@@ -76,10 +71,14 @@ jobs:
             --out "$(pwd)/dist/${DECK}" \
             --router-mode hash
 
+      # Always uploaded — cd.yml's pages job consumes these, and CI simply
+      # ignores them. Keeping the step unconditional means build.yml has no
+      # main-vs-PR branch at all. retention-days: 1 keeps the PR-side waste
+      # negligible (cd downloads them minutes later in the same run).
       - name: Upload built deck
-        if: inputs.upload-artifacts
         uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
         with:
           name: deck-${{ matrix.deck }}
           path: dist
           if-no-files-found: error
+          retention-days: 1
