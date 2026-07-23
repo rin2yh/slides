@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
@@ -18,10 +20,22 @@ jobs:
 
       - run: npm ci
 
-      - name: Build all slides
+      - name: Build changed slides
         run: |
           set -euo pipefail
-          for f in slides/*.md; do
+          BASE_SHA="$(git merge-base HEAD origin/main)"
+
+          changed=()
+          while IFS= read -r f; do
+            changed+=("$f")
+          done < <(git diff --name-only "$BASE_SHA" HEAD -- 'slides/*.md')
+
+          if [ ${#changed[@]} -eq 0 ]; then
+            echo "No slide changes detected."
+            exit 0
+          fi
+
+          for f in "${changed[@]}"; do
             [ -e "$f" ] || continue
             name="$(basename "$f" .md)"
             echo "::group::Building $name"
