@@ -24,7 +24,6 @@ runs:
       env:
         DECK: ${{ inputs.deck }}
       run: |
-        set -euo pipefail
         REPO_NAME="${GITHUB_REPOSITORY#*/}"
         npm run build -- "${DECK}" \
           --base "/${REPO_NAME}/${DECK}/" \
