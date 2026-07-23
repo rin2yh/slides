@@ -78,7 +78,8 @@ function descLines(d?: Branch['desc']): string[] {
   width: 100%;
   height: 340px;
   margin: 12px 0 6px;
-  font-family: 'Noto Sans JP', sans-serif;
+  /* font-family inherits from .slidev-layout ('Latin Override', 'Noto Sans JP',
+     sans-serif) so Latin node labels get the same 和欧混植 correction. */
 }
 .line {
   position: absolute;
