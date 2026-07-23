@@ -13,30 +13,36 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
-        with:
-          node-version: 24
-          cache: npm
-
-      - run: npm ci
+      - uses: ./.github/actions/setup-node
 
       - name: Build changed slides
         run: |
           set -euo pipefail
-          BASE_SHA="$(git merge-base HEAD origin/main)"
+          BASE_REF="${{ github.base_ref || 'main' }}"
 
-          changed=()
-          while IFS= read -r f; do
-            changed+=("$f")
-          done < <(git diff --name-only "$BASE_SHA" HEAD -- 'slides/*.md')
+          mapfile -t touched < <(git diff --name-only --diff-filter=d "origin/$BASE_REF...HEAD" -- slides)
+
+          md_changed=()
+          shared_changed=false
+          for f in "${touched[@]}"; do
+            case "$f" in
+              slides/*.md) md_changed+=("$f") ;;
+              *) shared_changed=true ;;
+            esac
+          done
+
+          if $shared_changed; then
+            echo "Shared slides/ files changed; building all decks."
+            changed=(slides/*.md)
+          else
+            changed=("${md_changed[@]}")
+          fi
 
           if [ ${#changed[@]} -eq 0 ]; then
             echo "No slide changes detected."
-            exit 0
           fi
 
           for f in "${changed[@]}"; do
-            [ -e "$f" ] || continue
             name="$(basename "$f" .md)"
             echo "::group::Building $name"
             npx slidev build "$f" --out "dist/$name"
