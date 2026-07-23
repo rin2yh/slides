@@ -3,7 +3,6 @@ name: CD
 on:
   push:
     branches: [main]
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -13,7 +12,6 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  # CI と同じ定義でビルドする。ここが全デッキ通らない限り deploy に進まない
   build:
     uses: ./.github/workflows/build.yml
     with:
@@ -21,8 +19,6 @@ jobs:
 
   deploy:
     needs: build
-    # workflow_dispatch を feature ブランチから実行してもビルド検証のみで公開はしない
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
