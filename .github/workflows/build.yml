@@ -1,0 +1,67 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      upload-artifacts:
+        description: Upload each built deck as an artifact (deck-<name>)
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  decks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      decks: ${{ steps.list.outputs.decks }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: List decks
+        id: list
+        run: |
+          set -euo pipefail
+          decks='[]'
+          if compgen -G 'slides/*.md' > /dev/null; then
+            decks="$(basename -s .md slides/*.md | jq -R . | jq -cs .)"
+          fi
+          echo "decks=$decks" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: decks
+    if: needs.decks.outputs.decks != '[]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        deck: ${{ fromJson(needs.decks.outputs.decks) }}
+    env:
+      DECK: ${{ matrix.deck }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-node
+
+      - name: Build ${{ matrix.deck }}
+        run: |
+          set -euo pipefail
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          npx slidev build "slides/${DECK}.md" \
+            --base "/${REPO_NAME}/${DECK}/" \
+            --out "$(pwd)/dist/${DECK}" \
+            --router-mode hash
+
+      - name: Upload deck artifact
+        if: inputs.upload-artifacts
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: deck-${{ matrix.deck }}
+          path: dist/${{ matrix.deck }}
