@@ -40,6 +40,7 @@ jobs:
           for f in slides/*.md; do
             [ -e "$f" ] || continue
             name="$(basename "$f" .md)"
+            [ "$name" = "template" ] && continue
             echo "::group::Building $name"
             npx slidev build "$f" \
               --base "$BASE/$name/" \
