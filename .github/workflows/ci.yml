@@ -9,13 +9,42 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
 jobs:
+  decks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      decks: ${{ steps.list.outputs.decks }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: List decks
+        id: list
+        run: |
+          set -euo pipefail
+          decks='[]'
+          if compgen -G 'slides/*.md' > /dev/null; then
+            decks="$(basename -s .md slides/*.md | jq -R . | jq -cs .)"
+          fi
+          echo "decks=$decks" >> "$GITHUB_OUTPUT"
+
   build:
+    needs: decks
+    if: needs.decks.outputs.decks != '[]'
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    concurrency:
-      group: ci-${{ github.ref }}
-      cancel-in-progress: true
+    strategy:
+      fail-fast: false
+      matrix:
+        deck: ${{ fromJson(needs.decks.outputs.decks) }}
+    env:
+      DECK: ${{ matrix.deck }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -23,16 +52,21 @@ jobs:
 
       - uses: ./.github/actions/setup-node
 
-      - name: Build all slides
+      - name: Build ${{ matrix.deck }}
         run: |
           set -euo pipefail
-          for f in slides/*.md; do
-            [ -e "$f" ] || continue
-            name="$(basename "$f" .md)"
-            echo "::group::Building $name"
-            npx slidev build "$f" --out "dist/$name"
-            echo "::endgroup::"
-          done
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          npx slidev build "slides/${DECK}.md" \
+            --base "/${REPO_NAME}/${DECK}/" \
+            --out "$(pwd)/dist/${DECK}" \
+            --router-mode hash
+
+      - name: Upload deck artifact
+        if: github.ref == 'refs/heads/main'
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: deck-${{ matrix.deck }}
+          path: dist/${{ matrix.deck }}
 
   pages:
     needs: build
@@ -45,32 +79,23 @@ jobs:
       group: pages
       cancel-in-progress: false
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Download deck artifacts
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          persist-credentials: false
+          pattern: deck-*
+          path: dist
 
-      - uses: ./.github/actions/setup-node
-
-      - name: Build all slides for GitHub Pages
+      - name: Assemble site index
         run: |
           set -euo pipefail
-          REPO_NAME="${GITHUB_REPOSITORY#*/}"
-          BASE="/${REPO_NAME}"
-          OUT_ROOT="$(pwd)/dist"
-          rm -rf "$OUT_ROOT"
-          mkdir -p "$OUT_ROOT"
+          for d in dist/deck-*; do
+            [ -d "$d" ] || continue
+            mv "$d" "dist/${d#dist/deck-}"
+          done
 
           entries=()
-          for f in slides/*.md; do
-            [ -e "$f" ] || continue
-            name="$(basename "$f" .md)"
-            echo "::group::Building $name"
-            npx slidev build "$f" \
-              --base "$BASE/$name/" \
-              --out "$OUT_ROOT/$name" \
-              --router-mode hash
-            echo "::endgroup::"
-            entries+=("$name")
+          for d in dist/*/; do
+            entries+=("$(basename "$d")")
           done
 
           {
@@ -84,7 +109,7 @@ jobs:
               echo "<li><a href=\"./${name}/\">${name}</a></li>"
             done
             echo '</ul></body></html>'
-          } > "$OUT_ROOT/index.html"
+          } > dist/index.html
 
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
         with:
