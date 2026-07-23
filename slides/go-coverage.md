@@ -16,7 +16,9 @@ fonts:
   weights: '400,500,700,900'
 seoMeta:
   ogTitle: なぜGoのカバレッジはstmtとfnなのか
-  ogDescription: 'Asakusa.go #8 発表資料'
+  ogDescription: |-
+    Asakusa.go #8のスライドです。
+    なぜGoのカバレッジはstmtとfnなのか、Goのカバレッジ計測を利用した時に感じた小さな疑念を発端に調査結果をまとめました。Goが選んだ選択と思想、そこから見えてくるカバレッジについて話します。
   ogImage: auto
 defaults:
   hashtag: asakusago
