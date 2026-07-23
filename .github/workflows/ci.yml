@@ -28,10 +28,18 @@ jobs:
         id: list
         run: |
           set -euo pipefail
-          decks="$(for f in slides/*.md; do
-            [ -e "$f" ] || continue
-            basename "$f" .md
-          done | jq -Rnc '[inputs]')"
+          shopt -s nullglob
+          names=()
+          for f in slides/*.md; do
+            names+=("$(basename "$f" .md)")
+          done
+          if [ ${#names[@]} -eq 0 ]; then
+            # No decks is a contract violation for this repo — fail loudly here
+            # instead of emitting [] and letting the build matrix error cryptically.
+            echo "::error::no slide decks found under slides/*.md" >&2
+            exit 1
+          fi
+          decks="$(printf '%s\n' "${names[@]}" | jq -Rnc '[inputs]')"
           echo "decks=$decks" >> "$GITHUB_OUTPUT"
           echo "decks: $decks"
 
