@@ -70,6 +70,32 @@ const decks = readdirSync(SLIDES_DIR)
   .filter((d) => existsSync(join(OUT_ROOT, d.name)))
   .sort((a, b) => a.title.localeCompare(b.title, 'ja'))
 
+// OGP / Twitter card for the landing page itself. The image is rendered by
+// scripts/gen-og.mjs into <out-root>/og-image.png. Absolute URLs are preferred
+// by crawlers, so build them from SITE_URL (the deployed base, e.g.
+// https://owner.github.io/repo/) when it's available; fall back to relative
+// paths for a plain local build.
+const PAGE_TITLE = 'Slides'
+const PAGE_DESC = 'Slidev で作成したスライド集です。'
+const rawSiteUrl = (process.env.SITE_URL || '').trim()
+const SITE_URL = rawSiteUrl ? rawSiteUrl.replace(/\/+$/, '') + '/' : ''
+const ogImage = SITE_URL ? `${SITE_URL}og-image.png` : './og-image.png'
+
+const meta = [
+  `<meta name="description" content="${esc(PAGE_DESC)}">`,
+  `<meta property="og:type" content="website">`,
+  `<meta property="og:title" content="${esc(PAGE_TITLE)}">`,
+  `<meta property="og:description" content="${esc(PAGE_DESC)}">`,
+  ...(SITE_URL ? [`<meta property="og:url" content="${esc(SITE_URL)}">`] : []),
+  `<meta property="og:image" content="${esc(ogImage)}">`,
+  `<meta property="og:image:width" content="1200">`,
+  `<meta property="og:image:height" content="630">`,
+  `<meta name="twitter:card" content="summary_large_image">`,
+  `<meta name="twitter:title" content="${esc(PAGE_TITLE)}">`,
+  `<meta name="twitter:description" content="${esc(PAGE_DESC)}">`,
+  `<meta name="twitter:image" content="${esc(ogImage)}">`,
+].join('\n')
+
 const cards = decks
   .map(
     (d) => `      <li>
@@ -89,6 +115,7 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Slides</title>
+${meta}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
