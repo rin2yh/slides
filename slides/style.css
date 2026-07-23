@@ -26,6 +26,10 @@
 /* Hide Slidev's "go to slide" dialog */
 #slidev-goto-dialog { display: none !important; }
 
+/* Play mode: reserve space at the bottom so the persistent controls bar sits
+   outside the slide canvas (the slide auto-scales down to fit). */
+#page-root { padding-bottom: 60px; }
+
 .slidev-layout {
   background: var(--dc-bg);
   color: var(--dc-text);
