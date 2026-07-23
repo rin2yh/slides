@@ -1,0 +1,85 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      upload-artifacts:
+        description: Upload each built deck as an artifact (needed by cd.yml's Pages deploy).
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  decks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      decks: ${{ steps.list.outputs.decks }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: List slide decks
+        id: list
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          names=()
+          for f in slides/*.md; do
+            names+=("$(basename "$f" .md)")
+          done
+          if [ ${#names[@]} -eq 0 ]; then
+            # No decks is a contract violation for this repo — fail loudly here
+            # instead of emitting [] and letting the build matrix error cryptically.
+            echo "::error::no slide decks found under slides/*.md" >&2
+            exit 1
+          fi
+          decks="$(printf '%s\n' "${names[@]}" | jq -Rnc '[inputs]')"
+          echo "decks=$decks" >> "$GITHUB_OUTPUT"
+          echo "decks: $decks"
+
+  build:
+    needs: decks
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        deck: ${{ fromJSON(needs.decks.outputs.decks) }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: ./.github/actions/setup-node
+
+      - name: Cache Playwright browsers
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Chromium for OGP image generation
+        run: npx playwright-chromium install --with-deps chromium
+
+      - name: Build ${{ matrix.deck }}
+        env:
+          DECK: ${{ matrix.deck }}
+        run: |
+          set -euo pipefail
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          npm run build -- "${DECK}" \
+            --base "/${REPO_NAME}/${DECK}/" \
+            --out "$(pwd)/dist/${DECK}" \
+            --router-mode hash
+
+      - name: Upload built deck
+        if: inputs.upload-artifacts
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
+        with:
+          name: deck-${{ matrix.deck }}
+          path: dist
+          if-no-files-found: error
