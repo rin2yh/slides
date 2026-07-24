@@ -1,6 +1,6 @@
 ---
 name: slidev-components
-description: このプロジェクトの自作 Vue コンポーネント (`<Lead>` `<Caption>` `<Summary>` `<Refs>` `<Pipeline>` `<Code>`) の API と使い分け。Markdown だけでは表現しづらいスライド上のパターン（punchline / 引用キャプション / 番号付き決定 + 理由 / 参考文献 / 数直線パイプライン図）を書きたい・書いたけど期待通りに描画されない、と言ったら参照する。新しいコンポーネントを追加すべきか判断したい時も。「`<b>` と `**bold**` で色が違うのはなぜ」「HTML を props に混ぜたい」「v-html は安全か」「`<Refs>` の中でリストが崩れる」「Summary の item に HTML を書ける？」等の細かい疑問にも該当。素の Markdown 記法（見出し・テーブル・コードブロック）については `.claude/rules/` を先に見る。
+description: このプロジェクトの自作 Vue コンポーネント (`<Lead>` `<Caption>` `<Summary>` `<Refs>` `<Pipeline>` `<Code>`) の API と使い分け。Markdown だけでは表現しづらいスライド上のパターン（punchline / 引用キャプション / 番号付き決定 + 理由 / 参考文献 / 数直線パイプライン図）を書きたい・書いたけど期待通りに描画されない、と言ったら参照する。新しいコンポーネントを追加すべきか判断したい時も。「`**bold**` を青くしたいのに濃い太字にしかならない（青は構造要素専用）」「HTML を props に混ぜたい」「v-html は安全か」「`<Refs>` の中でリストが崩れる」「Summary の item に HTML を書ける？」等の細かい疑問にも該当。素の Markdown 記法（見出し・テーブル・コードブロック）については `.claude/rules/` を先に見る。
 ---
 
 # Slidev components
@@ -28,7 +28,11 @@ Punchline 用の大きなボールド段落。
 ```md
 <Lead>Vitest では branch も取れるのに、なぜGoは取れないのか?</Lead>
 
-<Lead size="sm">Go標準ライブラリの**構文解析・整形パッケージ**で実現。</Lead>
+<Lead size="sm">
+
+Go標準ライブラリの**構文解析・整形パッケージ**で実現。
+
+</Lead>
 ```
 
 **Props**:
@@ -36,6 +40,8 @@ Punchline 用の大きなボールド段落。
 - `size?: 'lg' | 'sm'` — default `lg`（44px）、`sm` は 32px（章末結論・小サブリード用）
 
 **なぜ component か**: 44px / 32px の bold + max-width + 前後の margin ルール（h2 直後は top 0 等）が要る。Markdown で書き分けられない。
+
+**スロット内で `**bold**` を効かせるには開始/終了タグと本文の間に空行を入れる**（block 記法）。1 行に詰めると markdown-it が本文を生テキスト扱いして `**` が処理されず、そのまま記号が残る（`<Refs>` が空行を要求するのと同じ）。空行を入れると本文は `<p>` に包まれるが `.dc-lead > p` / `.dc-caption > p` リセット済みで見た目は変わらない。生の `<strong>` / `<b>` は書かない。`**` の色の扱い（周囲色の普通太字・青は構造要素専用）は `.claude/rules/text-emphasis.md`。
 
 **マージン**: `.dc-lead { margin: 36px 0 28px }` が default、`.slidev-layout h2 + .dc-lead` で h2 直後は自動 top 0。余白の管理原則は `.claude/rules/spacing.md`。
 
@@ -49,7 +55,9 @@ Punchline 用の大きなボールド段落。
 <Caption>— The cover story, Rob Pike, The Go Blog (2013)</Caption>
 ```
 
-**Props**: なし。中身の slot は Markdown 混在 OK。
+**Props**: なし。
+
+**slot 内の Markdown**: `<Lead>` と同じで、``**`Abs(3)`**`` のような強調を入れるなら block 記法（空行）にする。出典表記のように装飾なしの 1 行なら inline のままでよい。
 
 **なぜ component か**: フォントサイズ・色・引用直後の 16px top margin を CSS 変数だけでは書き分けられない（`blockquote + .dc-caption` セレクタが必要）。
 
@@ -75,7 +83,7 @@ Q → A スライドの最後に置く「決定 + 理由」の番号付きリス
 - `items: { text: string, reason?: string }[]` — 番号は自動採番
 - `text` / `reason` はどちらも HTML 文字列（v-html レンダリング）。`<b>...</b>` を混ぜて通常色ボールドを差し込むのが定石
 
-**`<b>` が通常色になる理由**: `slides/style.css` の `.summary .item b { color: var(--dc-text) }` で明示的に上書きしている。`**...**`（`<strong>`）を書くとアクセント色になってしまい、Summary 内の 2 段目「理由」欄と色がケンカする。`<Summary>` の text で強調は `<b>` に統一する。
+**Summary の強調に `<b>` を使う理由**: `slides/style.css` の `.summary .item b { color: var(--dc-text) }` が決定語を最も濃い `#1b1f23` にする。一方 `**...**`（`<strong>`）は周囲色を継承する（Summary 本文は `--dc-text-2` = `#3a4046`）ので、決定語がやや薄く出て 1 段目のインパクトが落ちる。元スライドでも決定語は最濃・「理由」欄は薄い、の 2 段コントラスト。だから `<Summary>` の text 強調は `<b>` に統一する。
 
 **なぜ component か**: 番号採番、`理由` ラベル付き 2 段構成、番号セル幅固定などの構造を Markdown で表現できない。
 

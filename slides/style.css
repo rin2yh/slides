@@ -76,7 +76,10 @@
   max-width: 1620px;
 }
 
-.slidev-layout strong { color: var(--dc-accent); font-weight: 700; }
+/* Prose emphasis (**bold**) is plain bold in the inherited text color, not
+ * accent — so **bold** and <b> are equivalent. Accent (blue) is reserved for
+ * structural elements; see .claude/rules/text-emphasis.md for the policy. */
+.slidev-layout strong { color: inherit; font-weight: 700; }
 
 .slidev-layout ul {
   font-size: 32px;
@@ -101,7 +104,8 @@
 }
 .slidev-layout ul li { margin-bottom: 16px; }
 
-/* Inline mono: use `code` for plain (muted grey), **`code`** for accent bold. */
+/* Inline mono: `code` is muted grey; **`code`** bolds it in the surrounding
+ * text color (inherits, matching prose emphasis above — not accent). */
 .slidev-layout :not(pre) > code {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.9em;
@@ -111,8 +115,7 @@
 }
 .slidev-layout strong > code,
 .slidev-layout strong code {
-  color: var(--dc-accent);
-  font-weight: 700;
+  color: inherit;
 }
 .dc-mono { font-family: 'JetBrains Mono', monospace; }
 
@@ -314,6 +317,18 @@
 .dc-lead.size-lg { font-size: 44px; }
 .dc-lead.size-sm { font-size: 32px; max-width: 1660px; }
 .slidev-layout h2 + .dc-lead { margin-top: 0; }
+
+/* Block-form <Lead>/<Caption> wraps its slot text in a <p> that would otherwise
+ * pick up `.slidev-layout p` (32px, text-2, bottom margin). Neutralize it so the
+ * component's own font/color/margins govern. See .claude/rules/text-emphasis.md. */
+.slidev-layout .dc-lead > p,
+.slidev-layout .dc-caption > p {
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+  max-width: none;
+  margin: 0;
+}
 
 .dc-caption {
   font-size: 24px;
