@@ -25,7 +25,7 @@ runs:
         DECK: ${{ inputs.deck }}
       run: |
         REPO_NAME="${GITHUB_REPOSITORY#*/}"
-        npm run build -- "${DECK}" \
+        npm run build -- "slides/${DECK}.md" \
           --base "/${REPO_NAME}/${DECK}/" \
           --out "$(pwd)/dist/${DECK}" \
           --router-mode hash

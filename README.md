@@ -11,24 +11,20 @@ npm install
 
 ## コマンド
 
-スライド名を引数で渡す（`slides/` と `.md` は省略可）。
+`slidev` にスライドのパスを渡すだけ（`npm run` 経由でもよい）。
 
 | コマンド | 説明 |
 |---|---|
-| `npm run new -- <name>` | `slides/templates/template.md` から新規スライドを作成 |
-| `npm run dev <name>` | プレビュー起動 |
-| `npm run build <name>` | 静的サイトを `dist/` に出力 |
-| `npm run export <name>` | PDF を出力（`playwright-chromium` が必要） |
+| `npm run dev -- slides/<name>.md` | プレビュー起動（ブラウザを自動で開く） |
+| `npm run build -- slides/<name>.md` | 静的サイトを `dist/` に出力 |
+| `npm run export -- slides/<name>.md` | PDF を出力（`playwright-chromium` が必要） |
 
 例:
 
 ```bash
-npm run new -- go-coverage
-npm run dev go-coverage
-npm run build go-coverage
+npm run dev -- slides/go-coverage.md
+npm run build -- slides/go-coverage.md
 ```
-
-フルパスを渡してもよい: `npm run dev slides/go-coverage.md`
 
 ## ディレクトリ構成
 
@@ -50,9 +46,11 @@ slides/
 
 ## 新しいスライドを作る
 
+テンプレートから `slides/<name>.md` を作る mise task。
+
 ```bash
-npm run new -- <name>
-npm run dev <name>
+mise run new <name>
+npm run dev -- slides/<name>.md
 ```
 
 ## OGP画像

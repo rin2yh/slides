@@ -17,11 +17,11 @@ description: このプロジェクト（/Users/yuuki/workspace/slides）の Slid
 
 ## コード内のインデントが 1 スペースに潰れる
 
-**症状**: `<div class="dc-code">` や自作の code panel の中で 4 空白が 1 空白になる。ソースには 4 空白入っているのに描画が「潰れた」状態。
+**症状**: `<div>` で囲った自作パネルの中で 4 空白が 1 空白になる。ソースには 4 空白入っているのに描画が「潰れた」状態。
 
 **原因**: Vue のテンプレートコンパイラは `<div>` の text 空白を default で `condense` する。`v-pre` はディレクティブ処理を skip するだけで、text 空白圧縮は防げない。
 
-**対処**: `<pre>` 要素を使う。Vue コンパイラは `<pre>` の中の空白は常に保持する。ハンドオーサリングの code panel も `<pre class="dc-code" v-pre>` にする。行ごとに background を出したいなら `<span class="hl">` を `display: block` にして pre 内に並べる（`<div>` は避ける、余計な空白挿入の温床）。
+**対処**: `<pre>` 要素を使う。Vue コンパイラは `<pre>` の中の空白は常に保持する。自作パネルも `<pre ... v-pre>` にする（preparser が吐く `<pre class="dc-shell">` がこの形）。行ごとに background を出したいなら `<span>` を `display: block` にして pre 内に並べる（`<div>` は避ける、余計な空白挿入の温床）。
 
 素の ``` ```lang ``` フェンスはこの制約と無関係（shiki が独自に `<pre><code>` を吐く）ので、可能ならそちらで済ませる。
 

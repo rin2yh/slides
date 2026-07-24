@@ -209,26 +209,6 @@
 .slidev-layout pre.has-highlighted::before,
 .slidev-layout pre.has-focused::before { content: none !important; }
 
-/* Hand-authored code panel (matches design tokens exactly) */
-.slidev-layout pre.dc-code,
-.dc-code {
-  background: var(--dc-panel) !important;
-  border-radius: 8px;
-  padding: 34px 52px !important;
-  font-family: 'JetBrains Mono', monospace !important;
-  font-size: 36px !important;
-  line-height: 1.8 !important;
-  color: var(--dc-text-2) !important;
-  max-width: 1240px;
-  white-space: pre;
-  overflow: auto;
-  margin: 0;
-}
-.dc-code .hl { background: rgba(10, 124, 152, 0.09); display: block; }
-.dc-code .hl-strong { background: rgba(10, 124, 152, 0.20); display: block; }
-.dc-code .mark { color: var(--dc-accent); font-weight: 700; }
-.dc-code .dim { color: var(--dc-muted-4); display: block; }
-
 /* Terminal / shell output panel */
 .slidev-layout pre.dc-shell,
 .dc-shell {
