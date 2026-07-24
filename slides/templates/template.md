@@ -1,48 +1,34 @@
 ---
-theme: default
+marp: true
+theme: dc
+paginate: true
+size: 16:9
 title: プレゼンテーションのタイトル
-info: |
-  デザインシステムに沿った Slidev テンプレート
-highlighter: shiki
-lineNumbers: false
-favicon: /favicon.ico
-drawings:
-  persist: false
-transition: none
-mdc: true
-canvasWidth: 1920
-aspectRatio: 16/9
-fonts:
-  sans: Noto Sans JP
-  mono: JetBrains Mono
-  weights: '400,500,700,900'
-seoMeta:
-  ogTitle: プレゼンテーションのタイトル
-  ogDescription: デザインシステムに沿った Slidev テンプレート
-  ogImage: auto
-defaults:
-  hashtag: asakusago
-layout: cover
-event: Asakusa.go #8
-speaker: Rinrin
-handle: '@rin2yh'
-handleUrl: https://x.com/rin2yh
+description: 発表の 1〜2 行の概要
 ---
 
-# プレゼンテーションのタイトルをここに
+<!-- _class: cover -->
+
+# プレゼンテーションのタイトル
+
+イベント名
+
+Rinrin — [@rin2yh](https://x.com/rin2yh)
 
 ---
-layout: profile
-title: 自己紹介
-image: /images/icon.jpg
-facts:
-  - { label: 名前, value: Rinrin }
-  - { label: 職種, value: フルスタックエンジニア }
-  - { label: 趣味, value: アニメ、ゲーム、キーボード }
-  - { label: ひとこと, value: 何か一言を書く }
----
 
----
+<!-- _class: profile -->
+
+## 自己紹介
+
+![w:340](./public/images/icon.jpg)
+
+| 名前 | Rinrin |
+|---|---|
+| 職種 | フルスタックエンジニア |
+| 趣味 | アニメ、ゲーム、キーボード |
+| ひとこと | 何か一言を書く |
+
 ---
 
 ## 目次
@@ -53,28 +39,28 @@ facts:
 4. 4つ目のトピック
 
 ---
-no: 1
----
+
+<!-- _class: section -->
+
+SECTION 01
 
 # セクション名
 
 ---
----
 
 ## 見出しをここに置く
 
-本文をここに記述します。読みやすい行間と文字サイズを保ち、1スライドに詰め込みすぎないようにします。**強調したい語**はアクセント色にできます。
+本文をここに記述します。読みやすい行間と文字サイズを保ち、1スライドに詰め込みすぎないようにします。**強調したい語**は太字で示します（色は付きません）。
 
-**最も伝えたい一文をここに。**
+**最も伝えたい一文（punchline）をここに置く。**
 
----
 ---
 
 ## コードで確認する
 
-補足説明をここに。強調したい行はハイライトできる。
+補足説明をここに書く。
 
-```go {all|2-4|all}
+```go
 func Abs(n int) int {
     if n < 0 {
         return -n
@@ -84,90 +70,71 @@ func Abs(n int) int {
 ```
 
 ---
----
 
 ## 端末で確認する
 
-<h3>コマンド</h3>
+### コマンド
 
 ```shell
 $ go test -cover
-coverage: 80.0% {badge}of statements{/badge}
+coverage: 80.0% of statements
 ```
 
----
 ---
 
 ## 表で整理・比較する
 
-素の表はそのまま Markdown で書ける。
+素の表はそのまま Markdown で書ける。装飾（行アクセント等）は無し。
 
 | 項目 | 説明 |
 |---|---|
 | 選択肢 A | メリットをここに |
 | 選択肢 B | 比較対象の説明をここに |
 
-アクセント行を作りたい場合は行末に `{.accent}` を付ける。
-
-| 項目 | 説明 |
-|---|---|
-| 選択肢 A | **推し**：メリットをここに | {.accent}
-| 選択肢 B | 比較対象の説明をここに |
-
----
 ---
 
 ## 引用で裏づける
 
 > ここに引用文を配置します。原文の主張をそのまま示し、根拠として使います。
 
-— 出典・著者・媒体（年）
+<small>— 出典・著者・媒体（年）</small>
 
----
 ---
 
 ## 図で説明する
 
-<div class="dc-figure-placeholder">
-  <div class="box"></div>
-  <span class="label">図版 / スクリーンショット</span>
-</div>
+![w:1400](./public/foo.svg)
 
----
+**図の下に短い解説文を置く。**
+
 ---
 
 ## Q. 今日の問いをここに?
 
 **A. 結論をここに一文で**
 
-要点
+<small>要点</small>
 
-1. 要点その1をここに
-2. 要点その2をここに
-3. 要点その3をここに
+- **要点1**
+  - 理由・根拠をここに
+- **要点2**
+  - 理由・根拠をここに
+- **要点3**
+  - 理由・根拠をここに
 
 ---
-layout: cover
-event: Thank you
-speaker: Rinrin
-handle: '@rin2yh'
-handleUrl: https://x.com/rin2yh
----
+
+<!-- _class: cover -->
 
 # ご清聴いただき、<br>ありがとうございました
 
----
+Rinrin — [@rin2yh](https://x.com/rin2yh)
+
 ---
 
 ## 参考文献
 
-<div class="refs">
-  <div class="ref">
-    <div class="title">著者「タイトル」媒体, 年</div>
-    <a class="dc-mono" href="https://example.com" target="_blank">https://example.com</a>
-  </div>
-  <div class="ref">
-    <div class="title">著者「タイトル」媒体, 年</div>
-    <a class="dc-mono" href="https://example.com" target="_blank">https://example.com</a>
-  </div>
-</div>
+- 著者「タイトル」媒体, 年
+  <https://example.com>
+- 著者「タイトル」媒体, 年
+  <https://example.com>

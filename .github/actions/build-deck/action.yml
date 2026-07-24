@@ -1,5 +1,5 @@
 name: Build deck
-description: Build a single Slidev deck into dist/<deck>, including its Chromium-rendered OGP image. Assumes Node is already set up.
+description: Build a single Marp deck into dist/<deck>, including its OGP image and shared assets. Assumes Node is already set up.
 
 inputs:
   deck:
@@ -9,23 +9,36 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Cache Playwright browsers
-      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-      with:
-        path: ~/.cache/ms-playwright
-        key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
-
-    - name: Install Chromium for OGP image generation
-      shell: bash
-      run: npx playwright-chromium install --with-deps chromium
-
-    - name: Build ${{ inputs.deck }}
+    - name: Build ${{ inputs.deck }} HTML
       shell: bash
       env:
         DECK: ${{ inputs.deck }}
       run: |
-        REPO_NAME="${GITHUB_REPOSITORY#*/}"
-        npm run build -- "slides/${DECK}.md" \
-          --base "/${REPO_NAME}/${DECK}/" \
-          --out "$(pwd)/dist/${DECK}" \
-          --router-mode hash
+        OWNER="${GITHUB_REPOSITORY%/*}"
+        REPO="${GITHUB_REPOSITORY#*/}"
+        DECK_URL="https://${OWNER}.github.io/${REPO}/${DECK}/"
+        npx marp --config-file .marprc.yml \
+          "slides/${DECK}.md" \
+          --html \
+          --url "${DECK_URL}" \
+          --og-image "${DECK_URL}og-image.png" \
+          --output "dist/${DECK}/index.html"
+
+    - name: Copy shared assets
+      shell: bash
+      env:
+        DECK: ${{ inputs.deck }}
+      run: |
+        cp -r slides/public "dist/${DECK}/public"
+        cp slides/public/favicon.ico "dist/${DECK}/favicon.ico"
+
+    - name: Generate OGP image (first slide)
+      shell: bash
+      env:
+        DECK: ${{ inputs.deck }}
+      run: |
+        npx marp --config-file .marprc.yml \
+          "slides/${DECK}.md" \
+          --image png \
+          --allow-local-files \
+          --output "dist/${DECK}/og-image.png"

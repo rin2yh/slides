@@ -4,12 +4,13 @@ node = "24.14.0"
 [tasks.new]
 description = "テンプレートから新規スライドを作成: mise run new <name>"
 run = '''
-dest="slides/{{arg(name='name')}}.md"
+name="{{arg(name='name')}}"
+dest="slides/${name}.md"
 if [ -e "$dest" ]; then
   echo "already exists: $dest" >&2
   exit 1
 fi
 cp slides/templates/template.md "$dest"
 echo "created: $dest"
-echo "next: npm run dev -- $dest"
+echo "next: npm run dev  →  http://localhost:8080/${name}"
 '''

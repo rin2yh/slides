@@ -5,21 +5,11 @@
     "node": "24"
   },
   "scripts": {
-    "dev": "slidev --open",
-    "build": "slidev build",
-    "export": "slidev export",
-    "test": "vitest run"
+    "dev": "marp --config-file .marprc.yml --server slides",
+    "build": "marp --config-file .marprc.yml",
+    "export": "marp --config-file .marprc.yml --pdf --allow-local-files"
   },
   "devDependencies": {
-    "@comark/markdown-it": "^0.3.4",
-    "@slidev/cli": "^52.18.0",
-    "@slidev/theme-default": "^0.25.0",
-    "markdown-it": "^14.3.0",
-    "playwright-chromium": "^1.10.0",
-    "vitest": "^4.1.10",
-    "vue": "^3.5.0"
-  },
-  "dependencies": {
-    "@shikijs/transformers": "^4.3.1"
+    "@marp-team/marp-cli": "^4.4.1"
   }
 }
