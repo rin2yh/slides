@@ -11,26 +11,14 @@ npm install
 
 ## コマンド
 
-`.marprc.yml` に共通設定（テーマパス等）が入っているので、`npm run` 経由で叩くだけ。
-
-| コマンド | 説明 |
-|---|---|
-| `npm run dev` | プレビューサーバ起動（`slides/` を配信、`http://localhost:8080`） |
-| `npm run build -- slides/<name>.md --output dist/<name>/index.html` | 静的 HTML を出力 |
-| `npm run export -- slides/<name>.md --output dist/<name>.pdf` | PDF を出力 |
-
-例:
+npm scripts は `package.json` を見る。`dev` はプレビューサーバを `http://localhost:8080` で起動し、`build` / `export` は追加引数でデッキと出力先を渡す：
 
 ```bash
-npm run dev
 npm run build -- slides/go-coverage.md --output dist/go-coverage/index.html
+npm run export -- slides/go-coverage.md --output dist/go-coverage.pdf
 ```
 
-ローカルで完全にデプロイと同じ形にしたいときは、ビルド後に共通アセットもコピー：
-
-```bash
-cp -r slides/public dist/go-coverage/public
-```
+ローカルで完全にデプロイと同じ形にしたいときは、ビルド後に共通アセットも `cp -r slides/public dist/go-coverage/public`。
 
 ## ディレクトリ構成
 
