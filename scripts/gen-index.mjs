@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs'
+import { readFileSync, readdirSync, writeFileSync, existsSync, copyFileSync } from 'node:fs'
 import { join } from 'node:path'
 
 // Generate the landing page (index.html) that lists every built slide deck.
@@ -89,6 +89,11 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Slides</title>
+<link rel="icon" href="./favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="./apple-touch-icon.png">
+<link rel="manifest" href="./site.webmanifest">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -204,3 +209,26 @@ ${decks.length ? `    <ul>\n${cards}\n    </ul>` : '    <p class="empty">まだ�
 
 writeFileSync(join(OUT_ROOT, 'index.html'), html)
 console.log(`generated ${join(OUT_ROOT, 'index.html')} (${decks.length} deck${decks.length === 1 ? '' : 's'})`)
+
+// Copy favicon / PWA assets next to the landing page so the icons referenced in
+// its <head> resolve at the site root (/<repo>/). Each deck already bundles its
+// own copy via Slidev's public dir; this covers the generated index page.
+const ICON_SRC = join(SLIDES_DIR, 'public')
+const ICON_FILES = [
+  'favicon.ico',
+  'favicon-32x32.png',
+  'favicon-16x16.png',
+  'apple-touch-icon.png',
+  'android-chrome-192x192.png',
+  'android-chrome-512x512.png',
+  'site.webmanifest',
+]
+let copied = 0
+for (const f of ICON_FILES) {
+  const src = join(ICON_SRC, f)
+  if (existsSync(src)) {
+    copyFileSync(src, join(OUT_ROOT, f))
+    copied++
+  }
+}
+console.log(`copied ${copied} favicon asset${copied === 1 ? '' : 's'} to ${OUT_ROOT}`)

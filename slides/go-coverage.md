@@ -4,6 +4,8 @@ title: なぜGoのカバレッジはstmtとfnなのか
 info: 'Asakusa.go #8 発表資料'
 highlighter: shiki
 lineNumbers: false
+# Favicon links are injected via slides/index.html; disable Slidev's default.
+favicon: ''
 drawings:
   persist: false
 transition: none
