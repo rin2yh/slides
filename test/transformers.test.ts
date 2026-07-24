@@ -6,12 +6,7 @@ const PRE = (inner: string) => `<pre class="dc-shell">${inner}</pre>`
 describe('renderShell', () => {
   it.each([
     { name: 'wraps content in a dc-shell <pre>', input: 'hello', expected: PRE('hello') },
-    {
-      name: 'turns a line-leading `$ ` into the prompt glyph',
-      input: '$ go test -cover',
-      expected: PRE('<span class="prompt">$</span> go test -cover'),
-    },
-    { name: 'leaves a mid-line `$` (shell var) untouched', input: 'echo $HOME', expected: PRE('echo $HOME') },
+    { name: 'leaves a `$` prompt as literal text', input: '$ go test -cover', expected: PRE('$ go test -cover') },
     {
       name: 'maps {badge} and {mark} to accent spans',
       input: 'x {badge}stmts{/badge} {mark}66.7%{/mark}',
@@ -19,7 +14,7 @@ describe('renderShell', () => {
     },
     { name: 'HTML-escapes &, < and >', input: 'a < b && c > d', expected: PRE('a &lt; b &amp;&amp; c &gt; d') },
     { name: 'strips a single trailing newline', input: 'line\n', expected: PRE('line') },
-    { name: 'preserves multiple lines', input: '$ a\nb', expected: PRE('<span class="prompt">$</span> a\nb') },
+    { name: 'preserves multiple lines', input: 'a\nb', expected: PRE('a\nb') },
   ])('$name', ({ input, expected }) => {
     expect(renderShell(input)).toBe(expected)
   })

@@ -224,7 +224,6 @@
   overflow: auto;
   margin: 0;
 }
-.dc-shell .prompt { color: var(--dc-muted); }
 .dc-shell .badge {
   background: var(--dc-accent-soft);
   color: var(--dc-accent);

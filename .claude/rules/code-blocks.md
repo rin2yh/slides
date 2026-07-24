@@ -56,9 +56,9 @@ coverage: 80.0% {badge}of statements{/badge}
 ```
 ````
 
-- 行頭 `$ ` → `<span class="prompt">$</span>` に自動置換
 - `{badge}text{/badge}` → アクセントソフト背景の帯
 - `{mark}text{/mark}` → アクセント色ボールド
+- `$` プロンプトはそのまま文字として書く（特別扱いはしない）
 
 トリガーする言語識別子: `shell` / `sh` / `console` / `terminal`。
 
