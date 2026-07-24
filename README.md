@@ -27,11 +27,3 @@ npm run dev
 ```bash
 npm run export -- slides/<name>.md --output dist/<name>.pdf
 ```
-
-## 公開する
-
-`main` に push すると GitHub Actions が全デッキをビルドして GitHub Pages に公開する。各デッキは `https://<user>.github.io/<repo>/<name>/` で開く。OGP 画像 (`og-image.png`) と `og:image` / `og:url` メタタグは CI 側で埋め込まれる。
-
-## 装飾を変える
-
-`slides/theme.css` に集約されている。個別スライドで `<style>` や inline style を書かない。
