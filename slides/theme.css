@@ -246,6 +246,9 @@ section.section p {
 
 /* -- Profile slide (<!-- _class: profile -->) --
    Image left, facts table right. h2 spans the top full width.
+   Rows are `auto 1fr` so the heading pins to the top like every other
+   content slide (without it, the grid's default align-content:stretch grows
+   both rows and align-items:center drops a phantom margin above the heading).
    Markdown structure:
      ## 自己紹介
      ![w:340](./public/images/icon.jpg)
@@ -255,6 +258,7 @@ section.section p {
 section.profile {
   display: grid;
   grid-template-columns: 380px 1fr;
+  grid-template-rows: auto 1fr;
   column-gap: 80px;
   align-items: center;
 }
