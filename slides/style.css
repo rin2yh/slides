@@ -76,13 +76,9 @@
   max-width: 1620px;
 }
 
-/* Prose emphasis (**bold**) is plain bold in the surrounding text color — it
- * inherits, so it darkens/weights a phrase without recoloring it. In the source
- * design, in-sentence and <Lead> emphasis is the same dark as its neighbours
- * (#1b1f23 / #3a4046), never the accent. Accent (blue) is reserved for
- * structural elements — section tags, h3 labels, {.accent} table rows,
- * badge/mark, code `++` lines, list markers, links — each carrying its own
- * color rule. So **bold** and <b> are equivalent here. */
+/* Prose emphasis (**bold**) is plain bold in the inherited text color, not
+ * accent — so **bold** and <b> are equivalent. Accent (blue) is reserved for
+ * structural elements; see .claude/rules/text-emphasis.md for the policy. */
 .slidev-layout strong { color: inherit; font-weight: 700; }
 
 .slidev-layout ul {
@@ -120,7 +116,6 @@
 .slidev-layout strong > code,
 .slidev-layout strong code {
   color: inherit;
-  font-weight: 700;
 }
 .dc-mono { font-family: 'JetBrains Mono', monospace; }
 
@@ -324,11 +319,9 @@
 .dc-lead.size-sm { font-size: 32px; max-width: 1660px; }
 .slidev-layout h2 + .dc-lead { margin-top: 0; }
 
-/* Block-form <Lead> / <Caption> (blank lines inside the tag) is what lets
- * markdown like **bold** be processed in the slot — but it wraps the text in
- * a <p>, which would otherwise pick up `.slidev-layout p` (32px, text-2,
- * bottom margin). Make that inner <p> transparent so the component's own
- * font/color/margins govern. Emphasis inside is then plain **…** as usual. */
+/* Block-form <Lead>/<Caption> wraps its slot text in a <p> that would otherwise
+ * pick up `.slidev-layout p` (32px, text-2, bottom margin). Neutralize it so the
+ * component's own font/color/margins govern. See .claude/rules/text-emphasis.md. */
 .slidev-layout .dc-lead > p,
 .slidev-layout .dc-caption > p {
   font-size: inherit;

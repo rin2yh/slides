@@ -41,11 +41,7 @@ Go標準ライブラリの**構文解析・整形パッケージ**で実現。
 
 **なぜ component か**: 44px / 32px の bold + max-width + 前後の margin ルール（h2 直後は top 0 等）が要る。Markdown で書き分けられない。
 
-**スロット内で `**bold**` を効かせるには開始/終了タグと本文の間に空行を入れる**（block 記法）。
-- 理由: `<Lead>本文</Lead>` と 1 行に詰めて書くと、markdown-it は本文をインライン HTML の生テキストとして扱い **Markdown を処理しない**。`**構文解析**` がそのまま `**` 付きの文字列で描画されてしまう（`<Refs>` が空行を要求するのと同じ現象）
-- 空行を入れると本文は `<p>` に包まれるが、`slides/style.css` の `.dc-lead > p` / `.dc-caption > p` リセットで font/color/margin を親に継承させてあるので見た目は変わらず、`**bold**` や ``**`code`**`` が普通に効く
-- `**bold**` は**周囲色の普通の太字**（`<b>` と同義。青は付かない）。`<Lead>` の中の語を強調しても色は Lead と同じ濃色のまま太くなるだけ ＝ 元スライドの設計どおり。青にしたいなら `**` ではなく構造要素側で（`.claude/rules/text-emphasis.md`）
-- 強調に生の `<strong>` / `<b>` を書かない。素の Markdown `**` で書けるようにするための block 記法
+**スロット内で `**bold**` を効かせるには開始/終了タグと本文の間に空行を入れる**（block 記法）。1 行に詰めると markdown-it が本文を生テキスト扱いして `**` が処理されず、そのまま記号が残る（`<Refs>` が空行を要求するのと同じ）。空行を入れると本文は `<p>` に包まれるが `.dc-lead > p` / `.dc-caption > p` リセット済みで見た目は変わらない。生の `<strong>` / `<b>` は書かない。`**` の色の扱い（周囲色の普通太字・青は構造要素専用）は `.claude/rules/text-emphasis.md`。
 
 **マージン**: `.dc-lead { margin: 36px 0 28px }` が default、`.slidev-layout h2 + .dc-lead` で h2 直後は自動 top 0。余白の管理原則は `.claude/rules/spacing.md`。
 
@@ -61,7 +57,7 @@ Go標準ライブラリの**構文解析・整形パッケージ**で実現。
 
 **Props**: なし。
 
-**slot 内の Markdown**: `<Lead>` と同じ。1 行に詰めて書くと Markdown は処理されない。``**`Abs(3)`**`` のような強調を入れたいときは開始/終了タグと本文の間に空行を入れて block 記法にする（`.dc-caption > p` リセット済み）。出典表記のように装飾なしの 1 行なら inline のままでよい。
+**slot 内の Markdown**: `<Lead>` と同じで、``**`Abs(3)`**`` のような強調を入れるなら block 記法（空行）にする。出典表記のように装飾なしの 1 行なら inline のままでよい。
 
 **なぜ component か**: フォントサイズ・色・引用直後の 16px top margin を CSS 変数だけでは書き分けられない（`blockquote + .dc-caption` セレクタが必要）。
 
