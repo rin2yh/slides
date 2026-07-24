@@ -1,0 +1,41 @@
+name: Build decks
+description: Build every Marp deck under slides/*.md into dist/<deck>, including each deck's OGP image and shared assets. Assumes the marp CLI is already on PATH.
+
+runs:
+  using: composite
+  steps:
+    - name: Build all decks
+      shell: bash
+      run: |
+        set -euo pipefail
+        shopt -s nullglob
+
+        OWNER="${GITHUB_REPOSITORY%/*}"
+        REPO="${GITHUB_REPOSITORY#*/}"
+
+        for f in slides/*.md; do
+          DECK="$(basename "$f" .md)"
+          DECK_URL="https://${OWNER}.github.io/${REPO}/${DECK}/"
+          echo "::group::build ${DECK}"
+
+          # HTML
+          marp --config-file .marprc.yml \
+            "slides/${DECK}.md" \
+            --html \
+            --url "${DECK_URL}" \
+            --og-image "${DECK_URL}og-image.png" \
+            --output "dist/${DECK}/index.html"
+
+          # Shared assets
+          cp -r slides/public "dist/${DECK}/public"
+          cp slides/public/favicon.ico "dist/${DECK}/favicon.ico"
+
+          # OGP image (first slide)
+          marp --config-file .marprc.yml \
+            "slides/${DECK}.md" \
+            --image png \
+            --allow-local-files \
+            --output "dist/${DECK}/og-image.png"
+
+          echo "::endgroup::"
+        done
