@@ -20,24 +20,6 @@ npm run export -- slides/go-coverage.md --output dist/go-coverage.pdf
 
 ローカルで完全にデプロイと同じ形にしたいときは、ビルド後に共通アセットも `cp -r slides/public dist/go-coverage/public`。
 
-## ディレクトリ構成
-
-```
-slides/
-├── slides/
-│   ├── go-coverage.md      # 発表資料の例
-│   ├── theme.css           # Marp テーマ（/* @theme dc */）
-│   ├── public/             # 共通アセット（画像・SVG 等）
-│   │   ├── favicon.ico
-│   │   ├── pipeline.svg
-│   │   └── images/
-│   └── templates/
-│       └── template.md     # 新規スライドの雛形（デプロイ対象外）
-├── .marprc.yml             # Marp CLI 共通設定
-├── package.json
-└── mise.toml
-```
-
 `slides/*.md`（直下のみ）が GitHub Pages のビルド対象。`templates/` はサブディレクトリなので対象外。ランディングページは無いので、`https://<user>.github.io/<repo>/<deck>/` で直接開く。
 
 ## 新しいスライドを作る
