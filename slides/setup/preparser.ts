@@ -210,18 +210,21 @@ function rewriteShellFences(md: string): string {
   return out.join('\n')
 }
 
-// Inject `favicon: ''` into a deck's headmatter block so Slidev's built-in
-// default favicon (a jsdelivr CDN icon) is suppressed. Runs for every deck, so
-// the icon is configured commonly — no per-deck headmatter — matching the fact
-// that the favicon (injected via slides/index.html) is the same everywhere and
-// never changes. Skips decks that already set `favicon` explicitly.
-function disableDefaultFavicon(lines: string[]): void {
+// Set the favicon on every deck via Slidev's documented `favicon` headmatter
+// (https://sli.dev/custom/config-headmatter), served from slides/public/. We
+// inject it here rather than writing it in each deck's headmatter because the
+// icon is the same everywhere and never changed per-deck. The leading-slash path
+// is base-prefixed by Slidev at build (e.g. /slides/<deck>/favicon.ico). Decks
+// that set `favicon` themselves are left untouched.
+const FAVICON = '/favicon.ico'
+
+function applyCommonFavicon(lines: string[]): void {
   if (lines[0]?.trim() !== '---') return
   for (let i = 1; i < lines.length; i++) {
     const t = lines[i].trim()
     if (/^favicon\s*:/.test(t)) return // deck sets favicon explicitly; leave it
-    if (t === '---') { // end of headmatter with no favicon key — inject one
-      lines.splice(i, 0, "favicon: ''")
+    if (t === '---') { // end of headmatter — inject the common favicon
+      lines.splice(i, 0, `favicon: ${FAVICON}`)
       return
     }
   }
@@ -230,7 +233,7 @@ function disableDefaultFavicon(lines: string[]): void {
 export default definePreparserSetup(() => {
   return [{
     name: 'favicon',
-    transformRawLines: disableDefaultFavicon,
+    transformRawLines: applyCommonFavicon,
   }, {
     name: 'row-attrs',
     transformSlide(content, frontmatter) {
