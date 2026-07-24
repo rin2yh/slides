@@ -5,8 +5,6 @@ info: |
   デザインシステムに沿った Slidev テンプレート
 highlighter: shiki
 lineNumbers: false
-# Favicon links are injected via slides/index.html; disable Slidev's default.
-favicon: ''
 drawings:
   persist: false
 transition: none
