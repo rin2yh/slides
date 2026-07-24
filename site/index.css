@@ -1,0 +1,136 @@
+/* デッキ一覧ページ（dist/index.html）のスタイル。
+   デザイントークンは slides/theme.css と同じ値を使う。
+   スライド本体の CSS はスライド用の巨大な font-size を前提にしているので、
+   一覧ページはこちらに独立して持つ。 */
+
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
+
+:root {
+  --dc-bg: #fbfaf7;
+  --dc-text: #1b1f23;
+  --dc-text-2: #3a4046;
+  --dc-text-3: #5a6066;
+  --dc-muted: #7d838a;
+  --dc-accent: #0a7c98;
+  --dc-accent-hover: #0a6076;
+  --dc-panel: #f0eee7;
+  --dc-border: #c4ccd0;
+  --dc-border-2: #eae6dd;
+  --dc-font-sans: 'Noto Sans JP', system-ui, sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--dc-bg);
+  color: var(--dc-text);
+  font-family: var(--dc-font-sans);
+  font-size: 16px;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--dc-accent);
+  color: #fff;
+}
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 80px 24px 64px;
+}
+
+/* Header */
+.site-header h1 {
+  margin: 0;
+  font-size: 40px;
+  font-weight: 900;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.site-header p {
+  margin: 8px 0 0;
+  color: var(--dc-text-3);
+}
+
+/* Deck list */
+.decks {
+  margin: 48px 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--dc-border-2);
+}
+
+.deck {
+  border-bottom: 1px solid var(--dc-border-2);
+}
+
+.deck a {
+  display: block;
+  padding: 24px 16px;
+  color: inherit;
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.15s ease;
+}
+.deck a:hover {
+  background: var(--dc-panel);
+}
+.deck a:focus-visible {
+  outline: 2px solid var(--dc-accent);
+  outline-offset: -2px;
+}
+
+.deck-title {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--dc-accent);
+}
+.deck a:hover .deck-title {
+  color: var(--dc-accent-hover);
+}
+
+.deck-description {
+  display: block;
+  margin-top: 6px;
+  font-size: 15px;
+  color: var(--dc-text-2);
+}
+
+.empty {
+  padding: 24px 16px;
+  color: var(--dc-muted);
+}
+
+/* Footer */
+.site-footer {
+  margin-top: 48px;
+  font-size: 14px;
+  color: var(--dc-muted);
+}
+.site-footer a {
+  color: var(--dc-accent);
+  text-decoration: none;
+}
+.site-footer a:hover {
+  color: var(--dc-accent-hover);
+  text-decoration: underline;
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding: 48px 16px 48px;
+  }
+  .site-header h1 {
+    font-size: 32px;
+  }
+  .deck a {
+    padding: 20px 12px;
+  }
+}
