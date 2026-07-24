@@ -147,7 +147,7 @@ title: 計測の単位はブロック
 **ブロック**（basic block）とは、`if` / `for` / `range` / `switch` / `type switch` / `select`、`break` ・ `continue` ・ `goto` ・ `fallthrough`、ラベル付き文、ネストした `{ }`、`panic()` で区切られた**区間**。
 
 デメリットは、ブロック内部の分岐を細かく計測できないこと。
-**＝Goで branch を計測できず、取れない**
+<b>＝Goで branch を計測できず、取れない</b>
 
 ---
 title: 仕組み

@@ -1,6 +1,6 @@
 ---
 name: slidev-components
-description: このプロジェクト（/Users/yuuki/workspace/slides）の自作 Vue コンポーネント (`<Lead>` `<Caption>` `<Summary>` `<Refs>` `<Pipeline>`) の API と使い分け。Markdown だけでは表現しづらいスライド上のパターン（punchline / 引用キャプション / 番号付き決定 + 理由 / 参考文献 / 数直線パイプライン図）を書きたい・書いたけど期待通りに描画されない、と言ったら参照する。新しいコンポーネントを追加すべきか判断したい時も。「`<b>` と `**bold**` で色が違うのはなぜ」「HTML を props に混ぜたい」「v-html は安全か」「`<Refs>` の中でリストが崩れる」「Summary の item に HTML を書ける？」等の細かい疑問にも該当。素の Markdown 記法（見出し・テーブル・コードブロック）については `.claude/rules/` を先に見る。
+description: このプロジェクト（/Users/yuuki/workspace/slides）の自作 Vue コンポーネント (`<Lead>` `<Caption>` `<Summary>` `<Refs>` `<Pipeline>`) の API と使い分け。Markdown だけでは表現しづらいスライド上のパターン（punchline / 引用キャプション / 番号付き決定 + 理由 / 参考文献 / 数直線パイプライン図）を書きたい・書いたけど期待通りに描画されない、と言ったら参照する。新しいコンポーネントを追加すべきか判断したい時も。「`**bold**` を青くしたいのに濃い太字にしかならない（青は構造要素専用）」「HTML を props に混ぜたい」「v-html は安全か」「`<Refs>` の中でリストが崩れる」「Summary の item に HTML を書ける？」等の細かい疑問にも該当。素の Markdown 記法（見出し・テーブル・コードブロック）については `.claude/rules/` を先に見る。
 ---
 
 # Slidev components
@@ -43,8 +43,9 @@ Go標準ライブラリの**構文解析・整形パッケージ**で実現。
 
 **スロット内で `**bold**` を効かせるには開始/終了タグと本文の間に空行を入れる**（block 記法）。
 - 理由: `<Lead>本文</Lead>` と 1 行に詰めて書くと、markdown-it は本文をインライン HTML の生テキストとして扱い **Markdown を処理しない**。`**構文解析**` がそのまま `**` 付きの文字列で描画されてしまう（`<Refs>` が空行を要求するのと同じ現象）
-- 空行を入れると本文は `<p>` に包まれるが、`slides/style.css` の `.dc-lead > p` / `.dc-caption > p` リセットで font/color/margin を親に継承させてあるので見た目は変わらず、`**bold**`（アクセント色）や ``**`code`**`` が普通に効く
-- 強調に生の `<strong>` / `<b>` を書かない。素の Markdown 記法で書けるようにするための block 記法。装飾記法の使い分けは `.claude/rules/text-emphasis.md`
+- 空行を入れると本文は `<p>` に包まれるが、`slides/style.css` の `.dc-lead > p` / `.dc-caption > p` リセットで font/color/margin を親に継承させてあるので見た目は変わらず、`**bold**` や ``**`code`**`` が普通に効く
+- `**bold**` は**周囲色の普通の太字**（`<b>` と同義。青は付かない）。`<Lead>` の中の語を強調しても色は Lead と同じ濃色のまま太くなるだけ ＝ 元スライドの設計どおり。青にしたいなら `**` ではなく構造要素側で（`.claude/rules/text-emphasis.md`）
+- 強調に生の `<strong>` / `<b>` を書かない。素の Markdown `**` で書けるようにするための block 記法
 
 **マージン**: `.dc-lead { margin: 36px 0 28px }` が default、`.slidev-layout h2 + .dc-lead` で h2 直後は自動 top 0。余白の管理原則は `.claude/rules/spacing.md`。
 
@@ -86,7 +87,7 @@ Q → A スライドの最後に置く「決定 + 理由」の番号付きリス
 - `items: { text: string, reason?: string }[]` — 番号は自動採番
 - `text` / `reason` はどちらも HTML 文字列（v-html レンダリング）。`<b>...</b>` を混ぜて通常色ボールドを差し込むのが定石
 
-**`<b>` が通常色になる理由**: `slides/style.css` の `.summary .item b { color: var(--dc-text) }` で明示的に上書きしている。`**...**`（`<strong>`）を書くとアクセント色になってしまい、Summary 内の 2 段目「理由」欄と色がケンカする。`<Summary>` の text で強調は `<b>` に統一する。
+**Summary の強調に `<b>` を使う理由**: `slides/style.css` の `.summary .item b { color: var(--dc-text) }` が決定語を最も濃い `#1b1f23` にする。一方 `**...**`（`<strong>`）は周囲色を継承する（Summary 本文は `--dc-text-2` = `#3a4046`）ので、決定語がやや薄く出て 1 段目のインパクトが落ちる。元スライドでも決定語は最濃・「理由」欄は薄い、の 2 段コントラスト。だから `<Summary>` の text 強調は `<b>` に統一する。
 
 **なぜ component か**: 番号採番、`理由` ラベル付き 2 段構成、番号セル幅固定などの構造を Markdown で表現できない。
 
