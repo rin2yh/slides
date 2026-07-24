@@ -162,54 +162,6 @@ function detectLayout(content: string): 'section' | undefined {
   return undefined
 }
 
-// Convert ```shell fences into the terminal panel HTML.
-//
-//   ```shell
-//   $ go test -cover
-//   coverage: 80.0% {badge}of statements{/badge}
-//   ```
-//
-// becomes
-//
-//   <pre class="dc-shell"><span class="prompt">$</span> go test -cover
-//   coverage: 80.0% <span class="badge">of statements</span></pre>
-//
-// The line-leading `$ ` is auto-converted to the muted prompt glyph, and
-// `{badge}…{/badge}` / `{mark}…{/mark}` map to accent-soft chip and accent
-// bold. Any other language passes through untouched.
-function rewriteShellFences(md: string): string {
-  const lines = md.split(/\r?\n/)
-  const out: string[] = []
-  let i = 0
-  while (i < lines.length) {
-    const line = lines[i]
-    const m = line.match(/^(\s*)```(shell|sh|console|terminal)\s*$/)
-    if (m) {
-      const indent = m[1]
-      const body: string[] = []
-      let j = i + 1
-      while (j < lines.length && !/^\s*```\s*$/.test(lines[j])) {
-        body.push(lines[j])
-        j++
-      }
-      const html = body.map(l =>
-        esc(l)
-          .replace(/^(\s*)\$ /, (_, sp) => `${sp}<span class="prompt">$</span> `)
-          .replace(/\{badge\}([\s\S]*?)\{\/badge\}/g, '<span class="badge">$1</span>')
-          .replace(/\{mark\}([\s\S]*?)\{\/mark\}/g, '<span class="mark">$1</span>')
-      ).join('\n')
-      out.push('')
-      out.push(`${indent}<pre class="dc-shell">${html}</pre>`)
-      out.push('')
-      i = j + 1
-      continue
-    }
-    out.push(line)
-    i++
-  }
-  return out.join('\n')
-}
-
 export default definePreparserSetup(() => {
   return [{
     name: 'row-attrs',
@@ -218,9 +170,7 @@ export default definePreparserSetup(() => {
         const detected = detectLayout(content)
         if (detected) frontmatter.layout = detected
       }
-      let out = rewriteTables(content)
-      out = rewriteShellFences(out)
-      return out
+      return rewriteTables(content)
     },
   }]
 })
