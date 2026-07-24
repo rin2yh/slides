@@ -12,27 +12,9 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  decks:
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    outputs:
-      decks: ${{ steps.list.outputs.decks }}
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-
-      - id: list
-        uses: ./.github/actions/list-decks
-
   build:
-    needs: decks
     runs-on: ubuntu-latest
     timeout-minutes: 10
-    strategy:
-      fail-fast: false
-      matrix:
-        deck: ${{ fromJSON(needs.decks.outputs.decks) }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -45,33 +27,7 @@ jobs:
 
       - run: npm ci
 
-      - uses: ./.github/actions/build-deck
-        with:
-          deck: ${{ matrix.deck }}
-
-      - name: Upload built deck
-        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6.0.0
-        with:
-          name: deck-${{ matrix.deck }}
-          path: dist
-          if-no-files-found: error
-
-  pages:
-    needs: build
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    permissions:
-      contents: read
-    concurrency:
-      group: pages
-      cancel-in-progress: false
-    steps:
-      - name: Download built decks
-        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
-        with:
-          pattern: deck-*
-          path: dist
-          merge-multiple: true
+      - uses: ./.github/actions/build-decks
 
       - uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
         with:
@@ -82,7 +38,7 @@ jobs:
           path: dist
 
   deploy:
-    needs: pages
+    needs: build
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
