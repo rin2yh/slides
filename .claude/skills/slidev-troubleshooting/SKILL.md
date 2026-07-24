@@ -21,7 +21,7 @@ description: このプロジェクト（/Users/yuuki/workspace/slides）の Slid
 
 **原因**: Vue のテンプレートコンパイラは `<div>` の text 空白を default で `condense` する。`v-pre` はディレクティブ処理を skip するだけで、text 空白圧縮は防げない。
 
-**対処**: `<pre>` 要素を使う。Vue コンパイラは `<pre>` の中の空白は常に保持する。自作パネルも `<pre ... v-pre>` にする（preparser が吐く `<pre class="dc-code">` がこの形）。行ごとに background を出したいなら `<span>` を `display: block` にして pre 内に並べる（`<div>` は避ける、余計な空白挿入の温床）。
+**対処**: `<pre>` 要素を使う。Vue コンパイラは `<pre>` の中の空白は常に保持する。自作パネルも `<pre>` にする（`<Code>` コンポーネントの `<pre class="dc-code" v-html>` がこの形。動的な中身は v-html で props 文字列として流し込むと、そもそもテンプレートの空白圧縮を経由しない）。行ごとに background を出したいなら `<span>` を `display: block` にして pre 内に並べる（`<div>` は避ける、余計な空白挿入の温床）。
 
 素の ``` ```lang ``` フェンスはこの制約と無関係（shiki が独自に `<pre><code>` を吐く）ので、可能ならそちらで済ませる。
 
