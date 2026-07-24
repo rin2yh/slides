@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import MarkdownIt from 'markdown-it'
 import comark from '@comark/markdown-it'
-import { markdownItRowAttrs } from '../slides/vite.config'
+import { markdownItRowAttrs } from '../slides/lib/row-attrs'
 
 // Render with comark (MDC) applied, mirroring how Slidev wires the rule
 // alongside it — so the tests exercise the real interaction, not the plugin

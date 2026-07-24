@@ -70,23 +70,21 @@ title: Goのカバレッジで取れるのはstmtとfnだけ?
 
 ### statement 全体で取れる
 
-```shell
-$ go test -cover
-coverage: 80.0% {badge}of statements{/badge}
-```
+<Shell :lines="[
+  '$ go test -cover',
+  'coverage: 80.0% {badge}of statements{/badge}',
+]" />
 
 ### function ごとに取れる
 
-```shell
-$ go tool cover -func
-{badge}grade.go:4:  Grade   80.0%{/badge}
-```
+<Shell :lines="[
+  '$ go tool cover -func',
+  '{badge}grade.go:4:  Grade   80.0%{/badge}',
+]" />
 
 ### Vitest は branch も取れる
 
-```shell
-% Stmts | {badge}% Branch{/badge} | % Funcs | % Lines
-```
+<Shell :lines="['% Stmts | {badge}% Branch{/badge} | % Funcs | % Lines']" />
 
 <Lead>Vitest では branch も取れるのに、なぜGoは取れないのか?</Lead>
 
@@ -229,10 +227,10 @@ title: 集計
 
 ### 実行結果（ツール出力）
 
-```shell
-$ go tool cover -func
-abs.go:2:  Abs  {mark}66.7%{/mark}
-```
+<Shell :lines="[
+  '$ go tool cover -func',
+  'abs.go:2:  Abs  {mark}66.7%{/mark}',
+]" />
 
 ---
 title: まとめ

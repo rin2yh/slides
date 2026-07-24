@@ -1,6 +1,6 @@
 ---
 name: slidev-components
-description: このプロジェクト（/Users/yuuki/workspace/slides）の自作 Vue コンポーネント (`<Lead>` `<Caption>` `<Summary>` `<Refs>` `<Pipeline>`) の API と使い分け。Markdown だけでは表現しづらいスライド上のパターン（punchline / 引用キャプション / 番号付き決定 + 理由 / 参考文献 / 数直線パイプライン図）を書きたい・書いたけど期待通りに描画されない、と言ったら参照する。新しいコンポーネントを追加すべきか判断したい時も。「`<b>` と `**bold**` で色が違うのはなぜ」「HTML を props に混ぜたい」「v-html は安全か」「`<Refs>` の中でリストが崩れる」「Summary の item に HTML を書ける？」等の細かい疑問にも該当。素の Markdown 記法（見出し・テーブル・コードブロック）については `.claude/rules/` を先に見る。
+description: このプロジェクト（/Users/yuuki/workspace/slides）の自作 Vue コンポーネント (`<Lead>` `<Caption>` `<Summary>` `<Refs>` `<Pipeline>` `<Shell>`) の API と使い分け。Markdown だけでは表現しづらいスライド上のパターン（punchline / 引用キャプション / 番号付き決定 + 理由 / 参考文献 / 数直線パイプライン図）を書きたい・書いたけど期待通りに描画されない、と言ったら参照する。新しいコンポーネントを追加すべきか判断したい時も。「`<b>` と `**bold**` で色が違うのはなぜ」「HTML を props に混ぜたい」「v-html は安全か」「`<Refs>` の中でリストが崩れる」「Summary の item に HTML を書ける？」等の細かい疑問にも該当。素の Markdown 記法（見出し・テーブル・コードブロック）については `.claude/rules/` を先に見る。
 ---
 
 # Slidev components
@@ -124,6 +124,25 @@ Q → A スライドの最後に置く「決定 + 理由」の番号付きリス
 - `maxWidth?: number` — default 1660。図全体の最大幅
 
 **なぜ SVG じゃなく HTML+CSS positioning か**: SVG を Markdown / MDC に直接書くと Vue のテンプレートコンパイラや MDC が内部要素を text ノードとして扱って崩れる。図要素を HTML の `<div>` + 絶対配置で書くと、テキスト文字サイズがスライド本体と同じ CSS ピクセル系で決まるので周りと整合しやすい。同じ流儀で新しい図コンポーネントを追加する。
+
+### `<Shell>`
+
+端末出力パネル（`.dc-shell`）。各行を文字列で `:lines` に渡す。
+
+```md
+<Shell :lines="[
+  '$ go tool cover -func',
+  'abs.go:2:  Abs  {mark}66.7%{/mark}',
+]" />
+```
+
+**Props**:
+
+- `lines: string[]` — 端末の各行。`white-space: pre` で改行・空白はそのまま出る
+  - `{badge}text{/badge}` → アクセントソフト背景の帯 / `{mark}text{/mark}` → アクセント色ボールド（`slides/lib/shell.ts` の `renderShell` が変換、v-html レンダリング）
+  - `$` プロンプトは特別扱いせず、ただの文字として書く
+
+**なぜ component か（フェンスにしない理由）**: 以前は ```shell フェンスを codeblock transformer で横取りしていたが、「フェンスが時々 shiki を通らない」フォークになる。`<Shell>` にすると**フェンスは常に shiki のシンタックスハイライト専用**になり、端末パネルは明示的にコンポーネントで opt-in できる。スロットだと Vue の whitespace condense で改行が潰れるので、行は `:lines` 配列で渡す（`<Pipeline>` / `<Summary>` と同じ流儀）。
 
 ## 新規コンポーネントを追加するとき
 
