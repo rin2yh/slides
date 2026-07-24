@@ -209,9 +209,9 @@ ${decks.length ? `    <ul>\n${cards}\n    </ul>` : '    <p class="empty">まだ�
 writeFileSync(join(OUT_ROOT, 'index.html'), html)
 console.log(`generated ${join(OUT_ROOT, 'index.html')} (${decks.length} deck${decks.length === 1 ? '' : 's'})`)
 
-// Copy favicon / PWA assets next to the landing page so the icons referenced in
-// its <head> resolve at the site root (/<repo>/). Each deck already bundles its
-// own copy via Slidev's public dir; this covers the generated index page.
+// Copy favicon assets next to the landing page so the icons referenced in its
+// <head> resolve at the site root (/<repo>/). Each deck already bundles its own
+// copy via Slidev's public dir; this covers the generated index page.
 const ICON_SRC = join(SLIDES_DIR, 'public')
 const ICON_FILES = [
   'favicon.ico',
