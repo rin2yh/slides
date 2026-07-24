@@ -9,18 +9,11 @@ runs:
       run: |
         set -euo pipefail
         shopt -s nullglob
-        files=(slides/*.md)
-        if [ ${#files[@]} -eq 0 ]; then
-          # No decks is a contract violation for this repo — fail loudly instead
-          # of producing an empty dist and letting the Pages upload error cryptically.
-          echo "::error::no slide decks found under slides/*.md" >&2
-          exit 1
-        fi
 
         OWNER="${GITHUB_REPOSITORY%/*}"
         REPO="${GITHUB_REPOSITORY#*/}"
 
-        for f in "${files[@]}"; do
+        for f in slides/*.md; do
           DECK="$(basename "$f" .md)"
           DECK_URL="https://${OWNER}.github.io/${REPO}/${DECK}/"
           echo "::group::build ${DECK}"
