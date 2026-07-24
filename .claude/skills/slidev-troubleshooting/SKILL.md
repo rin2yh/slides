@@ -21,7 +21,7 @@ description: このプロジェクト（/Users/yuuki/workspace/slides）の Slid
 
 **原因**: Vue のテンプレートコンパイラは `<div>` の text 空白を default で `condense` する。`v-pre` はディレクティブ処理を skip するだけで、text 空白圧縮は防げない。
 
-**対処**: `<pre>` 要素を使う。Vue コンパイラは `<pre>` の中の空白は常に保持する。自作パネルも `<pre ... v-pre>` にする（preparser が吐く `<pre class="dc-shell">` がこの形）。行ごとに background を出したいなら `<span>` を `display: block` にして pre 内に並べる（`<div>` は避ける、余計な空白挿入の温床）。
+**対処**: `<pre>` 要素を使う。Vue コンパイラは `<pre>` の中の空白は常に保持する。自作パネルも `<pre ... v-pre>` にする（preparser が吐く `<pre class="dc-code">` がこの形）。行ごとに background を出したいなら `<span>` を `display: block` にして pre 内に並べる（`<div>` は避ける、余計な空白挿入の温床）。
 
 素の ``` ```lang ``` フェンスはこの制約と無関係（shiki が独自に `<pre><code>` を吐く）ので、可能ならそちらで済ませる。
 
@@ -102,7 +102,7 @@ ShikiError: Shiki instance has been disposed
 **原因の切り分け**:
 
 1. **要素同士のマージン collapse が効いていない** — スライドの root コンテナが `display: flex` になっていると collapse しない（flex アイテムは margin collapse しない）。`slides/layouts/default.vue` の `.dc-content` が `display: block` になっているか確認
-2. **要素の default margin が抜けている** — `slides/style.css` の該当要素のルールを確認。特に `pre` / `.dc-shell` / `.dc-lead` / `.dc-caption` は自分で `margin` を持っている
+2. **要素の default margin が抜けている** — `slides/style.css` の該当要素のルールを確認。特に `pre` / `.dc-code` / `.dc-lead` / `.dc-caption` は自分で `margin` を持っている
 3. **sibling selector の型が違う** — 例: `h2 + .dc-lead { margin-top: 0 }` は h2 の**直後**の Lead にしか効かない。間に `<p>` が入ると効かない
 
 **対処原則**:
