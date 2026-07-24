@@ -6,14 +6,16 @@ Marp 製スライド集。
 
 ```bash
 mise install
-npm install
 ```
+
+marp-cli は mise（aqua backend）でスタンドアロンバイナリを取得するため、Node.js は不要。
+PDF / 画像出力を使う場合はシステムに Chrome / Chromium などのブラウザが必要。
 
 ## 新しいスライドを作る
 
 ```bash
 mise run new <name>
-npm run dev
+mise run dev
 ```
 
 ## 記法
@@ -36,5 +38,5 @@ npm run dev
 ## PDF出力
 
 ```bash
-npm run export -- slides/<name>.md --output dist/<name>.pdf
+mise run export -- slides/<name>.md --output dist/<name>.pdf
 ```

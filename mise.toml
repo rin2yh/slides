@@ -1,5 +1,19 @@
 [tools]
-node = "24.14.0"
+# marp-cli スタンドアロンバイナリを aqua 経由で取得（Node 非依存）。
+# PDF / PNG 出力には別途システムのブラウザ（Chrome/Chromium 等）が必要。
+"aqua:marp-team/marp-cli" = "4.5.0"
+
+[tasks.dev]
+description = "開発サーバを起動（ライブリロード）: mise run dev"
+run = "marp --config-file .marprc.yml --server slides"
+
+[tasks.build]
+description = "slides/ を dist/ にHTMLビルド: mise run build"
+run = "marp --config-file .marprc.yml"
+
+[tasks.export]
+description = "PDF出力: mise run export -- slides/<name>.md --output dist/<name>.pdf"
+run = "marp --config-file .marprc.yml --pdf --allow-local-files"
 
 [tasks.new]
 description = "テンプレートから新規スライドを作成: mise run new <name>"
@@ -12,5 +26,5 @@ if [ -e "$dest" ]; then
 fi
 cp slides/templates/template.md "$dest"
 echo "created: $dest"
-echo "next: npm run dev  →  http://localhost:8080/${name}"
+echo "next: mise run dev  →  http://localhost:8080/${name}"
 '''
