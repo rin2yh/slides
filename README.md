@@ -36,11 +36,10 @@ npm run build go-coverage
 slides/
 ├── slides/
 │   ├── go-coverage.md      # 発表資料の例
-│   ├── index.html          # 各デッキ共通の <head>（favicon 等を注入）
 │   ├── style.css           # 共通スタイル
 │   ├── layouts/            # カスタムレイアウト
 │   ├── components/         # カスタムコンポーネント
-│   ├── public/             # 静的アセット（favicon 一式・/images/... 等）
+│   ├── public/images/      # 画像置き場（/images/... で参照）
 │   └── templates/
 │       └── template.md     # Slidev テンプレート（デプロイ対象外）
 ├── package.json
@@ -68,14 +67,6 @@ seoMeta:
 ```
 
 仕組みの詳細（`ogImage: auto` が何をするか、`ogTitle` / `ogDescription` を省略しない理由）は `.claude/rules/frontmatter.md` を参照。
-
-## Favicon
-
-favicon 一式（`favicon.ico` / 各サイズ PNG / `apple-touch-icon.png` / `site.webmanifest` など）は `slides/public/` に置いてある（`rin2yh/blog` と同じアイコン）。
-
-- 各デッキの `<head>` へは `slides/index.html` が `<link rel="icon">` などを注入する。パスは `%BASE_URL%` を使うのでデッキごとの base（`/slides/<name>/`）に追従する
-- Slidev デフォルトの favicon（jsdelivr の CDN）はヘッドマターの `favicon: ''` で無効化している（テンプレートに含まれるので新規デッキも同様）
-- ランディングページ（`scripts/gen-index.mjs` が生成する `dist/index.html`）にも同じ `<link>` を出力し、`slides/public/` のアイコンを `dist/` 直下へコピーする
 
 ## カスタムレイアウト・コンポーネント
 
