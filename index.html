@@ -79,6 +79,13 @@
     box-shadow: var(--shadow-hover);
     outline: none;
   }
+  .card-date {
+    display: block;
+    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: .8rem;
+    color: var(--muted);
+    margin-bottom: .35rem;
+  }
   .card-title {
     display: block;
     font-size: 1.2rem;
@@ -107,12 +114,12 @@
   <div class="wrap">
     <header>
       <p class="eyebrow">Presentations</p>
-      <h1>Slides</h1>
-      <p class="lead">Marp で作成したスライド集です。</p>
+      <h1>スライド一覧</h1>
     </header>
     <ul>
       <li>
         <a class="card" href="./go-coverage/">
+          <span class="card-date">2026-07-24</span>
           <span class="card-title">なぜGoのカバレッジはstmtとfnなのか</span>
           <span class="card-desc">Asakusa.go #8 発表資料</span>
           <span class="card-go" aria-hidden="true">スライドを開く →</span>
