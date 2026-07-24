@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import { renderShell } from '../slides/lib/shell'
+import { renderCode } from '../slides/lib/code'
 
-describe('renderShell', () => {
+describe('renderCode', () => {
   it.each([
     { name: 'passes a plain line through', lines: ['hello'], expected: 'hello' },
     { name: 'leaves a `$` prompt as literal text', lines: ['$ go test -cover'], expected: '$ go test -cover' },
@@ -13,6 +13,6 @@ describe('renderShell', () => {
     { name: 'HTML-escapes &, < and >', lines: ['a < b && c > d'], expected: 'a &lt; b &amp;&amp; c &gt; d' },
     { name: 'joins lines with a newline', lines: ['a', 'b'], expected: 'a\nb' },
   ])('$name', ({ lines, expected }) => {
-    expect(renderShell(lines)).toBe(expected)
+    expect(renderCode(lines)).toBe(expected)
   })
 })
