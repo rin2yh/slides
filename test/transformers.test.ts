@@ -1,39 +1,26 @@
 import { describe, it, expect } from 'vitest'
 import { renderShell } from '../slides/setup/transformers'
 
+const PRE = (inner: string) => `<pre class="dc-shell">${inner}</pre>`
+
 describe('renderShell', () => {
-  it('wraps the content in a dc-shell <pre>', () => {
-    expect(renderShell('hello')).toBe('<pre class="dc-shell">hello</pre>')
-  })
-
-  it('turns a line-leading `$ ` into the prompt glyph', () => {
-    expect(renderShell('$ go test -cover')).toBe(
-      '<pre class="dc-shell"><span class="prompt">$</span> go test -cover</pre>',
-    )
-  })
-
-  it('only rewrites `$ ` at the start of a line', () => {
-    // A `$` mid-line (e.g. a shell variable) is left untouched.
-    expect(renderShell('echo $HOME')).toBe('<pre class="dc-shell">echo $HOME</pre>')
-  })
-
-  it('maps {badge} and {mark} to accent spans', () => {
-    const html = renderShell('coverage 80% {badge}of statements{/badge} {mark}66.7%{/mark}')
-    expect(html).toContain('<span class="badge">of statements</span>')
-    expect(html).toContain('<span class="mark">66.7%</span>')
-  })
-
-  it('HTML-escapes &, < and >', () => {
-    expect(renderShell('a < b && c > d')).toContain('a &lt; b &amp;&amp; c &gt; d')
-  })
-
-  it('strips a single trailing newline (the fence terminator)', () => {
-    expect(renderShell('line\n')).toBe('<pre class="dc-shell">line</pre>')
-  })
-
-  it('preserves multiple lines', () => {
-    expect(renderShell('$ a\nb')).toBe(
-      '<pre class="dc-shell"><span class="prompt">$</span> a\nb</pre>',
-    )
+  it.each([
+    { name: 'wraps content in a dc-shell <pre>', input: 'hello', expected: PRE('hello') },
+    {
+      name: 'turns a line-leading `$ ` into the prompt glyph',
+      input: '$ go test -cover',
+      expected: PRE('<span class="prompt">$</span> go test -cover'),
+    },
+    { name: 'leaves a mid-line `$` (shell var) untouched', input: 'echo $HOME', expected: PRE('echo $HOME') },
+    {
+      name: 'maps {badge} and {mark} to accent spans',
+      input: 'x {badge}stmts{/badge} {mark}66.7%{/mark}',
+      expected: PRE('x <span class="badge">stmts</span> <span class="mark">66.7%</span>'),
+    },
+    { name: 'HTML-escapes &, < and >', input: 'a < b && c > d', expected: PRE('a &lt; b &amp;&amp; c &gt; d') },
+    { name: 'strips a single trailing newline', input: 'line\n', expected: PRE('line') },
+    { name: 'preserves multiple lines', input: '$ a\nb', expected: PRE('<span class="prompt">$</span> a\nb') },
+  ])('$name', ({ input, expected }) => {
+    expect(renderShell(input)).toBe(expected)
   })
 })
