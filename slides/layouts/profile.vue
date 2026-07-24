@@ -5,7 +5,6 @@ const props = defineProps<{
   image?: string
   name?: string
   facts?: { label: string, value: string }[]
-  hashtag?: string
 }>()
 
 const resolvedImage = computed(() => {
@@ -29,7 +28,6 @@ const resolvedImage = computed(() => {
         <slot />
       </div>
     </div>
-    <PageFooter :hashtag="hashtag" />
   </div>
 </template>
 

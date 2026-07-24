@@ -65,7 +65,7 @@ no: 1
 
 本文をここに記述します。読みやすい行間と文字サイズを保ち、1スライドに詰め込みすぎないようにします。**強調したい語**はアクセント色にできます。
 
-<Lead>最も伝えたい一文をここに。</Lead>
+**最も伝えたい一文をここに。**
 
 ---
 ---
@@ -121,7 +121,7 @@ coverage: 80.0% {badge}of statements{/badge}
 
 > ここに引用文を配置します。原文の主張をそのまま示し、根拠として使います。
 
-<Caption>— 出典・著者・媒体（年）</Caption>
+— 出典・著者・媒体（年）
 
 ---
 ---
@@ -138,15 +138,13 @@ coverage: 80.0% {badge}of statements{/badge}
 
 ## Q. 今日の問いをここに?
 
-<Lead>A. 結論をここに一文で</Lead>
+**A. 結論をここに一文で**
 
-<Caption>要点</Caption>
+要点
 
-<div class="summary">
-  <div class="item"><span class="num">1.</span><span>要点その1をここに</span></div>
-  <div class="item"><span class="num">2.</span><span>要点その2をここに</span></div>
-  <div class="item"><span class="num">3.</span><span>要点その3をここに</span></div>
-</div>
+1. 要点その1をここに
+2. 要点その2をここに
+3. 要点その3をここに
 
 ---
 layout: cover

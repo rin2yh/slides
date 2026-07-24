@@ -86,7 +86,7 @@ title: Goのカバレッジで取れるのはstmtとfnだけ?
 
 <Code :lines="['% Stmts | {badge}% Branch{/badge} | % Funcs | % Lines']" />
 
-<Lead>Vitest では branch も取れるのに、なぜGoは取れないのか?</Lead>
+**Vitest では branch も取れるのに、なぜGoは取れないのか?**
 
 ---
 title: Goの選択とその理由
@@ -107,7 +107,7 @@ title: 計測にはバイナリ計測とソースコード計測の2系統があ
   { label: '実行', branch: { title: 'バイナリ計測', desc: ['実行中のバイナリを外から監視し、', 'どこが実行されたか記録する'] } },
 ]" />
 
-<Lead>Goはどちらを選んだのか。</Lead>
+**Goはどちらを選んだのか。**
 
 ---
 title: ソースコード計測
@@ -122,13 +122,9 @@ title: ソースコード計測
 
 > "For the new test coverage tool for Go, we took a different approach that avoids dynamic debugging. The idea is simple: Rewrite the package's source code before compilation to add instrumentation..."
 
-<Caption>— The cover story, Rob Pike, The Go Blog (2013)</Caption>
-
-<Lead size="sm">
+— The cover story, Rob Pike, The Go Blog (2013)
 
 Go標準ライブラリの**構文解析・整形パッケージ**で実現。Pikeが最重視した弱点の**移植性**を回避できる。
-
-</Lead>
 
 ---
 title: 計測の単位はブロック
@@ -218,11 +214,7 @@ title: 集計
 
 ## 集計
 
-<Caption>
-
 **`Abs(3)`** を 1 回テストした場合
-
-</Caption>
 
 | ブロック | カウンタ | 場所 | stmt数 | 実行 |
 |---|---|---|:-:|:-:|
@@ -253,14 +245,14 @@ title: Q. なぜGoのカバレッジはstmtとfnなのか?
 
 ## Q. なぜGoのカバレッジはstmtとfnなのか?
 
-<Lead>A. ブロック単位のソースコード計装を行っているから</Lead>
+**A. ブロック単位のソースコード計装を行っているから**
 
-<Caption>2 つの決定と、その理由</Caption>
+2 つの決定と、その理由
 
-<Summary :items="[
-  { text: '計測方式は <b>ソースコード計測</b>', reason: 'AST だけで完結し環境に依存しない＝移植性が高いから' },
-  { text: '計測単位は <b>ブロック単位</b>', reason: 'ソース書き換えでは分岐がソース上に現れず、波括弧で区切られたブロックが自然な単位だから' },
-]" />
+1. 計測方式は **ソースコード計測**
+    - 理由: AST だけで完結し環境に依存しない＝移植性が高いから
+2. 計測単位は **ブロック単位**
+    - 理由: ソース書き換えでは分岐がソース上に現れず、波括弧で区切られたブロックが自然な単位だから
 
 ---
 layout: cover

@@ -4,7 +4,6 @@ defineProps<{
   speaker?: string
   handle?: string
   handleUrl?: string
-  hashtag?: string
 }>()
 </script>
 
@@ -20,7 +19,6 @@ defineProps<{
         <span v-else class="handle dc-mono">{{ handle }}</span>
       </template>
     </div>
-    <PageFooter :hashtag="hashtag" :show-number="false" />
   </div>
 </template>
 

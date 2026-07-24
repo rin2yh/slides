@@ -1,13 +1,6 @@
-<script setup lang="ts">
-defineProps<{
-  hashtag?: string
-}>()
-</script>
-
 <template>
   <div class="slidev-layout dc-content">
     <slot />
-    <PageFooter :hashtag="hashtag" />
   </div>
 </template>
 

@@ -102,8 +102,8 @@ ShikiError: Shiki instance has been disposed
 **原因の切り分け**:
 
 1. **要素同士のマージン collapse が効いていない** — スライドの root コンテナが `display: flex` になっていると collapse しない（flex アイテムは margin collapse しない）。`slides/layouts/default.vue` の `.dc-content` が `display: block` になっているか確認
-2. **要素の default margin が抜けている** — `slides/style.css` の該当要素のルールを確認。特に `pre` / `.dc-code` / `.dc-lead` / `.dc-caption` は自分で `margin` を持っている
-3. **sibling selector の型が違う** — 例: `h2 + .dc-lead { margin-top: 0 }` は h2 の**直後**の Lead にしか効かない。間に `<p>` が入ると効かない
+2. **要素の default margin が抜けている** — `slides/style.css` の該当要素のルールを確認。特に `pre` / `.dc-code` は自分で `margin` を持っている
+3. **sibling selector の型が違う** — 例: `A + B { margin-top: 0 }` は A の**直後**の B にしか効かない。間に `<p>` が入ると効かない
 
 **対処原則**:
 
