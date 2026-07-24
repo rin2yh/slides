@@ -4,7 +4,7 @@ import type MarkdownIt from 'markdown-it'
 // `{.class}` at the end of a row's last cell → `class` on its `<tr>`.
 // Must be inside the last cell (`2 {.total} |`), not a trailing cell
 // (`| 2 | {.total}`): markdown-it drops cells past the header column count.
-function markdownItRowAttrs(md: MarkdownIt) {
+export function markdownItRowAttrs(md: MarkdownIt) {
   // Before `inline` so the marker is stripped before MDC/comark parses the
   // cell (else `{.class}` becomes an inline span instead of the row class).
   md.core.ruler.before('inline', 'row_attrs', (state) => {
