@@ -1,5 +1,5 @@
 name: Build decks
-description: Build every Marp deck under slides/*.md into dist/<deck>, including each deck's OGP image and shared assets. Assumes Node is already set up.
+description: Build every Marp deck under slides/*.md into dist/<deck>, including each deck's OGP image and shared assets. Assumes the marp CLI is already on PATH.
 
 runs:
   using: composite
@@ -19,7 +19,7 @@ runs:
           echo "::group::build ${DECK}"
 
           # HTML
-          npx marp --config-file .marprc.yml \
+          marp --config-file .marprc.yml \
             "slides/${DECK}.md" \
             --html \
             --url "${DECK_URL}" \
@@ -31,7 +31,7 @@ runs:
           cp slides/public/favicon.ico "dist/${DECK}/favicon.ico"
 
           # OGP image (first slide)
-          npx marp --config-file .marprc.yml \
+          marp --config-file .marprc.yml \
             "slides/${DECK}.md" \
             --image png \
             --allow-local-files \

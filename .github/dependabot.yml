@@ -1,12 +1,7 @@
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    cooldown:
-      default-days: 7
-
+  # marp-cli は mise (aqua backend) で管理しており Dependabot 非対応のため、
+  # バージョン更新は mise.toml を手動で編集する。
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
