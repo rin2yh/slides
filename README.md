@@ -20,7 +20,7 @@ npm run dev
 
 ## 画像・アセットを足す
 
-`slides/public/` に置き、Markdown からは `./public/foo.svg` の相対パスで参照する。dev / prod 両方でそのまま解決する（詳細と絶対パス禁止の理由は `.claude/rules/authoring-anti-patterns.md`）。
+`slides/public/` に置き、Markdown からは `./public/foo.svg` の相対パスで参照する。dev / prod 両方でそのまま解決する。絶対パス (`/foo.svg`) は GitHub Pages のサブパス配信で壊れるので使わない。
 
 ## PDF に書き出す
 
@@ -34,4 +34,4 @@ npm run export -- slides/<name>.md --output dist/<name>.pdf
 
 ## 装飾を変える
 
-`slides/theme.css` に集約されている。個別スライドで `<style>` や inline style を書かない。詳細は `.claude/rules/`。
+`slides/theme.css` に集約されている。個別スライドで `<style>` や inline style を書かない。
