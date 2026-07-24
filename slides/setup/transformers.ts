@@ -1,25 +1,8 @@
 import { defineTransformersSetup, defineCodeblockTransformer } from '@slidev/types'
 
 // Render ```shell / ```sh / ```console / ```terminal fences as the terminal
-// panel HTML.
-//
-//   ```shell
-//   $ go test -cover
-//   coverage: 80.0% {badge}of statements{/badge}
-//   ```
-//
-// becomes
-//
-//   <pre class="dc-shell"><span class="prompt">$</span> go test -cover
-//   coverage: 80.0% <span class="badge">of statements</span></pre>
-//
-// A line-leading `$ ` becomes the muted prompt glyph, and
-// `{badge}…{/badge}` / `{mark}…{/mark}` map to the accent-soft chip and accent
-// bold spans. Any other language returns undefined and falls through to
-// Slidev's normal (shiki) fence rendering.
-//
-// This runs on the already-tokenized fence (info + content) instead of the raw
-// Markdown text, so it replaces the preparser's regex-based rewrite.
+// panel: line-leading `$ ` → prompt glyph, `{badge}…{/badge}` / `{mark}…{/mark}`
+// → accent spans. Other languages fall through to shiki.
 
 const SHELL_LANGS = new Set(['shell', 'sh', 'console', 'terminal'])
 
