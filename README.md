@@ -1,6 +1,6 @@
 # slides
 
-[Slidev](https://sli.dev/) で作成したスライド集です。
+[Marp](https://marp.app/) で作成したスライド集です。
 
 ## セットアップ
 
@@ -11,19 +11,25 @@ npm install
 
 ## コマンド
 
-`slidev` にスライドのパスを渡すだけ（`npm run` 経由でもよい）。
+`.marprc.yml` に共通設定（テーマパス等）が入っているので、`npm run` 経由で叩くだけ。
 
 | コマンド | 説明 |
 |---|---|
-| `npm run dev -- slides/<name>.md` | プレビュー起動（ブラウザを自動で開く） |
-| `npm run build -- slides/<name>.md` | 静的サイトを `dist/` に出力 |
-| `npm run export -- slides/<name>.md` | PDF を出力（`playwright-chromium` が必要） |
+| `npm run dev` | プレビューサーバ起動（`slides/` を配信、`http://localhost:8080`） |
+| `npm run build -- slides/<name>.md --output dist/<name>/index.html` | 静的 HTML を出力 |
+| `npm run export -- slides/<name>.md --output dist/<name>.pdf` | PDF を出力 |
 
 例:
 
 ```bash
-npm run dev -- slides/go-coverage.md
-npm run build -- slides/go-coverage.md
+npm run dev
+npm run build -- slides/go-coverage.md --output dist/go-coverage/index.html
+```
+
+ローカルで完全にデプロイと同じ形にしたいときは、ビルド後に共通アセットもコピー：
+
+```bash
+cp -r slides/public dist/go-coverage/public
 ```
 
 ## ディレクトリ構成
@@ -32,15 +38,20 @@ npm run build -- slides/go-coverage.md
 slides/
 ├── slides/
 │   ├── go-coverage.md      # 発表資料の例
-│   ├── style.css           # 共通スタイル
-│   ├── layouts/            # カスタムレイアウト
-│   ├── components/         # カスタムコンポーネント
-│   ├── public/images/      # 画像置き場（/images/... で参照）
+│   ├── theme.css           # Marp テーマ（/* @theme dc */）
+│   ├── public/             # 共通アセット（画像・SVG 等）
+│   │   ├── favicon.ico
+│   │   ├── pipeline.svg
+│   │   └── images/
 │   └── templates/
-│       └── template.md     # Slidev テンプレート（デプロイ対象外）
+│       └── template.md     # 新規スライドの雛形（デプロイ対象外）
+├── index.html              # サイトルート (`/repo/`) のランディングページ
+├── .marprc.yml             # Marp CLI 共通設定
 ├── package.json
 └── mise.toml
 ```
+
+新しいスライドを追加したときは、`index.html` の `<ul>` に `<li>` を 1 個手で足す。
 
 `slides/*.md`（直下のみ）が GitHub Pages のビルド対象。`templates/` はサブディレクトリなので対象外。
 
@@ -50,24 +61,17 @@ slides/
 
 ```bash
 mise run new <name>
-npm run dev -- slides/<name>.md
+npm run dev
 ```
+
+## 画像・アセットの参照
+
+`slides/public/` に置き、Markdown からは `./public/foo.svg` の相対パスで参照する。開発時は Marp サーバの root が `slides/` なのでそのまま解決し、ビルド後は CI が `slides/public/` を `dist/<deck>/public/` にコピーするので同じパスが通る。パス指定のルールは `.claude/rules/authoring-anti-patterns.md` を参照。
 
 ## OGP画像
 
-各スライドのヘッドマターに `seoMeta` を書くと、SNS シェア時のカード（og:image 等）が出る。
+CI が各デッキの 1 枚目を PNG に書き出して `dist/<deck>/og-image.png` を生成し、HTML の `<meta property="og:image">` にそのフル URL を自動で埋め込む（`.github/actions/build-deck/action.yml` の `--og-image` フラグ）。`og:image` があると Twitter カードは自動で `summary_large_image` に昇格するので、追加設定は不要。
 
-```yaml
-seoMeta:
-  ogTitle: タイトル
-  ogDescription: 説明文
-  ogImage: auto
-```
+## デザインシステム
 
-仕組みの詳細（`ogImage: auto` が何をするか、`ogTitle` / `ogDescription` を省略しない理由）は `.claude/rules/frontmatter.md` を参照。
-
-## カスタムレイアウト・コンポーネント
-
-- `slides/layouts/*.vue` は自動で layout として使える
-- `slides/components/*.vue` は Markdown 内でそのまま呼べる
-- `slides/style.css` / `slides/uno.config.ts` でグローバルスタイルを拡張
+装飾は `slides/theme.css` に集約する。個別スライドで `<style>` タグや inline style を書かない。詳細は `.claude/rules/` を参照。

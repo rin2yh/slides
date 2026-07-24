@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1660 340" font-family="'Noto Sans JP', sans-serif">
+  <style>
+    .axis { stroke: #c4ccd0; stroke-width: 4; }
+    .node { fill: #0a7c98; }
+    .node-muted { fill: #8a8f95; }
+    .arrow { stroke: #c4ccd0; stroke-width: 4; fill: none; }
+    .tick { stroke: #0a7c98; stroke-width: 4; }
+    .caption { fill: #3a4046; font-size: 32px; }
+    .branch-title { fill: #0a7c98; font-size: 32px; font-weight: 700; }
+    .branch-desc { fill: #5a6066; font-size: 27px; }
+  </style>
+
+  <line class="axis" x1="200" y1="220" x2="1460" y2="220" />
+
+  <line class="tick" x1="200" y1="160" x2="200" y2="220" />
+  <text class="branch-title" x="200" y="40" text-anchor="middle">ソースコード計測</text>
+  <text class="branch-desc" x="200" y="90" text-anchor="middle">コンパイル前にソースを</text>
+  <text class="branch-desc" x="200" y="128" text-anchor="middle">書き換えてカウンタを挿入</text>
+
+  <line class="tick" x1="1460" y1="160" x2="1460" y2="220" />
+  <text class="branch-title" x="1460" y="40" text-anchor="middle">バイナリ計測</text>
+  <text class="branch-desc" x="1460" y="90" text-anchor="middle">実行中のバイナリを外から監視し、</text>
+  <text class="branch-desc" x="1460" y="128" text-anchor="middle">どこが実行されたか記録する</text>
+
+  <circle class="node" cx="200" cy="220" r="14" />
+  <circle class="node-muted" cx="830" cy="220" r="11" />
+  <circle class="node" cx="1460" cy="220" r="14" />
+
+  <polyline class="arrow" points="505,210 525,220 505,230" />
+  <polyline class="arrow" points="1135,210 1155,220 1135,230" />
+
+  <text class="caption" x="200" y="290" text-anchor="middle">ソースコード</text>
+  <text class="caption" x="830" y="290" text-anchor="middle">コンパイル</text>
+  <text class="caption" x="1460" y="290" text-anchor="middle">実行</text>
+</svg>

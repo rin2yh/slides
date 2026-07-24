@@ -8,7 +8,7 @@ paths:
 
 ## 通常のコード（言語ハイライト）
 
-素の ``` ```lang ``` フェンス。shiki が色付けする。
+素の ``` ```lang ``` フェンス。Marp（marp-core）が highlight.js でシンタックスハイライトする。
 
 ````md
 ```go
@@ -21,47 +21,40 @@ func Abs(n int) int {
 ```
 ````
 
-## 行の diff / 強調
+対応言語は highlight.js の標準セット（`go` / `shell` / `bash` / `ts` / `js` / `python` など）。
 
-shiki notation transformer（`slides/setup/shiki.ts` で登録済み）を使う。**行末コメント**に書く:
+## コード内の注釈
+
+diff アノテーションや行ハイライト（Slidev で使っていた `[!code ++]` `[!code --]` `[!code highlight]`）は**使わない**方針。「この行が挿入された」「この行が実行された」のような説明は、**コード内の行コメント**で書く：
 
 ````md
 ```go
 func Abs(n int) int {
-    GoCover.Count[0] = 0 // [!code ++]
-    if n < 0 { // [!code highlight]
-        GoCover.Count[1] = 0 // [!code --]
-        return -n // [!code --]
-    } // [!code --]
+    GoCover.Count[0] = 1   // 通った
+    if n < 0 {
+        GoCover.Count[1] = 0   // 通らなかった
+        return -n
+    }
+    GoCover.Count[2] = 1   // 通った
     return n
 }
 ```
 ````
 
-- `// [!code ++]` → アクセント色 + 濃い bg（実行 / 挿入）
-- `// [!code --]` → 灰色、bg なし（通らなかった / 削除）
-- `// [!code highlight]` → 薄い bg（文脈として注目）
-- `// [!code focus]` → focus 対象以外を薄くしてフォーカス強調（`transformerNotationFocus` も登録済み）
-
-notation コメント自体は出力から取り除かれる（見た目には残らない）。
-
 ## 端末出力
 
-`<Code>` コンポーネント（`slides/components/Code.vue`）。各行を文字列で `:lines` に渡す:
+素の ``` ```shell ``` フェンス。プロンプトも文字として素直に書く：
 
-```md
-<Code :lines="[
-  '$ go test -cover',
-  'coverage: 80.0% {badge}of statements{/badge}',
-]" />
+````md
+```shell
+$ go test -cover
+coverage: 80.0% of statements
 ```
+````
 
-- `{badge}text{/badge}` → アクセントソフト背景の帯
-- `{mark}text{/mark}` → アクセント色ボールド
-- `$` プロンプトはそのまま文字として書く（特別扱いはしない）
-- コードフェンス（```shell 等）は使わない。フェンスは shiki のシンタックスハイライト用。端末パネルにしたい行は `<Code>` を使う（フェンスを横取りする変換をやめ、Markdown だけで完結）
+端末パネル用の Vue コンポーネント（`<Code :lines>` / `{badge}` / `{mark}`）は廃止。強調が要る文字はそのまま書き、装飾はしない。
 
 ## リスト（参考）
 
-- `1. 導入` → **目次スタイル**（44px、番号は mono / accent）。目次スライドは素の Markdown ol で書く（自前コンポーネントを作らない）
+- `1. 導入` → **目次スタイル**（44px、番号は mono / accent）
 - `- item` → 通常の bullet（32px）
