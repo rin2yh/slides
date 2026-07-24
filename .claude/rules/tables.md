@@ -7,31 +7,26 @@ paths:
 # テーブル記述規約
 
 - ベースは Markdown 表。素直に書ける限り HTML `<table>` にしない
-- 行アクセントは preparser の属性記法で書く
+- 行アクセントは **最後のセル内の末尾に `{.class}`** を書く
 
 ## 記法
 
 ```md
 | 単位 | 分かること | コスト | 仕組み |
 |---|---|---|:-:|
-| ブロック単位（Go cover） | ブロックが実行されたか | 軽い | ブロック先頭にカウンタ1つ | {.accent}
+| ブロック単位（Go cover） | ブロックが実行されたか | 軽い | ブロック先頭にカウンタ1つ {.accent} |
 | 式・条件単位 | branch / condition | 重い | `&&` / `\|\|` を展開 |
 ```
 
-- 行末に `| {.className}` を付けると、preparser が **その表全体を HTML に書き換え** てクラスを付ける
+- **行の最後のセルの末尾に `{.className}`** を書くと、その `<tr>` にクラスが付く（`slides/vite.config.ts` の markdown-it プラグインが行トークンへ付与）
 - 使えるクラス: `.accent`（強調行）/ `.dim`（ミュート行）/ `.ok`（実行済みマーカ行）/ `.total`（合計行、上罫線 + 太字）
-- 列配置は `|:-:|`（center）/ `|--:|`（right）で。preparser が `text-align` を td/th に付与する
-- セル内でパイプを書くには `\|`（preparser は `\|` エスケープと `` ` `` code span 内のパイプを尊重）
+- `{.class}` マーカーはレンダリング時に取り除かれる（セルの表示内容には残らない）
+- 列配置は `|:-:|`（center）/ `|--:|`（right）で。markdown-it がネイティブに `text-align` を付与する
+- セル内でパイプを書くには `\|`（markdown-it 標準のエスケープ）
 
-## `{.class}` を付けた表のセル内で使える記法
+## セル内で使える記法
 
-preparser が表全体を HTML に書き出すとき、セル内容は独自の軽量パーサ (`renderCellInline`) を通る。**`**bold**` と `` `code` `` しか変換されない**。以下はセル内で効かない:
-
-- Markdown リンク `[text](url)` / autolink `<https://…>`
-- MDC 記法 / 他の Markdown インライン記法
-- `<br>` を書きたい場合は生のまま入れれば通る（HTML block として書き出される）
-
-素の Markdown 表（`{.class}` なし）ならセル内容は markdown-it が処理するので通常の Markdown が全部使える。**リンクやリッチな記法をセルに入れたい表では、代わりに raw `<table>` を書く**（inline style は書かず、必要なら CSS クラスを足す）。
+セル内容は markdown-it（+ MDC）が普通にインラインパースするので、**通常の Markdown が全部使える**（`**bold**` / `` `code` `` / リンク `[text](url)` / autolink `<https://…>` / MDC 記法など）。`{.class}` を付けた行のセルも同じ。生 HTML（`<br>` 等）もそのまま通る。
 
 ## Markdown で書けないもの
 
