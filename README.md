@@ -37,7 +37,6 @@ cp -r slides/public dist/go-coverage/public
 ```
 slides/
 ├── slides/
-│   ├── index.html          # サイトルート (`/repo/`) のランディングページ
 │   ├── go-coverage.md      # 発表資料の例
 │   ├── theme.css           # Marp テーマ（/* @theme dc */）
 │   ├── public/             # 共通アセット（画像・SVG 等）
@@ -51,9 +50,7 @@ slides/
 └── mise.toml
 ```
 
-新しいスライドを追加したときは、`slides/index.html` の `<ul>` に `<li>` を 1 個手で足す。dev server（`npm run dev`）で `http://localhost:8080/` を開けばリンク一覧の見た目を確認できる。
-
-`slides/*.md`（直下のみ）が GitHub Pages のビルド対象。`templates/` はサブディレクトリなので対象外。
+`slides/*.md`（直下のみ）が GitHub Pages のビルド対象。`templates/` はサブディレクトリなので対象外。ランディングページは無いので、`https://<user>.github.io/<repo>/<deck>/` で直接開く。
 
 ## 新しいスライドを作る
 
