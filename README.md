@@ -11,12 +11,12 @@ npm install
 
 ## 新しいスライドを書く
 
-`slides/templates/template.md` から `slides/<name>.md` を作り、dev server を起動する。プレビューは `http://localhost:8080/<name>`。
-
 ```bash
 mise run new <name>
 npm run dev
 ```
+
+`mise run new` がテンプレートをコピーし、プレビュー URL を教えてくれる。
 
 ## 画像・アセットを足す
 
