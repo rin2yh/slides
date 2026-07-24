@@ -9,20 +9,31 @@ mise install
 npm install
 ```
 
-## 新しいスライドを書く
+## 新しいスライドを作る
 
 ```bash
 mise run new <name>
 npm run dev
 ```
 
-`mise run new` がテンプレートをコピーし、プレビュー URL を教えてくれる。
+## 記法
 
-## 画像・アセットを足す
+### これまで通りMarkdown で書けるもの
 
-`slides/public/` に置き、Markdown からは `./public/foo.svg` の相対パスで参照する。dev / prod 両方でそのまま解決する。絶対パス (`/foo.svg`) は GitHub Pages のサブパス配信で壊れるので使わない。
+見出し / リスト / テーブル / コードフェンス / blockquote / リンク / 画像
 
-## PDF に書き出す
+### Marp 固有のもの
+
+- スライド区切りは `---`
+- フロントマターは `marp: true` から始める（`theme` / `paginate` / `size` / `footer` / `title` / `description`）
+- 1 枚だけに効かせる指定は `<!-- _class: cover|section|profile -->`（`_` 始まりがそのスライド限定）
+- 画像サイズは `![w:340](url)` / `![h:200](url)`
+
+## 画像・アセットを追加する
+
+`slides/public/` に置き、Markdown からは `./public/foo.svg` の相対パスで参照する。
+
+## PDF出力
 
 ```bash
 npm run export -- slides/<name>.md --output dist/<name>.pdf
