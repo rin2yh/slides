@@ -1,44 +1,37 @@
 # slides
 
-[Marp](https://marp.app/) で作成したスライド集です。
+Marp 製スライド集。
 
-## セットアップ
+## 初回セットアップ
 
 ```bash
 mise install
 npm install
 ```
 
-## コマンド
+## 新しいスライドを書く
 
-npm scripts は `package.json` を見る。`dev` はプレビューサーバを `http://localhost:8080` で起動し、`build` / `export` は追加引数でデッキと出力先を渡す：
-
-```bash
-npm run build -- slides/go-coverage.md --output dist/go-coverage/index.html
-npm run export -- slides/go-coverage.md --output dist/go-coverage.pdf
-```
-
-ローカルで完全にデプロイと同じ形にしたいときは、ビルド後に共通アセットも `cp -r slides/public dist/go-coverage/public`。
-
-`slides/*.md`（直下のみ）が GitHub Pages のビルド対象。`templates/` はサブディレクトリなので対象外。ランディングページは無いので、`https://<user>.github.io/<repo>/<deck>/` で直接開く。
-
-## 新しいスライドを作る
-
-テンプレートから `slides/<name>.md` を作る mise task。
+`slides/templates/template.md` から `slides/<name>.md` を作り、dev server を起動する。プレビューは `http://localhost:8080/<name>`。
 
 ```bash
 mise run new <name>
 npm run dev
 ```
 
-## 画像・アセットの参照
+## 画像・アセットを足す
 
-`slides/public/` に置き、Markdown からは `./public/foo.svg` の相対パスで参照する。開発時は Marp サーバの root が `slides/` なのでそのまま解決し、ビルド後は CI が `slides/public/` を `dist/<deck>/public/` にコピーするので同じパスが通る。パス指定のルールは `.claude/rules/authoring-anti-patterns.md` を参照。
+`slides/public/` に置き、Markdown からは `./public/foo.svg` の相対パスで参照する。dev / prod 両方でそのまま解決する（詳細と絶対パス禁止の理由は `.claude/rules/authoring-anti-patterns.md`）。
 
-## OGP画像
+## PDF に書き出す
 
-CI が各デッキの 1 枚目を PNG に書き出して `dist/<deck>/og-image.png` を生成し、HTML の `<meta property="og:image">` にそのフル URL を自動で埋め込む（`.github/actions/build-deck/action.yml` の `--og-image` フラグ）。`og:image` があると Twitter カードは自動で `summary_large_image` に昇格するので、追加設定は不要。
+```bash
+npm run export -- slides/<name>.md --output dist/<name>.pdf
+```
 
-## デザインシステム
+## 公開する
 
-装飾は `slides/theme.css` に集約する。個別スライドで `<style>` タグや inline style を書かない。詳細は `.claude/rules/` を参照。
+`main` に push すると GitHub Actions が全デッキをビルドして GitHub Pages に公開する。各デッキは `https://<user>.github.io/<repo>/<name>/` で開く。OGP 画像 (`og-image.png`) と `og:image` / `og:url` メタタグは CI 側で埋め込まれる。
+
+## 装飾を変える
+
+`slides/theme.css` に集約されている。個別スライドで `<style>` や inline style を書かない。詳細は `.claude/rules/`。
