@@ -55,6 +55,18 @@ const esc = (s) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
 
+// Favicon assets (in slides/public/). One descriptor drives both the landing
+// page's <head> links and the copy step at the bottom, so they can't drift.
+const ICONS = [
+  { file: 'favicon.ico', type: null, sizes: 'any' },
+  { file: 'favicon-32x32.png', type: 'image/png', sizes: '32x32' },
+  { file: 'favicon-16x16.png', type: 'image/png', sizes: '16x16' },
+]
+
+const faviconLinks = ICONS.map(
+  (i) => `<link rel="icon"${i.type ? ` type="${i.type}"` : ''} sizes="${i.sizes}" href="./${i.file}">`,
+).join('\n')
+
 const decks = readdirSync(SLIDES_DIR)
   .filter((f) => f.endsWith('.md'))
   .map((f) => {
@@ -89,9 +101,7 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Slides</title>
-<link rel="icon" href="./favicon.ico" sizes="any">
-<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png">
+${faviconLinks}
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -212,17 +222,7 @@ console.log(`generated ${join(OUT_ROOT, 'index.html')} (${decks.length} deck${de
 // <head> resolve at the site root (/<repo>/). Each deck already bundles its own
 // copy via Slidev's public dir; this covers the generated index page.
 const ICON_SRC = join(SLIDES_DIR, 'public')
-const ICON_FILES = [
-  'favicon.ico',
-  'favicon-32x32.png',
-  'favicon-16x16.png',
-]
-let copied = 0
-for (const f of ICON_FILES) {
-  const src = join(ICON_SRC, f)
-  if (existsSync(src)) {
-    copyFileSync(src, join(OUT_ROOT, f))
-    copied++
-  }
+for (const { file } of ICONS) {
+  const src = join(ICON_SRC, file)
+  if (existsSync(src)) copyFileSync(src, join(OUT_ROOT, file))
 }
-console.log(`copied ${copied} favicon asset${copied === 1 ? '' : 's'} to ${OUT_ROOT}`)

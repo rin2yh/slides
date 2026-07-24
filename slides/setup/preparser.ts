@@ -217,23 +217,22 @@ function rewriteShellFences(md: string): string {
 // never changes. Skips decks that already set `favicon` explicitly.
 function disableDefaultFavicon(lines: string[]): void {
   if (lines[0]?.trim() !== '---') return
-  let end = -1
   for (let i = 1; i < lines.length; i++) {
-    if (lines[i].trim() === '---') { end = i; break }
+    const t = lines[i].trim()
+    if (/^favicon\s*:/.test(t)) return // deck sets favicon explicitly; leave it
+    if (t === '---') { // end of headmatter with no favicon key — inject one
+      lines.splice(i, 0, "favicon: ''")
+      return
+    }
   }
-  if (end === -1) return
-  for (let i = 1; i < end; i++) {
-    if (/^favicon\s*:/.test(lines[i])) return
-  }
-  lines.splice(end, 0, "favicon: ''")
 }
 
 export default definePreparserSetup(() => {
   return [{
+    name: 'favicon',
+    transformRawLines: disableDefaultFavicon,
+  }, {
     name: 'row-attrs',
-    transformRawLines(lines) {
-      disableDefaultFavicon(lines)
-    },
     transformSlide(content, frontmatter) {
       if (!frontmatter.layout) {
         const detected = detectLayout(content)
