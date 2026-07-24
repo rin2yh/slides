@@ -55,11 +55,6 @@ const esc = (s) =>
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
 
-// Favicon (in slides/public/) — the same icon the decks use. Referenced in the
-// landing page <head> below and copied next to it so it resolves at the site
-// root (/<repo>/).
-const FAVICON = 'favicon.ico'
-
 const decks = readdirSync(SLIDES_DIR)
   .filter((f) => f.endsWith('.md'))
   .map((f) => {
@@ -94,7 +89,7 @@ const html = `<!doctype html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Slides</title>
-<link rel="icon" href="./${FAVICON}">
+<link rel="icon" href="./favicon.ico">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -214,5 +209,4 @@ console.log(`generated ${join(OUT_ROOT, 'index.html')} (${decks.length} deck${de
 // Copy the favicon next to the landing page so the icon referenced in its
 // <head> resolves at the site root (/<repo>/). Each deck already bundles its own
 // copy via Slidev's public dir; this covers the generated index page.
-const faviconSrc = join(SLIDES_DIR, 'public', FAVICON)
-if (existsSync(faviconSrc)) copyFileSync(faviconSrc, join(OUT_ROOT, FAVICON))
+copyFileSync(join(SLIDES_DIR, 'public', 'favicon.ico'), join(OUT_ROOT, 'favicon.ico'))
