@@ -1,6 +1,6 @@
 ---
 name: slidev-components
-description: このプロジェクト（/Users/yuuki/workspace/slides）の自作 Vue コンポーネント (`<Lead>` `<Caption>` `<Summary>` `<Refs>` `<Pipeline>` `<Code>`) の API と使い分け。Markdown だけでは表現しづらいスライド上のパターン（punchline / 引用キャプション / 番号付き決定 + 理由 / 参考文献 / 数直線パイプライン図）を書きたい・書いたけど期待通りに描画されない、と言ったら参照する。新しいコンポーネントを追加すべきか判断したい時も。「`<b>` と `**bold**` で色が違うのはなぜ」「HTML を props に混ぜたい」「v-html は安全か」「`<Refs>` の中でリストが崩れる」「Summary の item に HTML を書ける？」等の細かい疑問にも該当。素の Markdown 記法（見出し・テーブル・コードブロック）については `.claude/rules/` を先に見る。
+description: このプロジェクトの自作 Vue コンポーネント (`<Lead>` `<Caption>` `<Summary>` `<Refs>` `<Pipeline>` `<Code>`) の API と使い分け。Markdown だけでは表現しづらいスライド上のパターン（punchline / 引用キャプション / 番号付き決定 + 理由 / 参考文献 / 数直線パイプライン図）を書きたい・書いたけど期待通りに描画されない、と言ったら参照する。新しいコンポーネントを追加すべきか判断したい時も。「`<b>` と `**bold**` で色が違うのはなぜ」「HTML を props に混ぜたい」「v-html は安全か」「`<Refs>` の中でリストが崩れる」「Summary の item に HTML を書ける？」等の細かい疑問にも該当。素の Markdown 記法（見出し・テーブル・コードブロック）については `.claude/rules/` を先に見る。
 ---
 
 # Slidev components

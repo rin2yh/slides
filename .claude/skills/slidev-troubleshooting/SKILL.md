@@ -1,6 +1,6 @@
 ---
 name: slidev-troubleshooting
-description: このプロジェクト（/Users/yuuki/workspace/slides）の Slidev レンダリングパイプラインで起こる特有の症状の切り分けと修正。「コード内のインデントが消える／崩れる」「diff ハイライトが効かない or 色が消える」「スライド本体が真っ白になった」「テーブルの列数が合わない」「Node 25 で Shiki disposed エラー」「Slidev の goto ダイアログを消したい」「margin が思った通りに空かない／余計に空く」「HMR で反映されない」「dev server が固まった」「dist を消したい」「SVG を書いたら崩れた」等、書き方の問題ではなくパイプライン (markdown-it / Vue コンパイラ / shiki / Slidev のカスタム CSS) 側のクセや運用トラブルに起因する症状を扱う。書き方そのものは `.claude/rules/`、コンポーネント API は `slidev-components` を先に見る。
+description: このプロジェクトの Slidev レンダリングパイプラインで起こる特有の症状の切り分けと修正。「コード内のインデントが消える／崩れる」「diff ハイライトが効かない or 色が消える」「スライド本体が真っ白になった」「テーブルの列数が合わない」「Node 25 で Shiki disposed エラー」「Slidev の goto ダイアログを消したい」「margin が思った通りに空かない／余計に空く」「HMR で反映されない」「dev server が固まった」「dist を消したい」「SVG を書いたら崩れた」等、書き方の問題ではなくパイプライン (markdown-it / Vue コンパイラ / shiki / Slidev のカスタム CSS) 側のクセや運用トラブルに起因する症状を扱う。書き方そのものは `.claude/rules/`、コンポーネント API は `slidev-components` を先に見る。
 ---
 
 # Slidev troubleshooting
@@ -145,5 +145,5 @@ npm run dev slides/<file>.md
 
 ## 何をやっても直らないとき
 
-- ビルド後の JS assets を `grep` で覗く（`private/tmp/…/assets/md-*.js`）— どう class が出ているか / どんな span が生成されているかが見えるとデバッグしやすい
+- ビルド後の JS assets を `grep` で覗く（`dist/assets/md-*.js`）— どう class が出ているか / どんな span が生成されているかが見えるとデバッグしやすい
 - 症状に一番近い実物を `slides/go-coverage.md` から探す。動いている書き方があるなら真似る方が早い
