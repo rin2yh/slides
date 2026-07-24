@@ -5,6 +5,7 @@ paginate: true
 size: 16:9
 title: プレゼンテーションのタイトル
 description: 発表の 1〜2 行の概要
+date: 2026-01-01
 ---
 
 <!-- _class: cover -->

@@ -13,7 +13,7 @@ run = "marp --config-file .marprc.yml"
 
 [tasks.index]
 description = "デッキ一覧ページを dist/index.html に生成: mise run index"
-run = "scripts/build-index.sh dist"
+run = "scripts/build-index.sh"
 
 [tasks.export]
 description = "PDF出力: mise run export -- slides/<name>.md --output dist/<name>.pdf"

@@ -33,7 +33,10 @@ mise run dev
 
 ## 一覧ページ
 
-サイトのトップ（`https://<owner>.github.io/<repo>/`）はデッキ一覧ページ。`slides/*.md` の frontmatter の `title` / `description` から CI（`.github/actions/build-decks`）が自動生成するので、スライドを追加すれば一覧にも自動で載る（並びはファイル名昇順）。
+サイトのトップ（`https://<owner>.github.io/<repo>/`）はデッキ一覧ページ。`slides/*.md` の frontmatter の `title` / `description` / `date` から CI（`.github/actions/build-decks`）が自動生成するので、スライドを追加すれば一覧にも自動で載る。
+
+- 並びは `date`（`YYYY-MM-DD`）の新しい順。`date` が無いデッキは末尾
+- 見た目は素の HTML + 数行の CSS。スライド本体のデザイン（`slides/theme.css`）とは合わせていない
 
 手元で確認する場合：
 
@@ -41,7 +44,9 @@ mise run dev
 mise run index   # dist/index.html を生成
 ```
 
-見た目を変えたいときは `site/index.css` を直す。スライド本体の `slides/theme.css` とは別ファイルだが、デザイントークン（`--dc-*`）は同じ値を使っている。
+一覧から各デッキへのリンクは `dist/<name>/` を指すので、リンク先まで見るならデッキ側のビルドも必要。
+
+見た目を変えたいときは `scripts/build-index.sh` 内の `<style>` を直す。
 
 ## 画像・アセットを追加する
 

@@ -21,6 +21,7 @@ title: なぜGoのカバレッジはstmtとfnなのか
 description: >-
   Asakusa.go #8のスライドです。
   ...
+date: 2026-04-19
 ---
 ```
 
@@ -28,8 +29,9 @@ description: >-
 - `paginate: true` を全体で ON にし、`section.cover::after { display: none }` などのテーマ CSS 側で cover / section divider の pagination を消している
 - `size: 16:9` は Marp の canvas。実サイズ（1920×1080）は `slides/theme.css` の `section { width: 1920px; height: 1080px }` で指定
 - `footer: '#asakusago'` は全スライド左下にハッシュタグ表示。cover / section divider では `section.cover > footer { display: none }` などのテーマ CSS 側で消している
-- `title` / `description` は Marp が `<head>` の meta タグに展開する（`og:title` / `og:description` にもなる）
-- SNS カード用の `og:image` と `og:url` は CI（`.github/actions/build-deck/action.yml`）で `--og-image` / `--url` を渡して埋め込むので、frontmatter には書かない
+- `title` / `description` は Marp が `<head>` の meta タグに展開する（`og:title` / `og:description` にもなる）。加えてサイトトップのデッキ一覧（`scripts/build-index.sh`）にもこの 2 つがそのまま表示される
+- `date: YYYY-MM-DD` は Marp 側では使われない。デッキ一覧の並び順（新しい順）と日付表示のためのキーで、書かなければ一覧の末尾に落ちる
+- SNS カード用の `og:image` と `og:url` は CI（`.github/actions/build-decks/action.yml`）で `--og-image` / `--url` を渡して埋め込むので、frontmatter には書かない
 
 ## per-slide ディレクティブ
 
