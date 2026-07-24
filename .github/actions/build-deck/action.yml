@@ -1,5 +1,5 @@
 name: Build deck
-description: Build a single Marp deck into dist/<deck>, including its OGP image and shared assets. Assumes Node is already set up.
+description: Build a single Marp deck into dist/<deck>, including its OGP image and shared assets. Assumes the marp CLI is already on PATH.
 
 inputs:
   deck:
@@ -17,7 +17,7 @@ runs:
         OWNER="${GITHUB_REPOSITORY%/*}"
         REPO="${GITHUB_REPOSITORY#*/}"
         DECK_URL="https://${OWNER}.github.io/${REPO}/${DECK}/"
-        npx marp --config-file .marprc.yml \
+        marp --config-file .marprc.yml \
           "slides/${DECK}.md" \
           --html \
           --url "${DECK_URL}" \
@@ -37,7 +37,7 @@ runs:
       env:
         DECK: ${{ inputs.deck }}
       run: |
-        npx marp --config-file .marprc.yml \
+        marp --config-file .marprc.yml \
           "slides/${DECK}.md" \
           --image png \
           --allow-local-files \
