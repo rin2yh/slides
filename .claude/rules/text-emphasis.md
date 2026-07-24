@@ -30,3 +30,17 @@ paths:
 - `<Caption>text</Caption>` — 24px muted（引用の出典・小補足）
 
 これらは default で自分に必要な margin を持つ。余白の管理方針は `.claude/rules/spacing.md` を参照。
+
+### `<Lead>` / `<Caption>` の中で `**bold**` を使うとき
+
+コンポーネントのタグと本文を **1 行に詰めて書くと Markdown が処理されず**、`**構文解析**` がそのまま `**` 付きで描画される（markdown-it が本文を生テキスト扱いするため）。強調を効かせたいときは開始/終了タグと本文の間に空行を入れて block 記法で書く:
+
+```md
+<Lead size="sm">
+
+Go標準ライブラリの**構文解析・整形パッケージ**で実現。
+
+</Lead>
+```
+
+装飾のために生の `<strong>` / `<b>` を書くのではなく、この block 記法で素の `**bold**` を効かせる。詳細は skill `slidev-components`。

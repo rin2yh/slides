@@ -28,7 +28,11 @@ Punchline 用の大きなボールド段落。
 ```md
 <Lead>Vitest では branch も取れるのに、なぜGoは取れないのか?</Lead>
 
-<Lead size="sm">Go標準ライブラリの**構文解析・整形パッケージ**で実現。</Lead>
+<Lead size="sm">
+
+Go標準ライブラリの**構文解析・整形パッケージ**で実現。
+
+</Lead>
 ```
 
 **Props**:
@@ -36,6 +40,11 @@ Punchline 用の大きなボールド段落。
 - `size?: 'lg' | 'sm'` — default `lg`（44px）、`sm` は 32px（章末結論・小サブリード用）
 
 **なぜ component か**: 44px / 32px の bold + max-width + 前後の margin ルール（h2 直後は top 0 等）が要る。Markdown で書き分けられない。
+
+**スロット内で `**bold**` を効かせるには開始/終了タグと本文の間に空行を入れる**（block 記法）。
+- 理由: `<Lead>本文</Lead>` と 1 行に詰めて書くと、markdown-it は本文をインライン HTML の生テキストとして扱い **Markdown を処理しない**。`**構文解析**` がそのまま `**` 付きの文字列で描画されてしまう（`<Refs>` が空行を要求するのと同じ現象）
+- 空行を入れると本文は `<p>` に包まれるが、`slides/style.css` の `.dc-lead > p` / `.dc-caption > p` リセットで font/color/margin を親に継承させてあるので見た目は変わらず、`**bold**`（アクセント色）や ``**`code`**`` が普通に効く
+- 強調に生の `<strong>` / `<b>` を書かない。素の Markdown 記法で書けるようにするための block 記法。装飾記法の使い分けは `.claude/rules/text-emphasis.md`
 
 **マージン**: `.dc-lead { margin: 36px 0 28px }` が default、`.slidev-layout h2 + .dc-lead` で h2 直後は自動 top 0。余白の管理原則は `.claude/rules/spacing.md`。
 
@@ -49,7 +58,9 @@ Punchline 用の大きなボールド段落。
 <Caption>— The cover story, Rob Pike, The Go Blog (2013)</Caption>
 ```
 
-**Props**: なし。中身の slot は Markdown 混在 OK。
+**Props**: なし。
+
+**slot 内の Markdown**: `<Lead>` と同じ。1 行に詰めて書くと Markdown は処理されない。``**`Abs(3)`**`` のような強調を入れたいときは開始/終了タグと本文の間に空行を入れて block 記法にする（`.dc-caption > p` リセット済み）。出典表記のように装飾なしの 1 行なら inline のままでよい。
 
 **なぜ component か**: フォントサイズ・色・引用直後の 16px top margin を CSS 変数だけでは書き分けられない（`blockquote + .dc-caption` セレクタが必要）。
 

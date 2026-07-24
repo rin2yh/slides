@@ -125,7 +125,11 @@ title: ソースコード計測
 
 <Caption>— The cover story, Rob Pike, The Go Blog (2013)</Caption>
 
-<Lead size="sm">Go標準ライブラリの**構文解析・整形パッケージ**で実現。Pikeが最重視した弱点の**移植性**を回避できる。</Lead>
+<Lead size="sm">
+
+Go標準ライブラリの**構文解析・整形パッケージ**で実現。Pikeが最重視した弱点の**移植性**を回避できる。
+
+</Lead>
 
 ---
 title: 計測の単位はブロック
@@ -215,7 +219,11 @@ title: 集計
 
 ## 集計
 
-<Caption>**`Abs(3)`** を 1 回テストした場合</Caption>
+<Caption>
+
+**`Abs(3)`** を 1 回テストした場合
+
+</Caption>
 
 | ブロック | カウンタ | 場所 | stmt数 | 実行 |
 |---|---|---|:-:|:-:|

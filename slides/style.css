@@ -316,6 +316,20 @@
 .dc-lead.size-sm { font-size: 32px; max-width: 1660px; }
 .slidev-layout h2 + .dc-lead { margin-top: 0; }
 
+/* Block-form <Lead> / <Caption> (blank lines inside the tag) is what lets
+ * markdown like **bold** be processed in the slot — but it wraps the text in
+ * a <p>, which would otherwise pick up `.slidev-layout p` (32px, text-2,
+ * bottom margin). Make that inner <p> transparent so the component's own
+ * font/color/margins govern. Emphasis inside is then plain **…** as usual. */
+.slidev-layout .dc-lead > p,
+.slidev-layout .dc-caption > p {
+  font-size: inherit;
+  color: inherit;
+  line-height: inherit;
+  max-width: none;
+  margin: 0;
+}
+
 .dc-caption {
   font-size: 24px;
   color: var(--dc-muted);
