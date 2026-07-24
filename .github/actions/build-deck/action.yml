@@ -1,0 +1,31 @@
+name: Build deck
+description: Build a single Slidev deck into dist/<deck>, including its Chromium-rendered OGP image. Assumes Node is already set up.
+
+inputs:
+  deck:
+    description: Deck name (basename of slides/<deck>.md).
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Cache Playwright browsers
+      uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+      with:
+        path: ~/.cache/ms-playwright
+        key: playwright-chromium-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
+
+    - name: Install Chromium for OGP image generation
+      shell: bash
+      run: npx playwright-chromium install --with-deps chromium
+
+    - name: Build ${{ inputs.deck }}
+      shell: bash
+      env:
+        DECK: ${{ inputs.deck }}
+      run: |
+        REPO_NAME="${GITHUB_REPOSITORY#*/}"
+        npm run build -- "${DECK}" \
+          --base "/${REPO_NAME}/${DECK}/" \
+          --out "$(pwd)/dist/${DECK}" \
+          --router-mode hash
