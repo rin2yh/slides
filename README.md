@@ -46,10 +46,10 @@ slides/
 
 ## 新しいスライドを作る
 
-テンプレートを `slides/` 直下にコピーして編集する。
+テンプレートから `slides/<name>.md` を作る mise task。
 
 ```bash
-cp slides/templates/template.md slides/<name>.md
+mise run new <name>
 npm run dev -- slides/<name>.md
 ```
 
