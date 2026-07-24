@@ -1,6 +1,6 @@
 ---
 name: slidev-troubleshooting
-description: このプロジェクト（/Users/yuuki/workspace/slides）の Slidev レンダリングパイプラインで起こる特有の症状の切り分けと修正。「コード内のインデントが消える／崩れる」「diff ハイライトが効かない or 色が消える」「スライド本体が真っ白になった」「テーブルの列数が合わない」「Node 25 で Shiki disposed エラー」「Slidev の goto ダイアログを消したい」「margin が思った通りに空かない／余計に空く」「HMR で反映されない」「dev server が固まった」「dist を消したい」「SVG を書いたら崩れた」等、書き方の問題ではなくパイプライン (markdown-it / Vue コンパイラ / shiki / Slidev のカスタム CSS) 側のクセや運用トラブルに起因する症状を扱う。書き方そのものは `.claude/rules/`、コンポーネント API は `slidev-components` を先に見る。
+description: このプロジェクトの Slidev レンダリングパイプラインで起こる特有の症状の切り分けと修正。「コード内のインデントが消える／崩れる」「diff ハイライトが効かない or 色が消える」「スライド本体が真っ白になった」「テーブルの列数が合わない」「Node 25 で Shiki disposed エラー」「Slidev の goto ダイアログを消したい」「margin が思った通りに空かない／余計に空く」「HMR で反映されない」「dev server が固まった」「dist を消したい」「SVG を書いたら崩れた」等、書き方の問題ではなくパイプライン (markdown-it / Vue コンパイラ / shiki / Slidev のカスタム CSS) 側のクセや運用トラブルに起因する症状を扱う。書き方そのものは `.claude/rules/`、コンポーネント API は `slidev-components` を先に見る。
 ---
 
 # Slidev troubleshooting
@@ -21,7 +21,7 @@ description: このプロジェクト（/Users/yuuki/workspace/slides）の Slid
 
 **原因**: Vue のテンプレートコンパイラは `<div>` の text 空白を default で `condense` する。`v-pre` はディレクティブ処理を skip するだけで、text 空白圧縮は防げない。
 
-**対処**: `<pre>` 要素を使う。Vue コンパイラは `<pre>` の中の空白は常に保持する。自作パネルも `<pre ... v-pre>` にする（preparser が吐く `<pre class="dc-shell">` がこの形）。行ごとに background を出したいなら `<span>` を `display: block` にして pre 内に並べる（`<div>` は避ける、余計な空白挿入の温床）。
+**対処**: `<pre>` 要素を使う。Vue コンパイラは `<pre>` の中の空白は常に保持する。自作パネルも `<pre>` にする（`<Code>` コンポーネントの `<pre class="dc-code" v-html>` がこの形。動的な中身は v-html で props 文字列として流し込むと、そもそもテンプレートの空白圧縮を経由しない）。行ごとに background を出したいなら `<span>` を `display: block` にして pre 内に並べる（`<div>` は避ける、余計な空白挿入の温床）。
 
 素の ``` ```lang ``` フェンスはこの制約と無関係（shiki が独自に `<pre><code>` を吐く）ので、可能ならそちらで済ませる。
 
@@ -102,7 +102,7 @@ ShikiError: Shiki instance has been disposed
 **原因の切り分け**:
 
 1. **要素同士のマージン collapse が効いていない** — スライドの root コンテナが `display: flex` になっていると collapse しない（flex アイテムは margin collapse しない）。`slides/layouts/default.vue` の `.dc-content` が `display: block` になっているか確認
-2. **要素の default margin が抜けている** — `slides/style.css` の該当要素のルールを確認。特に `pre` / `.dc-shell` / `.dc-lead` / `.dc-caption` は自分で `margin` を持っている
+2. **要素の default margin が抜けている** — `slides/style.css` の該当要素のルールを確認。特に `pre` / `.dc-code` / `.dc-lead` / `.dc-caption` は自分で `margin` を持っている
 3. **sibling selector の型が違う** — 例: `h2 + .dc-lead { margin-top: 0 }` は h2 の**直後**の Lead にしか効かない。間に `<p>` が入ると効かない
 
 **対処原則**:
@@ -145,5 +145,5 @@ npm run dev slides/<file>.md
 
 ## 何をやっても直らないとき
 
-- ビルド後の JS assets を `grep` で覗く（`private/tmp/…/assets/md-*.js`）— どう class が出ているか / どんな span が生成されているかが見えるとデバッグしやすい
+- ビルド後の JS assets を `grep` で覗く（`dist/assets/md-*.js`）— どう class が出ているか / どんな span が生成されているかが見えるとデバッグしやすい
 - 症状に一番近い実物を `slides/go-coverage.md` から探す。動いている書き方があるなら真似る方が早い

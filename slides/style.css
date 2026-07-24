@@ -213,8 +213,8 @@
 .slidev-layout pre.has-focused::before { content: none !important; }
 
 /* Terminal / shell output panel */
-.slidev-layout pre.dc-shell,
-.dc-shell {
+.slidev-layout pre.dc-code,
+.dc-code {
   background: var(--dc-panel) !important;
   border-radius: 8px;
   padding: 26px 44px !important;
@@ -227,15 +227,14 @@
   overflow: auto;
   margin: 0;
 }
-.dc-shell .prompt { color: var(--dc-muted); }
-.dc-shell .badge {
+.dc-code .badge {
   background: var(--dc-accent-soft);
   color: var(--dc-accent);
   font-weight: 700;
   padding: 1px 8px;
   border-radius: 4px;
 }
-.dc-shell .mark { color: var(--dc-accent); font-weight: 700; }
+.dc-code .mark { color: var(--dc-accent); font-weight: 700; }
 
 /* Section labels above shell/code blocks — write as `### text` in Markdown */
 .dc-section-tag,

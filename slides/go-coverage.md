@@ -70,23 +70,21 @@ title: Goのカバレッジで取れるのはstmtとfnだけ?
 
 ### statement 全体で取れる
 
-```shell
-$ go test -cover
-coverage: 80.0% {badge}of statements{/badge}
-```
+<Code :lines="[
+  '$ go test -cover',
+  'coverage: 80.0% {badge}of statements{/badge}',
+]" />
 
 ### function ごとに取れる
 
-```shell
-$ go tool cover -func
-{badge}grade.go:4:  Grade   80.0%{/badge}
-```
+<Code :lines="[
+  '$ go tool cover -func',
+  '{badge}grade.go:4:  Grade   80.0%{/badge}',
+]" />
 
 ### Vitest は branch も取れる
 
-```shell
-% Stmts | {badge}% Branch{/badge} | % Funcs | % Lines
-```
+<Code :lines="['% Stmts | {badge}% Branch{/badge} | % Funcs | % Lines']" />
 
 <Lead>Vitest では branch も取れるのに、なぜGoは取れないのか?</Lead>
 
@@ -119,7 +117,7 @@ title: ソースコード計測
 
 | 方式 | 移植性 |
 |---|---|
-| ソースコード計測（Go cover） | **高い**：AST だけで完結し、環境に依存しない | {.accent}
+| ソースコード計測（Go cover） | **高い**：AST だけで完結し、環境に依存しない {.accent} |
 | バイナリ計測（gcov, V8） | 低い：OS / CPU / debug info に依存し、環境ごとに実装が必要になる |
 
 > "For the new test coverage tool for Go, we took a different approach that avoids dynamic debugging. The idea is simple: Rewrite the package's source code before compilation to add instrumentation..."
@@ -142,7 +140,7 @@ title: 計測の単位はブロック
 
 | 単位 | 分かること | コスト | 仕組み |
 |---|---|---|---|
-| ブロック単位（Go cover） | ブロックが実行されたか | 軽い | ブロック先頭にカウンタ1つ | {.accent}
+| ブロック単位（Go cover） | ブロックが実行されたか | 軽い | ブロック先頭にカウンタ1つ {.accent} |
 | 式・条件単位 | branch / condition | 重い | `&&` / `\|\|` を分岐へ展開し、オペランドごとにカウンタ |
 
 **ブロック**（basic block）とは、`if` / `for` / `range` / `switch` / `type switch` / `select`、`break` ・ `continue` ・ `goto` ・ `fallthrough`、ラベル付き文、ネストした `{ }`、`panic()` で区切られた**区間**。
@@ -228,19 +226,19 @@ title: 集計
 
 | ブロック | カウンタ | 場所 | stmt数 | 実行 |
 |---|---|---|:-:|:-:|
-| ① | `Count[0]` | `if n < 0 文` | 1 | ✓ | {.ok}
-| ② | `Count[1]` | `return -n` | 1 | ✗ | {.dim}
-| ③ | `Count[2]` | `return n` | 1 | ✓ | {.ok}
-| 合計 |  |  | 3 | 2 | {.total}
+| ① | `Count[0]` | `if n < 0 文` | 1 | ✓ {.ok} |
+| ② | `Count[1]` | `return -n` | 1 | ✗ {.dim} |
+| ③ | `Count[2]` | `return n` | 1 | ✓ {.ok} |
+| 合計 |  |  | 3 | 2 {.total} |
 
 **命令網羅（stmt）** = 実行 stmt ÷ 全 stmt = `2 / 3` = **`66.7%`**
 
 ### 実行結果（ツール出力）
 
-```shell
-$ go tool cover -func
-abs.go:2:  Abs  {mark}66.7%{/mark}
-```
+<Code :lines="[
+  '$ go tool cover -func',
+  'abs.go:2:  Abs  {mark}66.7%{/mark}',
+]" />
 
 ---
 title: まとめ
