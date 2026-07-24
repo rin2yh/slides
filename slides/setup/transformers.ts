@@ -4,7 +4,7 @@ import { defineTransformersSetup, defineCodeblockTransformer } from '@slidev/typ
 // panel: line-leading `$ ` → prompt glyph, `{badge}…{/badge}` / `{mark}…{/mark}`
 // → accent spans. Other languages fall through to shiki.
 
-export const SHELL_LANGS = new Set(['shell', 'sh', 'console', 'terminal'])
+const SHELL_LANGS = new Set(['shell', 'sh', 'console', 'terminal'])
 
 function esc(s: string) {
   return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')

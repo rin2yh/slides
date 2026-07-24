@@ -11,8 +11,10 @@
     "test": "vitest run"
   },
   "devDependencies": {
+    "@comark/markdown-it": "^0.3.4",
     "@slidev/cli": "^52.18.0",
     "@slidev/theme-default": "^0.25.0",
+    "markdown-it": "^14.3.0",
     "playwright-chromium": "^1.10.0",
     "vitest": "^4.1.10",
     "vue": "^3.5.0"
