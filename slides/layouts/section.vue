@@ -1,7 +1,6 @@
 <script setup lang="ts">
 defineProps<{
   no?: string | number
-  hashtag?: string
 }>()
 </script>
 
@@ -9,7 +8,6 @@ defineProps<{
   <div class="slidev-layout dc-section">
     <div v-if="no !== undefined" class="tag dc-mono">SECTION {{ String(no).padStart(2, '0') }}</div>
     <div class="title"><slot /></div>
-    <PageFooter :hashtag="hashtag" />
   </div>
 </template>
 

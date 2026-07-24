@@ -1,6 +1,6 @@
 ---
 name: slidev-components
-description: このプロジェクトの自作 Vue コンポーネント (`<Lead>` `<Caption>` `<Summary>` `<Refs>` `<Pipeline>` `<Code>`) の API と使い分け。Markdown だけでは表現しづらいスライド上のパターン（punchline / 引用キャプション / 番号付き決定 + 理由 / 参考文献 / 数直線パイプライン図）を書きたい・書いたけど期待通りに描画されない、と言ったら参照する。新しいコンポーネントを追加すべきか判断したい時も。「`**bold**` を青くしたいのに濃い太字にしかならない（青は構造要素専用）」「HTML を props に混ぜたい」「v-html は安全か」「`<Refs>` の中でリストが崩れる」「Summary の item に HTML を書ける？」等の細かい疑問にも該当。素の Markdown 記法（見出し・テーブル・コードブロック）については `.claude/rules/` を先に見る。
+description: このプロジェクトの自作 Vue コンポーネント (`<Refs>` `<Pipeline>` `<Code>`) の API と使い分け。Markdown だけでは表現しづらいスライド上のパターン（参考文献 / 数直線パイプライン図 / 端末出力パネル）を書きたい・書いたけど期待通りに描画されない、と言ったら参照する。新しいコンポーネントを追加すべきか判断したい時も。「`**bold**` を青くしたいのに濃い太字にしかならない（青は構造要素専用）」「HTML を props に混ぜたい」「v-html は安全か」「`<Refs>` の中でリストが崩れる」等の細かい疑問にも該当。素の Markdown 記法（見出し・テーブル・コードブロック）については `.claude/rules/` を先に見る。
 ---
 
 # Slidev components
@@ -20,72 +20,6 @@ description: このプロジェクトの自作 Vue コンポーネント (`<Lead
 これに当てはまらない one-off の装飾は、Markdown + `.dc-*` クラスで書く。
 
 ## 既存コンポーネント
-
-### `<Lead>`
-
-Punchline 用の大きなボールド段落。
-
-```md
-<Lead>Vitest では branch も取れるのに、なぜGoは取れないのか?</Lead>
-
-<Lead size="sm">
-
-Go標準ライブラリの**構文解析・整形パッケージ**で実現。
-
-</Lead>
-```
-
-**Props**:
-
-- `size?: 'lg' | 'sm'` — default `lg`（44px）、`sm` は 32px（章末結論・小サブリード用）
-
-**なぜ component か**: 44px / 32px の bold + max-width + 前後の margin ルール（h2 直後は top 0 等）が要る。Markdown で書き分けられない。
-
-**スロット内で `**bold**` を効かせるには開始/終了タグと本文の間に空行を入れる**（block 記法）。1 行に詰めると markdown-it が本文を生テキスト扱いして `**` が処理されず、そのまま記号が残る（`<Refs>` が空行を要求するのと同じ）。空行を入れると本文は `<p>` に包まれるが `.dc-lead > p` / `.dc-caption > p` リセット済みで見た目は変わらない。生の `<strong>` / `<b>` は書かない。`**` の色の扱い（周囲色の普通太字・青は構造要素専用）は `.claude/rules/text-emphasis.md`。
-
-**マージン**: `.dc-lead { margin: 36px 0 28px }` が default、`.slidev-layout h2 + .dc-lead` で h2 直後は自動 top 0。余白の管理原則は `.claude/rules/spacing.md`。
-
-### `<Caption>`
-
-引用の出典表記や小見出し用の 24px muted 段落。
-
-```md
-> "For the new test coverage tool for Go, we took a different approach that avoids dynamic debugging..."
-
-<Caption>— The cover story, Rob Pike, The Go Blog (2013)</Caption>
-```
-
-**Props**: なし。
-
-**slot 内の Markdown**: `<Lead>` と同じで、``**`Abs(3)`**`` のような強調を入れるなら block 記法（空行）にする。出典表記のように装飾なしの 1 行なら inline のままでよい。
-
-**なぜ component か**: フォントサイズ・色・引用直後の 16px top margin を CSS 変数だけでは書き分けられない（`blockquote + .dc-caption` セレクタが必要）。
-
-### `<Summary>`
-
-Q → A スライドの最後に置く「決定 + 理由」の番号付きリスト。
-
-```md
-## Q. なぜGoのカバレッジは stmt と fn なのか?
-
-<Lead>A. ブロック単位のソースコード計装を行っているから</Lead>
-
-<Caption>2 つの決定と、その理由</Caption>
-
-<Summary :items="[
-  { text: '計測方式は <b>ソースコード計測</b>', reason: 'AST だけで完結し環境に依存しない＝移植性が高いから' },
-  { text: '計測単位は <b>ブロック単位</b>', reason: 'ソース書き換えでは分岐がソース上に現れず、波括弧で区切られたブロックが自然な単位だから' },
-]" />
-```
-
-**Props**:
-
-- `items: { text: string, reason?: string }[]` — 番号は自動採番
-- `text` / `reason` はどちらも HTML 文字列（v-html レンダリング）。`<b>...</b>` を混ぜて通常色ボールドを差し込むのが定石
-
-**Summary の強調に `<b>` を使う理由**: `slides/style.css` の `.summary .item b { color: var(--dc-text) }` が決定語を最も濃い `#1b1f23` にする。一方 `**...**`（`<strong>`）は周囲色を継承する（Summary 本文は `--dc-text-2` = `#3a4046`）ので、決定語がやや薄く出て 1 段目のインパクトが落ちる。元スライドでも決定語は最濃・「理由」欄は薄い、の 2 段コントラスト。だから `<Summary>` の text 強調は `<b>` に統一する。
-
-**なぜ component か**: 番号採番、`理由` ラベル付き 2 段構成、番号セル幅固定などの構造を Markdown で表現できない。
 
 ### `<Refs>`
 
@@ -150,19 +84,19 @@ Q → A スライドの最後に置く「決定 + 理由」の番号付きリス
   - `{badge}text{/badge}` → アクセントソフト背景の帯 / `{mark}text{/mark}` → アクセント色ボールド（`slides/lib/code.ts` の `renderCode` が変換、v-html レンダリング）
   - `$` プロンプトは特別扱いせず、ただの文字として書く
 
-**なぜ component か（フェンスにしない理由）**: 以前は ```shell フェンスを codeblock transformer で横取りしていたが、「フェンスが時々 shiki を通らない」フォークになる。`<Code>` にすると**フェンスは常に shiki のシンタックスハイライト専用**になり、端末パネルは明示的にコンポーネントで opt-in できる。スロットだと Vue の whitespace condense で改行が潰れるので、行は `:lines` 配列で渡す（`<Pipeline>` / `<Summary>` と同じ流儀）。
+**なぜ component か（フェンスにしない理由）**: 以前は ```shell フェンスを codeblock transformer で横取りしていたが、「フェンスが時々 shiki を通らない」フォークになる。`<Code>` にすると**フェンスは常に shiki のシンタックスハイライト専用**になり、端末パネルは明示的にコンポーネントで opt-in できる。スロットだと Vue の whitespace condense で改行が潰れるので、行は `:lines` 配列で渡す（`<Pipeline>` と同じ流儀）。
 
 ## 新規コンポーネントを追加するとき
 
 1. **判断基準（前述）を通す** — 素の Markdown + CSS で書けないか一度試す
-2. **命名は用途ベース** — `<Lead>` `<Summary>` `<Refs>` のように、スライド内で果たす役割で名前を付ける（`<BigBoldText>` みたいな見た目ベースにしない）
+2. **命名は用途ベース** — `<Refs>` `<Pipeline>` `<Code>` のように、スライド内で果たす役割で名前を付ける（`<BigBoldText>` みたいな見た目ベースにしない）
 3. **props はできるだけ薄く** — 文字列 / boolean / 配列で表現できるなら Vue のリアクティビティは不要
 4. **CSS は `.dc-<name>` プリフィックスで `style.css` に集約** — component 内 scoped style を最小にして、共通トークン (`var(--dc-accent)` 等) で色・サイズを取る
 5. **マージンは自分で持つ** — 使う側で `style="margin-top:X"` を書かせない。default で必要な余白を持ち、隣接要素の型で調整が必要なら sibling selector を CSS に足す
 
 ## v-html を使うときの注意
 
-`<Summary>` の `text` / `reason` や `<Pipeline>` の内部で `v-html` を使っている。これは props に HTML 文字列を受けたいから（`<b>強調</b>` を混ぜたい等）。
+`<Pipeline>` の内部で `v-html` を使っている。これは props に HTML 文字列を受けたいから（`<b>強調</b>` を混ぜたい等）。
 
 - **props 経由の HTML は Vue の空白圧縮を回避できる** — テンプレート内の `<div>` テキスト空白は Vue が 1 個に潰すが、v-html で流し込む文字列はそのまま。コードブロック等でインデント保持が必要な時は同じテクを使う
 - **XSS の考慮は不要** — スライドのソースは著者自身が書くのでサニタイズしない
