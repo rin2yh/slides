@@ -14,6 +14,11 @@ import type MarkdownIt from 'markdown-it'
 // rewrite: cells now go through markdown-it's own inline parsing (so links /
 // MDC / any inline syntax work in every cell), and column alignment is handled
 // natively by markdown-it — we only hoist the class onto the row.
+//
+// The marker must live *inside* the last cell (`… 2 {.total} |`), not as a
+// standalone trailing cell (`… | 2 | {.total}`): markdown-it fixes each body
+// row to the header's column count and discards any extra cell, so a separate
+// `{.total}` cell would be dropped before this rule runs.
 function markdownItRowAttrs(md: MarkdownIt) {
   // Run before the `inline` rule so the marker is stripped from the raw cell
   // content before any inline parsing (incl. MDC/comark) sees it — otherwise
