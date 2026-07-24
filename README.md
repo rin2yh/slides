@@ -36,7 +36,7 @@ mise run dev
 サイトのトップ（`https://<owner>.github.io/<repo>/`）はデッキ一覧ページ。`slides/*.md` の frontmatter の `title` / `description` / `date` から CI（`.github/actions/build-decks`）が自動生成するので、スライドを追加すれば一覧にも自動で載る。
 
 - 並びは `date`（`YYYY-MM-DD`）の新しい順。`date` が無いデッキは末尾
-- 見た目は素の HTML + 数行の CSS。スライド本体のデザイン（`slides/theme.css`）とは合わせていない
+- 見た目は素の HTML + 数行の CSS。背景色・文字色・フォントだけスライド（`slides/theme.css`）と同じ値に揃えていて、レイアウトは合わせていない
 
 手元で確認する場合：
 
