@@ -37,6 +37,7 @@ cp -r slides/public dist/go-coverage/public
 ```
 slides/
 ├── slides/
+│   ├── index.html          # サイトルート (`/repo/`) のランディングページ
 │   ├── go-coverage.md      # 発表資料の例
 │   ├── theme.css           # Marp テーマ（/* @theme dc */）
 │   ├── public/             # 共通アセット（画像・SVG 等）
@@ -45,13 +46,12 @@ slides/
 │   │   └── images/
 │   └── templates/
 │       └── template.md     # 新規スライドの雛形（デプロイ対象外）
-├── index.html              # サイトルート (`/repo/`) のランディングページ
 ├── .marprc.yml             # Marp CLI 共通設定
 ├── package.json
 └── mise.toml
 ```
 
-新しいスライドを追加したときは、`index.html` の `<ul>` に `<li>` を 1 個手で足す。
+新しいスライドを追加したときは、`slides/index.html` の `<ul>` に `<li>` を 1 個手で足す。dev server（`npm run dev`）で `http://localhost:8080/` を開けばリンク一覧の見た目を確認できる。
 
 `slides/*.md`（直下のみ）が GitHub Pages のビルド対象。`templates/` はサブディレクトリなので対象外。
 
