@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor transparent
+skinparam shadowing false
+skinparam defaultFontName "Noto Sans JP"
+skinparam sequence {
+  ArrowColor #3a4046
+  LifeLineBorderColor #c4ccd0
+  ParticipantBorderColor #0a7c98
+  ParticipantBackgroundColor #ffffff
+  ActorBorderColor #0a7c98
+}
+
+actor 開発者 as dev
+participant "エディタ" as editor
+participant "pumlv\n(Go)" as go
+participant "SPA" as spa
+participant "plantuml.js" as pjs
+
+dev -> go : pumlv ./docs
+activate go
+go -> go : fsnotify で監視開始
+go -> spa : ブラウザを開く
+spa -> go : GET /api/files
+spa -> go : GET /api/events
+note right of go : SSE 接続を保持
+
+== ファイルを編集するたび ==
+
+dev -> editor : seq.puml を保存
+editor -> go : 書き込み（fsnotify）
+go -> go : 100ms デバウンス
+go --> spa : event: changed
+spa -> go : GET /api/file?path=...
+go --> spa : PlantUML ソース
+spa -> pjs : renderToString(ソース)
+pjs --> spa : SVG
+spa -> dev : 再描画された図
+@enduml

@@ -1,0 +1,38 @@
+@startuml
+skinparam backgroundColor transparent
+skinparam shadowing false
+skinparam defaultFontName "Noto Sans JP"
+skinparam defaultFontSize 14
+skinparam rectangle {
+  BorderColor #0a7c98
+  BackgroundColor #ffffff
+  FontColor #1b1f23
+}
+skinparam folder {
+  BorderColor #c4ccd0
+  BackgroundColor #ffffff
+}
+skinparam arrow {
+  Color #3a4046
+  FontColor #3a4046
+}
+
+left to right direction
+
+rectangle "pumlv（単一バイナリ）" as bin #f0eee7 {
+  rectangle "ファイル監視 (fsnotify)\n監視対象: *.puml" as watcher
+  rectangle "HTTP サーバ\n+ SSE Hub" as httpd
+  rectangle "フロントエンド資産\n(go:embed)" as embed
+}
+
+rectangle "ブラウザ" as browser #f0eee7 {
+  rectangle "React SPA" as spa
+  rectangle "plantuml.js\n(TeaVM)" as pjs
+}
+
+watcher --> httpd : イベント
+embed --> httpd : 埋め込み
+httpd --> spa : HTTP / SSE
+spa --> pjs : ソース
+pjs --> spa : SVG
+@enduml
