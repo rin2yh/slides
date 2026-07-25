@@ -42,4 +42,4 @@ runs:
 
     - name: Build index page
       shell: bash
-      run: scripts/build-index.sh
+      run: mise run index

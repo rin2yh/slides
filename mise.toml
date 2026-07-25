@@ -13,7 +13,24 @@ run = "marp --config-file .marprc.yml"
 
 [tasks.index]
 description = "デッキ一覧ページを dist/index.html に生成: mise run index"
-run = "scripts/build-index.sh"
+# site/index.html の @DECKS@ を、各デッキの frontmatter から作った <li> に差し替える。
+# 拾うのは title と date の 2 行だけ。並びは date の新しい順（date 無しは末尾）。
+run = '''
+list=$(
+  for f in slides/*.md; do
+    deck="$(basename "$f" .md)"
+    title="$(sed -n 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g; s/^title: *//p' "$f" | head -1)"
+    date="$(sed -n 's/^date: *//p' "$f" | head -1)"
+    time=""
+    [ -z "$date" ] || time="<time datetime=\"$date\">$date</time>"
+    echo "${date:-0000-00-00}|      <li><a href=\"./$deck/\">${title:-$deck}</a>$time</li>"
+  done | sort -t"|" -k1,1r -k2,2 | cut -d"|" -f2-
+)
+mkdir -p dist
+awk -v list="$list" '/@DECKS@/ { print list; next } { print }' site/index.html > dist/index.html
+cp slides/public/favicon.ico dist/favicon.ico
+echo "generated: dist/index.html"
+'''
 
 [tasks.export]
 description = "PDF出力: mise run export -- slides/<name>.md --output dist/<name>.pdf"

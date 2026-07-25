@@ -33,20 +33,18 @@ mise run dev
 
 ## 一覧ページ
 
-サイトのトップ（`https://<owner>.github.io/<repo>/`）はデッキ一覧ページ。`slides/*.md` の frontmatter の `title` / `description` / `date` から CI（`.github/actions/build-decks`）が自動生成するので、スライドを追加すれば一覧にも自動で載る。
-
-- 並びは `date`（`YYYY-MM-DD`）の新しい順。`date` が無いデッキは末尾
-- 見た目は素の HTML + 数行の CSS。背景色・文字色・フォントだけスライド（`slides/theme.css`）と同じ値に揃えていて、レイアウトは合わせていない
-
-手元で確認する場合：
+サイトのトップ（`https://<owner>.github.io/<repo>/`）はデッキ一覧ページ。スライドを追加すれば一覧にも自動で載る。
 
 ```bash
-mise run index   # dist/index.html を生成
+mise run index   # dist/index.html を生成（CI も同じタスクを叩く）
 ```
 
-一覧から各デッキへのリンクは `dist/<name>/` を指すので、リンク先まで見るならデッキ側のビルドも必要。
+- ページの外枠は `site/index.html`。**見た目を変えたいときはこのファイルを直す**
+- `mise run index` が、その中の `@DECKS@` の行をデッキ 1 件 1 行の `<li>` に差し替える。拾うのは各 `slides/*.md` の `title` と `date` の 2 行だけ
+- 並びは `date`（`YYYY-MM-DD`）の新しい順。`date` が無いデッキは末尾に落ちる
+- 背景色・文字色・フォントはスライド（`slides/theme.css`）と同じ値に揃えてある。レイアウトは合わせていない
 
-見た目を変えたいときは `scripts/build-index.sh` 内の `<style>` を直す。
+一覧から各デッキへのリンクは `dist/<name>/` を指すので、リンク先まで見るならデッキ側のビルドも必要。
 
 ## 画像・アセットを追加する
 
