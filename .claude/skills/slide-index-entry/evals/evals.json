@@ -1,0 +1,54 @@
+{
+  "skill_name": "slide-index-entry",
+  "evals": [
+    {
+      "id": 0,
+      "name": "insert-mid-list",
+      "prompt": "slides/go-coverage.md 書き終わったから、サイトに出しといて",
+      "expected_output": "site/index.html の <ul> に go-coverage の <li> が 1 行だけ追加される。日付 2026-04-19 は既存の pumlv-go(2026-07-29) と go-generics(2026-02-14) の間なので、その中間の位置に入る。既存 2 行は無変更。「index.html」と明言されていなくても一覧更新だと解釈できるかも見る。",
+      "fixture": "index.html に既存 2 件、slides/go-coverage.md が未追記の状態",
+      "files": [],
+      "assertions": [
+        "go-coverage の <li> が一覧に追加されている",
+        "href が ./go-coverage/ 形式（末尾スラッシュあり・.html なし）",
+        "<time> の datetime と表示テキストが frontmatter の 2026-04-19 と一致",
+        "リンクテキストが frontmatter の title と完全一致",
+        "一覧全体が日付の降順（go-coverage が pumlv-go と go-generics の間に入る）",
+        "差分が <li> 1 行の追加のみ（既存 2 行は無変更）",
+        "<li> が 1 行に収まり、インデントが半角スペース 6"
+      ]
+    },
+    {
+      "id": 1,
+      "name": "template-default-date",
+      "prompt": "slides/rust-async.md を一覧ページに追記して",
+      "expected_output": "frontmatter の date がテンプレート初期値 2026-01-01 のままなので、その日付を書き込まずユーザーに発表日を確認する。2026-01-01 や今日の日付を勝手に採用しないこと。",
+      "fixture": "slides/rust-async.md の date が 2026-01-01（テンプレの初期値）",
+      "files": [],
+      "assertions": [
+        "勝手な日付で rust-async の <li> を追加していない",
+        "テンプレ初期値 2026-01-01 を index.html に書き込んでいない",
+        "response.md で発表日をユーザーに確認している",
+        "site/index.html を変更していない（保留して止まった）"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "multi-deck-escaping",
+      "prompt": "slides/ に2本デッキ足したから、一覧に反映して",
+      "expected_output": "go-rust-compare(2026-08-20) と testing-tips(2026-06-10) の 2 行を追加。前者の title に & が含まれるので &amp; にエスケープする。並び順は 08-20 → 07-29(既存 pumlv-go) → 06-10 になり、既存行は無変更。",
+      "fixture": "slides/go-rust-compare.md（title に & を含む）と slides/testing-tips.md が未追記",
+      "files": [],
+      "assertions": [
+        "go-rust-compare の <li> が追加されている",
+        "title の & が &amp; にエスケープされている（生 & / 二重エスケープでない）",
+        "testing-tips の <li> が追加されている",
+        "並び順が 2026-08-20 → 2026-07-29 → 2026-06-10 の降順",
+        "既存の pumlv-go 行が一字一句変更されていない",
+        "追加された 2 件の href がどちらも ./<name>/ 形式",
+        "差分が <li> 2 行の追加のみ（既存行の巻き添え変更なし）",
+        "追加した <li> がそれぞれ 1 行・インデント半角 6"
+      ]
+    }
+  ]
+}
