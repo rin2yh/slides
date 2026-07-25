@@ -1,0 +1,76 @@
+@startuml
+skinparam backgroundColor transparent
+skinparam shadowing false
+' Noto Sans JP はデッキの Web フォントで、img で読む SVG には効かない。
+' 実際に表示されるフォント（macOS なら Hiragino Sans）で計測させないと
+' 枠の幅が足りず文字がはみ出すので、ここは端末にあるフォント名を書く。
+skinparam defaultFontName "Hiragino Sans"
+skinparam defaultFontSize 15
+skinparam linetype ortho
+skinparam nodesep 75
+skinparam ranksep 60
+skinparam classAttributeIconSize 0
+skinparam class {
+  BorderColor #0a7c98
+  BackgroundColor #ffffff
+  FontColor #1b1f23
+  AttributeFontColor #3a4046
+  ArrowColor #3a4046
+  ArrowFontColor #5a6066
+}
+hide circle
+hide empty members
+
+' 並べ方を明示できるのがPlantUML。方向つきリンクで段を作り、意図した形に整える。
+top to bottom direction
+
+class ユーザ {
+  +id
+  +name
+}
+class プロフィール {
+  +bio
+}
+class 記事 {
+  +id
+  +title
+  +body
+}
+class コメント {
+  +id
+  +body
+}
+class カテゴリ {
+  +name
+}
+class タグ {
+  +name
+}
+class 画像 {
+  +url
+}
+class いいね {
+  +created_at
+}
+
+' 1段目: ユーザとその1対1
+ユーザ "1" -left- "0..1" プロフィール
+
+' 2段目: ユーザがぶら下げるもの。記事を中央に置く
+ユーザ "1" -down- "0..*" コメント
+ユーザ "1" -down- "0..*" 記事
+ユーザ "1" -down- "0..*" いいね
+
+' 記事から見た同じ段の関係は左右に流す
+記事 "1" -left- "0..*" コメント
+記事 "1" -right- "0..*" いいね
+
+' 3段目: 記事だけがぶら下げるもの
+記事 "1" -down- "0..*" 画像
+記事 "*" -down- "1" カテゴリ
+記事 "*" -down- "*" タグ
+
+' 3段目の左右の並び順も固定できる（描画されない補助リンク）
+画像 -[hidden]right- カテゴリ
+カテゴリ -[hidden]right- タグ
+@enduml

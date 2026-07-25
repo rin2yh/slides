@@ -1,0 +1,31 @@
+@startuml
+skinparam backgroundColor transparent
+skinparam shadowing false
+skinparam defaultFontName "Noto Sans JP"
+skinparam sequence {
+  ArrowColor #3a4046
+  LifeLineBorderColor #c4ccd0
+  ParticipantBorderColor #0a7c98
+  ActorBorderColor #0a7c98
+}
+
+actor 開発者 as dev
+participant "pumlv (Go)" as go
+participant "ブラウザ (SPA)" as spa
+participant "plantuml.js" as pjs
+
+dev -> go : pumlv ./docs
+activate go
+go -> go : fsnotify で監視を開始
+go -> spa : 空きポートで待ち受け、ブラウザを開く
+spa -> go : GET /api/files
+go --> spa : 監視中のファイル一覧
+spa -> go : GET /api/events
+note right of go : SSE 接続を保持したまま\n変更を待つ
+
+spa -> go : GET /api/file?path=...（先頭のファイルを自動で選択）
+go --> spa : PlantUML ソース
+spa -> pjs : renderToString(ソース)
+pjs --> spa : SVG
+spa -> dev : 図が表示される
+@enduml

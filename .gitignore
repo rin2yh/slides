@@ -1,3 +1,5 @@
 dist/
 .slidev/
 slides/og-image.png
+# marp をデッキ単体に対して直接叩いたときのローカル出力（公開用は CD が dist/ に生成する）
+slides/*.html
