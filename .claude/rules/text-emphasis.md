@@ -1,7 +1,6 @@
 ---
 paths:
   - "slides/**/*.md"
-  - "!slides/node_modules/**"
 ---
 
 # テキスト装飾規約
@@ -29,11 +28,17 @@ paths:
 - `` `code` `` → 灰色モノスペース（inline code）
 - ``**`code`**`` → 周囲色の**太字**モノスペース（色は付かない）
 
+## リスト
+
+- `1. 導入` → **目次スタイル**（44px、番号は mono / accent）。目次以外で番号付きリストを使うとこの大きさになるので注意
+- `- item` → 通常の bullet（32px）
+
 ## 大きい強調文・引用キャプション
 
-**Vue コンポーネント（`<Lead>` `<Caption>` `<Summary>` `<Refs>`）は廃止**。全部素の Markdown で書く：
+専用のタグやコンポーネントは用意しない。素の Markdown で書く：
 
 - **punchline / 章末結論** → `**bold**`（本文と同じ 32px の太字。章末に句点付きの文で置く）
+- **引用** → blockquote。左に青罫線が付く
 - **引用の出典・小補足** → `<small>text</small>`（24px muted）
 - **決定 + 理由の 2 段構造** → 素の unordered list `- **決定** — 理由`
 - **参考文献** → 素の unordered list。URL は autolink `<https://…>` で

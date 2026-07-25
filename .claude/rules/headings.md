@@ -1,17 +1,16 @@
 ---
 paths:
   - "slides/**/*.md"
-  - "!slides/node_modules/**"
 ---
 
 # 見出し規約
 
 見出しレベルは「見た目のロール」と 1 対 1 で対応させる。文書構造上の階層のためではなく、装飾スタイルを選ぶ手段として使う。
 
-- `#` → **section divider スライド**（章の切れ目）
-  - `<!-- _class: section -->` を併記して初めて Marp の section スタイル（巨大 h1 + SECTION 番号）が効く
-  - 章切り替えのみで使う。**content スライドで `#` を使わない**
-  - 番号は自動採番されない。`SECTION 01` のように p として自分で書く：
+- `#` → **cover スライドと section divider スライドのタイトル**
+  - `<!-- _class: cover -->` / `<!-- _class: section -->` を併記して初めてそれぞれの h1 スタイル（cover 96px / section 128px）が効く
+  - **content スライドで `#` を使わない**
+  - section divider の番号は自動採番されない。`SECTION 01` のように p として自分で書く：
     ```md
     <!-- _class: section -->
 
@@ -24,4 +23,3 @@ paths:
   - content スライドの見出しはすべてこれ
 - `###` → **セクションタグ**（モノスペースの小ラベル）
   - mono / accent color / 24px。shell や表の直前に置く小見出しに使う
-  - 例: 「statement 全体で取れる」のような機能ラベル

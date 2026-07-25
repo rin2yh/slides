@@ -1,7 +1,6 @@
 ---
 paths:
   - "slides/**/*.md"
-  - "!slides/node_modules/**"
 ---
 
 # コードブロック規約
@@ -21,11 +20,11 @@ func Abs(n int) int {
 ```
 ````
 
-対応言語は highlight.js の標準セット（`go` / `shell` / `bash` / `ts` / `js` / `python` など）。
+対応言語は highlight.js の標準セット（`go` / `shell` / `bash` / `ts` / `js` / `python` など）。トークンの色は `slides/theme.css` の `.hljs-*` で絞ってあるので、そこに無いトークンは本文色のまま出る。
 
 ## コード内の注釈
 
-diff アノテーションや行ハイライト（Slidev で使っていた `[!code ++]` `[!code --]` `[!code highlight]`）は**使わない**方針。「この行が挿入された」「この行が実行された」のような説明は、**コード内の行コメント**で書く：
+行ハイライトや diff アノテーションの仕組みは無い。「この行が挿入された」「この行が実行された」のような説明は、**コード内の行コメント**で書く：
 
 ````md
 ```go
@@ -52,9 +51,6 @@ coverage: 80.0% of statements
 ```
 ````
 
-端末パネル用の Vue コンポーネント（`<Code :lines>` / `{badge}` / `{mark}`）は廃止。強調が要る文字はそのまま書き、装飾はしない。
+## 収まらないとき
 
-## リスト（参考）
-
-- `1. 導入` → **目次スタイル**（44px、番号は mono / accent）
-- `- item` → 通常の bullet（32px）
+`pre` は 30px / `max-width: 1400px` で、横は `overflow: auto` なので**はみ出した部分はスライド上で見えない**。長い行はコード側で折り返すか、貼る範囲を削る。font-size を inline style で縮めない（→ `.claude/rules/styling.md`）。

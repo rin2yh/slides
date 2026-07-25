@@ -22,7 +22,7 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 
 ## 自己紹介
 
-![w:340](./public/images/icon.jpg)
+![](./public/images/icon.jpg)
 
 | 名前 | Rinrin |
 |---|---|
