@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <!--
-  サイトトップ（デッキ一覧）の外枠。@DECKS@ の行が mise run index で
-  デッキ 1 件 1 行の <li> に置き換わる
+  サイトトップ（デッキ一覧）。デッキを足したら <li> を 1 行足す。日付の新しい順
 -->
 <html lang="ja">
   <head>
@@ -45,7 +44,7 @@
     <h1>slides</h1>
     <p>Rinrin の発表スライド一覧</p>
     <ul>
-@DECKS@
+      <li><a href="./go-coverage/">なぜGoのカバレッジはstmtとfnなのか</a><time datetime="2026-07-03">2026-07-03</time></li>
     </ul>
   </body>
 </html>

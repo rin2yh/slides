@@ -30,8 +30,7 @@ date: 2026-04-19
 - `size: 16:9` は Marp の canvas。実サイズ（1920×1080）は `slides/theme.css` の `section { width: 1920px; height: 1080px }` で指定
 - `footer: '#asakusago'` は全スライド左下にハッシュタグ表示。cover / section divider では `section.cover > footer { display: none }` などのテーマ CSS 側で消している
 - `title` / `description` は Marp が `<head>` の meta タグに展開する（`og:title` / `og:description` にもなる）
-- `date: YYYY-MM-DD` は Marp 側では使われない。サイトトップのデッキ一覧（`mise run index`）の並び順（新しい順）と日付表示のためのキーで、書かなければ一覧の末尾に落ちる
-- 一覧が読むのは `title` と `date` の **1 行だけ**。どちらも `title: なぜ…` のように素で書く（クォートで囲むとクォートごと一覧に出る）。複数行に折り返さない
+- `date: YYYY-MM-DD` は発表日の記録。Marp も CI も読まない。サイトトップの一覧（`site/index.html`）に `<li>` を足すときに、日付をここから引く
 - SNS カード用の `og:image` と `og:url` は CI（`.github/actions/build-decks/action.yml`）で `--og-image` / `--url` を渡して埋め込むので、frontmatter には書かない
 
 ## per-slide ディレクティブ

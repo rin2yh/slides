@@ -9,60 +9,6 @@ run = "marp --config-file .marprc.yml --server slides"
 description = "slides/ を dist/ にHTMLビルド: mise run build"
 run = "marp --config-file .marprc.yml"
 
-[tasks.index]
-description = "デッキ一覧ページを dist/index.html に生成: mise run index"
-shell = 'bash -c'
-run = '''
-list=""
-for f in slides/*.md; do
-  deck="$(basename "$f" .md)"
-  title=""
-  date=""
-
-  # 先頭の --- から次の --- まで（frontmatter）だけ見る
-  fence=0
-  while IFS= read -r line; do
-    if [ "$line" = "---" ]; then
-      fence=$((fence + 1))
-      [ "$fence" -lt 2 ] || break
-      continue
-    fi
-    case "$line" in
-      "title: "*) title="${line#title: }" ;;
-      "date: "*)  date="${line#date: }" ;;
-    esac
-  done < "$f"
-
-  # 置換後の文字列は "" で囲む。囲まないと & が「元の文字」の意味になる
-  title="${title:-$deck}"
-  title="${title//&/"&amp;"}"
-  title="${title//</"&lt;"}"
-  title="${title//>/"&gt;"}"
-
-  timetag=""
-  if [ -n "$date" ]; then
-    timetag="<time datetime=\"$date\">$date</time>"
-  fi
-
-  # 日付が無いデッキは 0000-00-00。新しい順に並べたとき末尾に落ちる
-  list+="${date:-0000-00-00}|      <li><a href=\"./$deck/\">$title</a>$timetag</li>"$'\n'
-done
-
-mkdir -p dist
-while IFS= read -r line; do
-  if [ "$line" = "@DECKS@" ]; then
-    echo "$list" | sort -r | while IFS= read -r item; do
-      [ -z "$item" ] || echo "${item#*|}"   # 先頭の "日付|" を落とす
-    done
-  else
-    echo "$line"
-  fi
-done < site/index.html > dist/index.html
-
-cp slides/public/favicon.ico dist/favicon.ico
-echo "generated: dist/index.html"
-'''
-
 [tasks.export]
 description = "PDF出力: mise run export -- slides/<name>.md --output dist/<name>.pdf"
 run = "marp --config-file .marprc.yml --pdf --allow-local-files"

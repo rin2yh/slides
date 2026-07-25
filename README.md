@@ -33,16 +33,15 @@ mise run dev
 
 ## 一覧ページ
 
-サイトのトップ（`https://<owner>.github.io/<repo>/`）はデッキ一覧ページ。スライドを追加すれば一覧にも自動で載る。
+サイトのトップ（`https://<owner>.github.io/<repo>/`）はデッキ一覧ページ。実体は `site/index.html` で、CI はこれを `dist/` にコピーするだけ。
 
-```bash
-mise run index   # dist/index.html を生成（CI も同じタスクを叩く）
+**スライドを足したら `<ul>` に `<li>` を 1 行足す。** 日付の新しい順に並べる。
+
+```html
+<li><a href="./go-coverage/">なぜGoのカバレッジはstmtとfnなのか</a><time datetime="2026-07-03">2026-07-03</time></li>
 ```
 
-- `mise run index` が、その中の `@DECKS@` の行をデッキ 1 件 1 行の `<li>` に差し替える。
-- 並びは `date`（`YYYY-MM-DD`）の新しい順。`date` が無いデッキは末尾へ
-
-一覧から各デッキへのリンクは `dist/<name>/` を指すので、リンク先まで見るならデッキ側のビルドも必要。
+リンク先は `dist/<name>/` を指すので、手元でリンク先まで見るならデッキ側のビルドも必要。
 
 ## 画像・アセットを追加する
 

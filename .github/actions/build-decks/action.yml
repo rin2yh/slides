@@ -40,6 +40,8 @@ runs:
           echo "::endgroup::"
         done
 
-    - name: Build index page
+    - name: Copy index page
       shell: bash
-      run: mise run index
+      run: |
+        cp site/index.html dist/index.html
+        cp slides/public/favicon.ico dist/favicon.ico
