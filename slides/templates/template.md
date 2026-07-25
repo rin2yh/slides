@@ -98,7 +98,7 @@ coverage: 80.0% of statements
 
 > ここに引用文を配置します。原文の主張をそのまま示し、根拠として使います。
 
-<small>— 出典・著者・媒体（年）</small>
+— 出典・著者・媒体（年）
 
 ---
 
@@ -114,8 +114,6 @@ coverage: 80.0% of statements
 
 **A. 結論をここに一文で**
 
-<small>要点</small>
-
 - **要点1**
   - 理由・根拠をここに
 - **要点2**
@@ -127,7 +125,7 @@ coverage: 80.0% of statements
 
 <!-- _class: cover -->
 
-# ご清聴いただき、<br>ありがとうございました
+# ご清聴いただき、ありがとうございました
 
 Rinrin — [@rin2yh](https://x.com/rin2yh)
 
