@@ -74,8 +74,6 @@ func Abs(n int) int {
 
 ## 端末で確認する
 
-### コマンド
-
 ```shell
 $ go test -cover
 coverage: 80.0% of statements
@@ -84,8 +82,6 @@ coverage: 80.0% of statements
 ---
 
 ## 表で整理・比較する
-
-素の表はそのまま Markdown で書ける。装飾（行アクセント等）は無し。
 
 | 項目 | 説明 |
 |---|---|
@@ -125,7 +121,7 @@ coverage: 80.0% of statements
 
 <!-- _class: cover -->
 
-# ご清聴いただき、ありがとうございました
+# ご清聴いただき、<br>ありがとうございました
 
 Rinrin — [@rin2yh](https://x.com/rin2yh)
 
