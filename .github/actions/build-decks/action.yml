@@ -1,5 +1,5 @@
 name: Build decks
-description: Build every Marp deck under slides/*.md into dist/<deck>, including each deck's OGP image and shared assets. Assumes the marp CLI is already on PATH.
+description: Build every Marp deck under slides/*.md into dist/<deck>, including each deck's OGP image and shared assets, plus the deck index page at dist/index.html. Assumes the marp CLI is already on PATH.
 
 runs:
   using: composite
@@ -39,3 +39,10 @@ runs:
 
           echo "::endgroup::"
         done
+
+    - name: Copy index page
+      shell: bash
+      run: |
+        cp site/index.html dist/index.html
+        cp slides/theme.css dist/theme.css
+        cp slides/public/favicon.ico dist/favicon.ico

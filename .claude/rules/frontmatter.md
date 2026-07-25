@@ -21,6 +21,7 @@ title: なぜGoのカバレッジはstmtとfnなのか
 description: >-
   Asakusa.go #8のスライドです。
   ...
+date: 2026-04-19
 ---
 ```
 
@@ -29,7 +30,8 @@ description: >-
 - `size: 16:9` は Marp の canvas。実サイズ（1920×1080）は `slides/theme.css` の `section { width: 1920px; height: 1080px }` で指定
 - `footer: '#asakusago'` は全スライド左下にハッシュタグ表示。cover / section divider では `section.cover > footer { display: none }` などのテーマ CSS 側で消している
 - `title` / `description` は Marp が `<head>` の meta タグに展開する（`og:title` / `og:description` にもなる）
-- SNS カード用の `og:image` と `og:url` は CI（`.github/actions/build-deck/action.yml`）で `--og-image` / `--url` を渡して埋め込むので、frontmatter には書かない
+- `date: YYYY-MM-DD` は発表日の記録。Marp も CI も読まない。サイトトップの一覧（`site/index.html`）に `<li>` を足すときに、日付をここから引く
+- SNS カード用の `og:image` と `og:url` は CI（`.github/actions/build-decks/action.yml`）で `--og-image` / `--url` を渡して埋め込むので、frontmatter には書かない
 
 ## per-slide ディレクティブ
 

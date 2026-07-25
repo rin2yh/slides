@@ -31,6 +31,18 @@ mise run dev
 - 1 枚だけに効かせる指定は `<!-- _class: cover|section|profile -->`（`_` 始まりがそのスライド限定）
 - 画像サイズは `![w:340](url)` / `![h:200](url)`
 
+## 一覧ページ
+
+サイトのトップ（`https://<owner>.github.io/<repo>/`）はデッキ一覧ページ。実体は `site/index.html` で、CI はこれを `dist/` にコピーするだけ。
+
+**スライドを足したら `<ul>` に `<li>` を 1 行足す。** 日付の新しい順に並べる。
+
+```html
+<li><a href="./go-coverage/">なぜGoのカバレッジはstmtとfnなのか</a><time datetime="2026-07-03">2026-07-03</time></li>
+```
+
+リンク先は `dist/<name>/` を指すので、手元でリンク先まで見るならデッキ側のビルドも必要。
+
 ## 画像・アセットを追加する
 
 `slides/public/` に置き、Markdown からは `./public/foo.svg` の相対パスで参照する。

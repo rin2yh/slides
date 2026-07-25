@@ -1,6 +1,4 @@
 [tools]
-# marp-cli スタンドアロンバイナリを aqua 経由で取得（Node 非依存）。
-# PDF / PNG 出力には別途システムのブラウザ（Chrome/Chromium 等）が必要。
 "aqua:marp-team/marp-cli" = "4.5.0"
 
 [tasks.dev]
