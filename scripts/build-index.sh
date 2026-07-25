@@ -6,17 +6,10 @@
 # 拾うのは title / description / date の 3 つ。並びは date の新しい順で、
 # date が無いデッキは末尾。リンク先は ./<deck>/ で build-decks の出力先と対応する。
 set -euo pipefail
-shopt -s nullglob
 
 cd "$(dirname "${BASH_SOURCE[0]}")/.."
 
 OUT_DIR="${1:-dist}"
-
-decks=(slides/*.md)
-if [ "${#decks[@]}" -eq 0 ]; then
-  echo "no decks found under slides/" >&2
-  exit 1
-fi
 
 # 各デッキの frontmatter を 1 パスで読み、"日付 \t デッキ名 \t タイトル \t 説明" を
 # 日付の新しい順（日付なしは末尾）に出す。値は HTML エスケープ済み。
@@ -68,11 +61,13 @@ deck_rows() {
       fm[key] = value
     }
     END { if (NR > 0) emit() }
-  ' "${decks[@]}" | sort -t"$(printf '\t')" -k1,1r -k2,2
+  ' slides/*.md | sort -t"$(printf '\t')" -k1,1r -k2,2
 }
 
 items=""
+count=0
 while IFS=$'\t' read -r date deck title description; do
+  count=$((count + 1))
   items="${items}      <li>
         <a href=\"./${deck}/\">${title}</a>
 "
@@ -138,4 +133,4 @@ HTML
 
 cp slides/public/favicon.ico "$OUT_DIR/favicon.ico"
 
-echo "generated: $OUT_DIR/index.html (${#decks[@]} decks)"
+echo "generated: $OUT_DIR/index.html (${count} decks)"
