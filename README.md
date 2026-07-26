@@ -43,7 +43,7 @@ mise run dev
 
 リンク先は `dist/<name>/` を指すので、手元でリンク先まで見るならデッキ側のビルドも必要。
 
-各デッキの OGP（`og:url` / `canonical` / `og:image` / `og:site_name`）もこのドメインを指す。ドメインを変えるときは `.github/actions/build-decks/action.yml` の `SITE_HOST` を直す。
+各デッキの OGP（`og:url` / `canonical` / `og:image`）もこのドメインを指す。ドメインを変えるときは `.github/actions/build-decks/action.yml` の `SITE_HOST` を直す。
 
 ## 画像・アセットを追加する
 
