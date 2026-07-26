@@ -61,7 +61,7 @@ slides/
 
 CI は各デッキに `shared/` と `<name>/` だけをコピーするので、デッキが増えても他のデッキの画像を巻き込まない。
 
-参照した画像が同梱されていなければ CI（`.github/workflows/ci.yml`）が落ちる。ビルドした `dist/` を [lychee](https://github.com/lycheeverse/lychee) で検査していて、一覧ページのリンク切れも同時に見る。手元では `mise run check` で同じ検査ができる。
+CD はデプロイの手前で `dist/` を [lychee](https://github.com/lycheeverse/lychee) にかける。参照した画像が同梱されていなければそこで落ちて、公開までいかない（一覧ページのリンク切れも同時に見る）。手元では `mise run check` で同じ検査ができる。
 
 ## PDF出力
 
