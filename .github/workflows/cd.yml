@@ -24,11 +24,7 @@ jobs:
 
       - uses: ./.github/actions/build-decks
 
-      # marp writes image paths into the HTML as-is and never checks them, so a
-      # deck whose assets sit under the wrong name would deploy with broken
-      # <img> tags. Fail here and nothing gets uploaded or deployed. --offline
-      # skips the http(s) links in the decks and only resolves the local ones,
-      # which also covers the hand-written index page.
+      # marp emits image paths unchecked; --offline resolves only the local ones
       - name: Check the built site for broken images and links
         run: lychee --offline --no-progress dist
 

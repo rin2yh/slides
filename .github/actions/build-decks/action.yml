@@ -26,8 +26,7 @@ runs:
             --og-image "${DECK_URL}og-image.png" \
             --output "dist/${DECK}/index.html"
 
-          # Assets: shared/ plus this deck's own directory. A deck that uses
-          # neither is fine; the check step below catches anything else.
+          # Assets: shared/ plus this deck's own dir (either may be absent)
           mkdir -p "dist/${DECK}/public"
           cp -r slides/public/shared "dist/${DECK}/public/shared"
           if [ -d "slides/public/${DECK}" ]; then
