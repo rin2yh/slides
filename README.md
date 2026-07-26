@@ -45,7 +45,23 @@ mise run dev
 
 ## 画像・アセットを追加する
 
-`slides/public/` に置き、Markdown からは `./public/foo.svg` の相対パスで参照する。
+**デッキごとにディレクトリを切る。** `slides/<name>.md` が使う画像は `slides/public/<name>/` に置き、Markdown からは `./public/<name>/foo.svg` の相対パスで参照する。
+
+```
+slides/
+  pumlv-go.md                    ← デッキ
+  public/
+    shared/                      ← 全デッキ共通（favicon、プロフィール画像）
+    pumlv-go/                    ← pumlv-go.md 専用の画像
+  diagrams/
+    pumlv-go/                    ← その SVG のソース（.puml / .mmd）
+```
+
+`shared/` に置くのは **2 つ以上のデッキが実際に使うもの**だけ。1 つのデッキしか使わないなら、汎用的に見えてもそのデッキのディレクトリに置く（使うデッキが増えたときに移せばいい）。
+
+CI は各デッキに `shared/` と `<name>/` だけをコピーするので、デッキが増えても他のデッキの画像を巻き込まない。
+
+CD はデプロイの手前で `dist/` を [lychee](https://github.com/lycheeverse/lychee) にかける。参照した画像が同梱されていなければそこで落ちて、公開までいかない（一覧ページのリンク切れも同時に見る）。手元では `mise run check` で同じ検査ができる。
 
 ## PDF出力
 

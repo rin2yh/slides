@@ -1,5 +1,6 @@
 [tools]
 "aqua:marp-team/marp-cli" = "4.5.0"
+lychee = "0.24.2"
 
 [tasks.dev]
 description = "開発サーバを起動（ライブリロード）: mise run dev"
@@ -8,6 +9,10 @@ run = "marp --config-file .marprc.yml --server slides"
 [tasks.build]
 description = "slides/ を dist/ にHTMLビルド: mise run build"
 run = "marp --config-file .marprc.yml"
+
+[tasks.check]
+description = "ビルド済みの dist/ に壊れた画像・リンクが無いか検査: mise run check"
+run = "lychee --offline --no-progress dist"
 
 [tasks.export]
 description = "PDF出力: mise run export -- slides/<name>.md --output dist/<name>.pdf"
@@ -24,5 +29,6 @@ if [ -e "$dest" ]; then
 fi
 cp slides/templates/template.md "$dest"
 echo "created: $dest"
-echo "next: mise run dev  →  http://localhost:8080/${name}"
+echo "assets:  slides/public/${name}/  (共有は slides/public/shared/)"
+echo "next: mise run dev  →  http://localhost:8080/${name}.md"
 '''

@@ -251,7 +251,7 @@ section.section p {
    both rows and align-items:center drops a phantom margin above the heading).
    Markdown structure:
      ## 自己紹介
-     ![](./public/images/icon.jpg)   ← 幅は指定しない（カラム幅いっぱいに表示する）
+     ![](./public/shared/icon.jpg)   ← 幅は指定しない（カラム幅いっぱいに表示する）
      | key | value |
      ...
 */

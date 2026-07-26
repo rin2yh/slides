@@ -23,7 +23,7 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 
 ## 自己紹介
 
-![](./public/images/icon.jpg)
+![](./public/shared/icon.jpg)
 
 | 名前 | Rinrin |
 |---|---|
@@ -55,7 +55,7 @@ SECTION 01
 
 ## [ PlantUML ](https://plantuml.com/ja/)とは
 
-![w:220](./public/plantuml-logo.png)
+![w:220](./public/pumlv-go/plantuml-logo.png)
 
 > PlantUMLは、様々なダイアグラムを迅速かつ簡単に作成できる、非常に多目的なツールです。
 https://plantuml.com/ja/
@@ -87,10 +87,10 @@ https://plantuml.com/ja/
 
 ## PlantUMLとMermaid、実際の図
 
-![](./public/compare-plantuml.svg)
+![](./public/pumlv-go/compare-plantuml.svg)
 **PlantUML**
 
-![](./public/compare-mermaid.svg)
+![](./public/pumlv-go/compare-mermaid.svg)
 **Mermaid**
 
 同じクラス図でも、PlantUMLは配置や線種を指定して整理できる（Mermaidは自動レイアウト任せ）
@@ -131,7 +131,7 @@ SECTION 02
 
 ## 構成
 
-![w:1660](./public/pumlv-arch.svg)
+![w:1660](./public/pumlv-go/arch.svg)
 
 - Go側: ファイルの監視、ローカルHTTPサーバ、SSE配信、フロントエンド資産の同梱
 - ブラウザ側: SPAが変更通知を受け取り、plantuml.js(TeaVM)がその場でSVGを生成
@@ -178,7 +178,7 @@ SECTION 03
 
 ## 構成（再掲）
 
-![w:1660](./public/pumlv-arch-go.svg)
+![w:1660](./public/pumlv-go/arch-go.svg)
 
 赤枠がGoを使用している箇所（＝バイナリ）
 
@@ -187,13 +187,13 @@ SECTION 03
 
 ## シーケンス①：起動時
 
-![h:740](./public/pumlv-seq-start.svg)
+![h:740](./public/pumlv-go/seq-start.svg)
 
 ---
 
 ## シーケンス②：ファイルを保存したとき
 
-![h:740](./public/pumlv-seq-reload.svg)
+![h:740](./public/pumlv-go/seq-reload.svg)
 
 ---
 

@@ -22,7 +22,7 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 
 ## 自己紹介
 
-![](./public/images/icon.jpg)
+![](./public/shared/icon.jpg)
 
 | 名前 | Rinrin |
 |---|---|
@@ -100,7 +100,7 @@ coverage: 80.0% of statements
 
 ## 図で説明する
 
-![w:1400](./public/foo.svg)
+![w:1400](./public/このデッキの名前/foo.svg)
 
 **図の下に短い解説文を置く。**
 

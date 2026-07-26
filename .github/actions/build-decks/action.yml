@@ -1,5 +1,5 @@
 name: Build decks
-description: Build every Marp deck under slides/*.md into dist/<deck>, including each deck's OGP image and shared assets, plus the deck index page at dist/index.html. Assumes the marp CLI is already on PATH.
+description: Build every Marp deck under slides/*.md into dist/<deck>, with its OGP image and its assets, plus the deck index page at dist/index.html. Assumes the marp CLI is already on PATH.
 
 runs:
   using: composite
@@ -26,9 +26,13 @@ runs:
             --og-image "${DECK_URL}og-image.png" \
             --output "dist/${DECK}/index.html"
 
-          # Shared assets
-          cp -r slides/public "dist/${DECK}/public"
-          cp slides/public/favicon.ico "dist/${DECK}/favicon.ico"
+          # Assets: shared/ plus this deck's own dir (either may be absent)
+          mkdir -p "dist/${DECK}/public"
+          cp -r slides/public/shared "dist/${DECK}/public/shared"
+          if [ -d "slides/public/${DECK}" ]; then
+            cp -r "slides/public/${DECK}" "dist/${DECK}/public/${DECK}"
+          fi
+          cp slides/public/shared/favicon.ico "dist/${DECK}/favicon.ico"
 
           # OGP image (first slide)
           marp --config-file .marprc.yml \
@@ -45,4 +49,4 @@ runs:
       run: |
         cp site/index.html dist/index.html
         cp slides/theme.css dist/theme.css
-        cp slides/public/favicon.ico dist/favicon.ico
+        cp slides/public/shared/favicon.ico dist/favicon.ico
