@@ -22,7 +22,7 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 
 ## 自己紹介
 
-![w:340](./public/images/icon.jpg)
+![](./public/images/icon.jpg)
 
 | 名前 | Rinrin |
 |---|---|
@@ -74,8 +74,6 @@ func Abs(n int) int {
 
 ## 端末で確認する
 
-### コマンド
-
 ```shell
 $ go test -cover
 coverage: 80.0% of statements
@@ -84,8 +82,6 @@ coverage: 80.0% of statements
 ---
 
 ## 表で整理・比較する
-
-素の表はそのまま Markdown で書ける。装飾（行アクセント等）は無し。
 
 | 項目 | 説明 |
 |---|---|
@@ -98,7 +94,7 @@ coverage: 80.0% of statements
 
 > ここに引用文を配置します。原文の主張をそのまま示し、根拠として使います。
 
-<small>— 出典・著者・媒体（年）</small>
+— 出典・著者・媒体（年）
 
 ---
 
@@ -113,8 +109,6 @@ coverage: 80.0% of statements
 ## Q. 今日の問いをここに?
 
 **A. 結論をここに一文で**
-
-<small>要点</small>
 
 - **要点1**
   - 理由・根拠をここに
