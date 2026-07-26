@@ -45,30 +45,17 @@ runs:
           echo "::endgroup::"
         done
 
-    # marp writes image paths into the HTML as-is and never checks them, so a
-    # deck whose assets sit under the wrong name would deploy with broken
-    # <img> tags. Fail the build instead.
-    - name: Check every referenced image was shipped
-      shell: python
-      run: |
-        import pathlib
-        import re
-        import sys
-
-        broken = []
-        for html in sorted(pathlib.Path("dist").glob("*/index.html")):
-            deck = html.parent
-            for src in re.findall(r'src="\./([^"]+)"', html.read_text()):
-                if not (deck / src).exists():
-                    broken.append(f"{deck.name} references ./{src}, but dist/{deck.name}/{src} does not exist")
-
-        for problem in broken:
-            print(f"::error::{problem}")
-        sys.exit(1 if broken else 0)
-
     - name: Copy index page
       shell: bash
       run: |
         cp site/index.html dist/index.html
         cp slides/theme.css dist/theme.css
         cp slides/public/shared/favicon.ico dist/favicon.ico
+
+    # marp writes image paths into the HTML as-is and never checks them, so a
+    # deck whose assets sit under the wrong name would deploy with broken
+    # <img> tags. --offline skips the http(s) links in the decks and only
+    # resolves the local ones, which also covers the hand-written index page.
+    - name: Check the built site for broken images and links
+      shell: bash
+      run: lychee --offline --no-progress dist
