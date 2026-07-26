@@ -24,4 +24,5 @@ section divider の番号は自動採番されない。`SECTION 01` のように
 
 - **HTML タグ** — 許容するのは `<br>`（見出しの改行位置を決める用）だけ。`<!-- _class: ... -->` は Marp のディレクティブ、`<https://…>` は Markdown の autolink なので、どちらも対象外
 - **`slides/theme.css` への追記**、inline style、`<!-- _color: red -->` 系の装飾ディレクティブ — 既存のクラスで組めないときは中身の方を分割・整理する
-- **画像の絶対パス** `/foo.svg` — GitHub Pages ではデッキが `/repo/deck/` に置かれるので壊れる。`./public/foo.svg` と書く（`slides/public/*` は CI が `dist/<deck>/public/*` にコピーする）
+- **画像の絶対パス** `/foo.svg` — GitHub Pages ではデッキが `/repo/deck/` に置かれるので壊れる。`./public/<deck>/foo.svg`（全デッキ共通のものだけ `./public/shared/foo.svg`）と書く
+- **他のデッキのディレクトリの参照** `./public/other-deck/foo.svg` — CI は各デッキに `shared/` と自分の `<deck>/` しかコピーしないので、本番で 404 になる。共通で使うなら `slides/public/shared/` に移してから参照する
