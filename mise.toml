@@ -22,7 +22,7 @@ if [ -e "$dest" ]; then
   echo "already exists: $dest" >&2
   exit 1
 fi
-sed "s|__NAME__|${name}|g" slides/templates/template.md > "$dest"
+cp slides/templates/template.md "$dest"
 echo "created: $dest"
 echo "assets:  slides/public/${name}/  (共有は slides/public/shared/)"
 echo "next: mise run dev  →  http://localhost:8080/${name}.md"

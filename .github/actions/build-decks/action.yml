@@ -27,26 +27,13 @@ runs:
             --output "dist/${DECK}/index.html"
 
           # Assets: shared/ plus this deck's own directory. A deck that uses
-          # neither is fine; referencing anything else is caught right below.
+          # neither is fine; the check step below catches anything else.
           mkdir -p "dist/${DECK}/public"
           cp -r slides/public/shared "dist/${DECK}/public/shared"
           if [ -d "slides/public/${DECK}" ]; then
             cp -r "slides/public/${DECK}" "dist/${DECK}/public/${DECK}"
           fi
           cp slides/public/shared/favicon.ico "dist/${DECK}/favicon.ico"
-
-          # marp emits image paths verbatim and never checks them, so a deck
-          # whose assets live under the wrong name would deploy with broken
-          # <img> tags. Fail the build instead.
-          MISSING=""
-          for SRC in $(grep -o 'src="\./[^"]*"' "dist/${DECK}/index.html" \
-            | sed 's|^src="\./||; s|"$||' | sort -u || true); do
-            [ -f "dist/${DECK}/${SRC}" ] || MISSING="${MISSING} ${SRC}"
-          done
-          if [ -n "${MISSING}" ]; then
-            echo "::error::${DECK} references assets missing from dist:${MISSING}"
-            exit 1
-          fi
 
           # OGP image (first slide)
           marp --config-file .marprc.yml \
@@ -57,6 +44,27 @@ runs:
 
           echo "::endgroup::"
         done
+
+    # marp writes image paths into the HTML as-is and never checks them, so a
+    # deck whose assets sit under the wrong name would deploy with broken
+    # <img> tags. Fail the build instead.
+    - name: Check every referenced image was shipped
+      shell: python
+      run: |
+        import pathlib
+        import re
+        import sys
+
+        broken = []
+        for html in sorted(pathlib.Path("dist").glob("*/index.html")):
+            deck = html.parent
+            for src in re.findall(r'src="\./([^"]+)"', html.read_text()):
+                if not (deck / src).exists():
+                    broken.append(f"{deck.name} references ./{src}, but dist/{deck.name}/{src} does not exist")
+
+        for problem in broken:
+            print(f"::error::{problem}")
+        sys.exit(1 if broken else 0)
 
     - name: Copy index page
       shell: bash

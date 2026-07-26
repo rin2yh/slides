@@ -100,7 +100,7 @@ coverage: 80.0% of statements
 
 ## 図で説明する
 
-![w:1400](./public/__NAME__/foo.svg)
+![w:1400](./public/このデッキの名前/foo.svg)
 
 **図の下に短い解説文を置く。**
 
