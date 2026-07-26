@@ -33,7 +33,7 @@ mise run dev
 
 ## 一覧ページ
 
-サイトのトップ（`https://<owner>.github.io/<repo>/`）はデッキ一覧ページ。実体は `site/index.html` で、CI はこれを `dist/` にコピーするだけ。
+サイトのトップ（https://slides.rin2yh.com/ ）はデッキ一覧ページ。実体は `site/index.html` で、CI はこれを `dist/` にコピーするだけ。
 
 **スライドを足したら `<ul>` に `<li>` を 1 行足す。** 日付の新しい順に並べる。
 
@@ -42,6 +42,8 @@ mise run dev
 ```
 
 リンク先は `dist/<name>/` を指すので、手元でリンク先まで見るならデッキ側のビルドも必要。
+
+各デッキの OGP（`og:url` / `canonical` / `og:image` / `og:site_name`）もこのドメインを指す。ドメインを変えるときは `.github/actions/build-decks/action.yml` の `SITE_HOST` を直す。
 
 ## 画像・アセットを追加する
 

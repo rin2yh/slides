@@ -10,12 +10,13 @@ runs:
         set -euo pipefail
         shopt -s nullglob
 
-        OWNER="${GITHUB_REPOSITORY%/*}"
-        REPO="${GITHUB_REPOSITORY#*/}"
+        # Pages のカスタムドメイン。og:url / canonical / og:image が指す先で、
+        # カードにドメインを出す側もここのホストを読む
+        SITE_HOST="slides.rin2yh.com"
 
         for f in slides/*.md; do
           DECK="$(basename "$f" .md)"
-          DECK_URL="https://${OWNER}.github.io/${REPO}/${DECK}/"
+          DECK_URL="https://${SITE_HOST}/${DECK}/"
           echo "::group::build ${DECK}"
 
           # HTML
@@ -25,6 +26,10 @@ runs:
             --url "${DECK_URL}" \
             --og-image "${DECK_URL}og-image.png" \
             --output "dist/${DECK}/index.html"
+
+          # marp に og:site_name のフラグは無いので後から差し込む
+          sed -i "s|<head>|<head><meta property=\"og:site_name\" content=\"${SITE_HOST}\">|" \
+            "dist/${DECK}/index.html"
 
           # Assets: shared/ plus this deck's own dir (either may be absent)
           mkdir -p "dist/${DECK}/public"
