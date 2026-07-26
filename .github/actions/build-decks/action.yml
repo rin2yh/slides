@@ -1,5 +1,5 @@
 name: Build decks
-description: Build every Marp deck under slides/*.md into dist/<deck>, including each deck's OGP image, its own assets from slides/public/<deck> and the shared ones from slides/public/shared, plus the deck index page at dist/index.html. Assumes the marp CLI is already on PATH.
+description: Build every Marp deck under slides/*.md into dist/<deck>, with its OGP image and its assets, plus the deck index page at dist/index.html. Assumes the marp CLI is already on PATH.
 
 runs:
   using: composite
@@ -26,13 +26,27 @@ runs:
             --og-image "${DECK_URL}og-image.png" \
             --output "dist/${DECK}/index.html"
 
-          # Assets: everyone's shared/ plus this deck's own directory
+          # Assets: shared/ plus this deck's own directory. A deck that uses
+          # neither is fine; referencing anything else is caught right below.
           mkdir -p "dist/${DECK}/public"
           cp -r slides/public/shared "dist/${DECK}/public/shared"
           if [ -d "slides/public/${DECK}" ]; then
             cp -r "slides/public/${DECK}" "dist/${DECK}/public/${DECK}"
           fi
           cp slides/public/shared/favicon.ico "dist/${DECK}/favicon.ico"
+
+          # marp emits image paths verbatim and never checks them, so a deck
+          # whose assets live under the wrong name would deploy with broken
+          # <img> tags. Fail the build instead.
+          MISSING=""
+          for SRC in $(grep -o 'src="\./[^"]*"' "dist/${DECK}/index.html" \
+            | sed 's|^src="\./||; s|"$||' | sort -u || true); do
+            [ -f "dist/${DECK}/${SRC}" ] || MISSING="${MISSING} ${SRC}"
+          done
+          if [ -n "${MISSING}" ]; then
+            echo "::error::${DECK} references assets missing from dist:${MISSING}"
+            exit 1
+          fi
 
           # OGP image (first slide)
           marp --config-file .marprc.yml \

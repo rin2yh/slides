@@ -23,7 +23,6 @@ if [ -e "$dest" ]; then
   exit 1
 fi
 sed "s|__NAME__|${name}|g" slides/templates/template.md > "$dest"
-mkdir -p "slides/public/${name}" "slides/diagrams/${name}"
 echo "created: $dest"
 echo "assets:  slides/public/${name}/  (共有は slides/public/shared/)"
 echo "next: mise run dev  →  http://localhost:8080/${name}.md"
