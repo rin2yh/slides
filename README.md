@@ -82,7 +82,7 @@ CD が成功すると `Sync to blog` ワークフローが走り、`slides/*.md`
 ]
 ```
 
-手元で中身を見るなら `mise run manifest`。`title` / `description` / `date` が欠けているデッキがあるとそこで落ちる。
+JSON を作るのは `tools/deck-manifest`（Go、標準ライブラリのみ）。手元で中身を見るなら `mise run manifest`。`title` / `description` / `date` が欠けているデッキがあるとそこで落ちる。
 
 同期先ブランチ `slides-sync` は毎回上書きするので、PR が開いたままでも常に最新の一覧に差し替わる。手で編集しても次の同期で消える。
 

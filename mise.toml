@@ -1,5 +1,6 @@
 [tools]
 "aqua:marp-team/marp-cli" = "4.5.0"
+go = "1.24"
 lychee = "0.24.2"
 
 [tasks.dev]
@@ -16,7 +17,7 @@ run = "lychee --offline --no-progress dist"
 
 [tasks.manifest]
 description = "blog に送るデッキ一覧 JSON を手元で確認: mise run manifest"
-run = "python3 .github/scripts/deck-manifest.py"
+run = "go run ./tools/deck-manifest"
 
 [tasks.export]
 description = "PDF出力: mise run export -- slides/<name>.md --output dist/<name>.pdf"
