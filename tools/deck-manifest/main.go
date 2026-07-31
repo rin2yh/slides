@@ -139,24 +139,32 @@ func unquote(value string) string {
 
 var originPattern = regexp.MustCompile(`[:/]([^/:]+)/([^/]+?)(?:\.git)?$`)
 
-// siteBase は公開サイトのルート URL。CI では GITHUB_REPOSITORY、手元では origin から引く。
+// siteBase は公開サイトのルート URL。
 func siteBase() (string, error) {
-	repo := os.Getenv("GITHUB_REPOSITORY")
-	if repo == "" {
-		out, err := exec.Command("git", "config", "--get", "remote.origin.url").Output()
-		if err != nil {
-			return "", fmt.Errorf("公開 URL を決められない: GITHUB_REPOSITORY も origin も無い")
-		}
-		matched := originPattern.FindStringSubmatch(strings.TrimSpace(string(out)))
-		if matched == nil {
-			return "", fmt.Errorf("公開 URL を決められない: origin の URL から <owner>/<repo> を読めない")
-		}
-		repo = matched[1] + "/" + matched[2]
-	}
-
-	owner, name, found := strings.Cut(repo, "/")
-	if !found {
-		return "", fmt.Errorf("公開 URL を決められない: %q が <owner>/<repo> でない", repo)
+	owner, name, err := repo()
+	if err != nil {
+		return "", fmt.Errorf("公開 URL を決められない: %w", err)
 	}
 	return fmt.Sprintf("https://%s.github.io/%s", owner, name), nil
+}
+
+// repo は公開先の owner と repo。CI では GITHUB_REPOSITORY、手元では origin から引く。
+func repo() (string, string, error) {
+	if slug := os.Getenv("GITHUB_REPOSITORY"); slug != "" {
+		owner, name, found := strings.Cut(slug, "/")
+		if !found {
+			return "", "", fmt.Errorf("GITHUB_REPOSITORY %q が <owner>/<repo> でない", slug)
+		}
+		return owner, name, nil
+	}
+
+	out, err := exec.Command("git", "config", "--get", "remote.origin.url").Output()
+	if err != nil {
+		return "", "", fmt.Errorf("GITHUB_REPOSITORY も origin も無い")
+	}
+	matched := originPattern.FindStringSubmatch(strings.TrimSpace(string(out)))
+	if matched == nil {
+		return "", "", fmt.Errorf("origin の URL から <owner>/<repo> を読めない")
+	}
+	return matched[1], matched[2], nil
 }

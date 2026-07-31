@@ -33,11 +33,6 @@ jobs:
         with:
           persist-credentials: false
 
-      - uses: jdx/mise-action@f10502fc09dadecfefb962fff68ce77213930204 # v4.2.2
-
-      - name: Build the deck manifest
-        run: go run ./tools/deck-manifest > "${RUNNER_TEMP}/slides.json"
-
       # push と PR 作成に使うので、こちらは資格情報を残す
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -45,15 +40,20 @@ jobs:
           token: ${{ secrets.BLOG_SYNC_TOKEN }}
           path: blog
 
+      - uses: jdx/mise-action@f10502fc09dadecfefb962fff68ce77213930204 # v4.2.2
+
+      - name: Build the deck manifest into the blog checkout
+        run: |
+          set -euo pipefail
+          mkdir -p "blog/$(dirname "${MANIFEST_PATH}")"
+          go run ./tools/deck-manifest > "blog/${MANIFEST_PATH}"
+
       - name: Open a pull request against the blog
         working-directory: blog
         env:
           GH_TOKEN: ${{ secrets.BLOG_SYNC_TOKEN }}
         run: |
           set -euo pipefail
-
-          mkdir -p "$(dirname "${MANIFEST_PATH}")"
-          cp "${RUNNER_TEMP}/slides.json" "${MANIFEST_PATH}"
 
           # 未追跡（初回）も拾いたいので diff ではなく status で見る
           if [ -z "$(git status --porcelain -- "${MANIFEST_PATH}")" ]; then
@@ -78,9 +78,11 @@ jobs:
           gh pr create \
             --head "${SYNC_BRANCH}" \
             --title "chore: スライド一覧を同期" \
-            --body "$(printf '%s\n' \
-              "[${GITHUB_REPOSITORY}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}) のデッキ一覧を \`${MANIFEST_PATH}\` に取り込む。" \
-              "" \
-              "このファイルは \`tools/deck-manifest\` の出力なので、手で編集しても次の同期で上書きされる。" \
-              "" \
-              "[同期したワークフロー実行](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})")"
+            --body "$(cat <<EOF
+          [${GITHUB_REPOSITORY}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}) のデッキ一覧を \`${MANIFEST_PATH}\` に取り込む。
+
+          このファイルは \`tools/deck-manifest\` の出力なので、手で編集しても次の同期で上書きされる。
+
+          [同期したワークフロー実行](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})
+          EOF
+          )"
