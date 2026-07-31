@@ -14,6 +14,10 @@ run = "marp --config-file .marprc.yml"
 description = "ビルド済みの dist/ に壊れた画像・リンクが無いか検査: mise run check"
 run = "lychee --offline --no-progress dist"
 
+[tasks.manifest]
+description = "blog に送るデッキ一覧 JSON を手元で確認: mise run manifest"
+run = "python3 .github/scripts/deck-manifest.py"
+
 [tasks.export]
 description = "PDF出力: mise run export -- slides/<name>.md --output dist/<name>.pdf"
 run = "marp --config-file .marprc.yml --pdf --allow-local-files"

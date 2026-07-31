@@ -1,0 +1,84 @@
+name: Sync to blog
+
+# デッキ一覧（タイトル / 日付 / 公開 URL / OGP）を JSON にして blog リポジトリに PR で送る。
+# CD の成功後にだけ走るので、PR に載る URL はデプロイ済みのものしか出てこない。
+
+on:
+  workflow_run:
+    workflows: [CD]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sync-blog
+  cancel-in-progress: false
+
+env:
+  BLOG_REPO: rin2yh/blog
+  # blog 側が読む場所。blog のディレクトリ構成を変えたらここだけ直す
+  MANIFEST_PATH: data/slides.json
+  SYNC_BRANCH: slides-sync
+
+jobs:
+  sync:
+    # CD がコケた回は流さない（手動実行には workflow_run が無いので素通りさせる）
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Build the deck manifest
+        run: python3 .github/scripts/deck-manifest.py > "${RUNNER_TEMP}/slides.json"
+
+      # push と PR 作成に使うので、こちらは資格情報を残す
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          repository: ${{ env.BLOG_REPO }}
+          token: ${{ secrets.BLOG_SYNC_TOKEN }}
+          path: blog
+
+      - name: Open a pull request against the blog
+        working-directory: blog
+        env:
+          GH_TOKEN: ${{ secrets.BLOG_SYNC_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          mkdir -p "$(dirname "${MANIFEST_PATH}")"
+          cp "${RUNNER_TEMP}/slides.json" "${MANIFEST_PATH}"
+
+          # 未追跡（初回）も拾いたいので diff ではなく status で見る
+          if [ -z "$(git status --porcelain -- "${MANIFEST_PATH}")" ]; then
+            echo "デッキ一覧に変化なし"
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch -c "${SYNC_BRANCH}"
+          git add "${MANIFEST_PATH}"
+          git commit -m "chore: スライド一覧を同期"
+
+          # 同期用ブランチは常に最新の一覧で上書きする。PR が開いていれば中身が差し替わるだけ
+          git push --force -u origin "${SYNC_BRANCH}"
+
+          if [ -n "$(gh pr list --head "${SYNC_BRANCH}" --state open --json number --jq '.[].number')" ]; then
+            echo "既存の PR を更新した"
+            exit 0
+          fi
+
+          gh pr create \
+            --head "${SYNC_BRANCH}" \
+            --title "chore: スライド一覧を同期" \
+            --body "$(printf '%s\n' \
+              "[${GITHUB_REPOSITORY}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}) のデッキ一覧を \`${MANIFEST_PATH}\` に取り込む。" \
+              "" \
+              "このファイルは \`.github/scripts/deck-manifest.py\` の出力なので、手で編集しても次の同期で上書きされる。" \
+              "" \
+              "[同期したワークフロー実行](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID})")"
