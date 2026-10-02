@@ -1,0 +1,104 @@
+name: PR Preview
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pr-preview-${{ github.event.pull_request.number }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      deck: ${{ steps.changes.outputs.deck }}
+      preview-url: ${{ steps.upload.outputs.artifact-url }}
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - uses: jdx/mise-action@f10502fc09dadecfefb962fff68ce77213930204 # v4.2.2
+
+      - name: Find the changed slide deck
+        id: changes
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          mapfile -t decks < <(git diff --name-only "$BASE_SHA...$HEAD_SHA" -- 'slides/*.md')
+
+          if (( ${#decks[@]} == 0 )); then
+            echo "No slide deck Markdown changed; skipping preview."
+            exit 0
+          fi
+
+          if (( ${#decks[@]} != 1 )); then
+            echo "::error::PR previews support one changed slide deck per pull request."
+            exit 1
+          fi
+
+          deck="$(basename "${decks[0]}" .md)"
+          if [[ ! "$deck" =~ ^[[:alnum:]_][[:alnum:]_.-]*$ ]]; then
+            echo "::error::Unsupported slide deck filename: ${decks[0]}"
+            exit 1
+          fi
+          echo "deck=$deck" >> "$GITHUB_OUTPUT"
+
+      - name: Export the changed deck as PDF
+        if: steps.changes.outputs.deck != ''
+        env:
+          DECK: ${{ steps.changes.outputs.deck }}
+        run: |
+          mkdir -p dist
+          marp --config-file .marprc.yml \
+            "slides/${DECK}.md" \
+            --pdf \
+            --allow-local-files \
+            --output "dist/${DECK}.pdf"
+
+      - name: Upload the PDF preview
+        id: upload
+        if: steps.changes.outputs.deck != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          path: dist/${{ steps.changes.outputs.deck }}.pdf
+          if-no-files-found: error
+          retention-days: 14
+          archive: false
+
+  comment:
+    needs: build
+    if: github.event.pull_request.head.repo.full_name == github.repository && needs.build.outputs.preview-url != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Find the existing preview comment
+        id: find-comment
+        uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: github-actions[bot]
+          body-includes: '<!-- slides-preview-artifact -->'
+
+      - name: Create or update the preview comment
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            <!-- slides-preview-artifact -->
+            `${{ needs.build.outputs.deck }}` のプレビューをビルドしました。
+
+            [PDFプレビューをブラウザで開く](${{ needs.build.outputs.preview-url }})
