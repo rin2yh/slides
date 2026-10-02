@@ -52,6 +52,12 @@ jobs:
           fi
           echo "deck=$deck" >> "$GITHUB_OUTPUT"
 
+      - name: Install Japanese fonts
+        if: steps.changes.outputs.deck != ''
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes fonts-noto-cjk
+
       - name: Export the changed deck as PDF
         if: steps.changes.outputs.deck != ''
         env:
