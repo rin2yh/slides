@@ -144,12 +144,12 @@ func (kb *keyboard) Down(c Keycode) error {
     // 省略...
 ```
 
-<!-- `KeyMediaVolumeInc / Dec` には `0xE400` が含まれている。 -->
 <!-- `Down()` は上位ビットを見て `downCon()` へ処理を分岐する。 -->
 
 [TinyGo: keycode.go](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keycode.go#L98-L99) · [keyboard.go: Down()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L280-L310)
 
 ---
+
 ## Consumer Controlの値をUSB送信用のバイト列に変換する
 
 ```go
@@ -166,8 +166,7 @@ func (kb *keyboard) keyboardSendKeys(consumer bool) bool {
     // 省略...
 ```
 
-このバイト列、データはReportと呼ばれる。
-<!-- Consumer Controlの場合は、Report IDと保持していた値を3バイトに組み立てて`sendKey()`へ渡す。 -->
+HIDでやり取りするデータをReportと呼ぶ。REPORT_ID は、Reportの種類を示すID。
 [TinyGo: keyboardSendKeys() / downCon()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L258-L279) · [SendUSBPacket()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/hid.go#L97-L100)
 
 ---
