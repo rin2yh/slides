@@ -89,13 +89,12 @@ SECTION 01
 
 ## Consumer Controlとは
 
-HIDの中で、音量や再生・停止などの操作を扱うための分類。
+HIDの中で、音量や再生・停止などのメディア関連の操作を扱うための分類。
+一般にMedia Keyと呼ばれる。
 
-- Volume Increment / Decrement
-- Mute
-- Play / Pause など
-
-今回扱う音量調節は、Consumer Controlに含まれる。
+例
+- 音量調節: Volume Increment / Decrement, Mute
+- 再生・停止: Play / Pause
 
 ---
 
