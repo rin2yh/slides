@@ -63,8 +63,6 @@ CI は各デッキに `shared/` と `<name>/` だけをコピーするので、�
 
 CD はデプロイの手前で `dist/` を [lychee](https://github.com/lycheeverse/lychee) にかける。参照した画像が同梱されていなければそこで落ちて、公開までいかない（一覧ページのリンク切れも同時に見る）。手元では `mise run check` で同じ検査ができる。
 
-PR では全デッキをビルドしたプレビューを GitHub Actions の成果物として14日間保存する。同一リポジトリ内のPRには成果物への案内コメントが付き、PR更新時にコメントも更新される。コメント内のリンクから workflow run を開き、Artifacts の ZIP をダウンロードして展開し、`index.html` を開く。fork からのPRはコメントを付けず、Checks の workflow run から成果物を確認する。
-
 ## PDF出力
 
 ```bash
