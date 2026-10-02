@@ -76,29 +76,18 @@ jobs:
 
   comment:
     needs: build
-    if: github.event.pull_request.head.repo.full_name == github.repository && needs.build.outputs.preview-url != ''
+    if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      issues: write
       pull-requests: write
     steps:
-      - name: Find the existing preview comment
-        id: find-comment
-        uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
+      - name: Update the preview comment
+        uses: marocchino/sticky-pull-request-comment@5770ad5eb8f42dd2c4f34da00c94c5381e49af88 # v3.0.5
         with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-author: github-actions[bot]
-          body-includes: '<!-- slides-preview-artifact -->'
-
-      - name: Create or update the preview comment
-        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
-        with:
-          issue-number: ${{ github.event.pull_request.number }}
-          comment-id: ${{ steps.find-comment.outputs.comment-id }}
-          edit-mode: replace
-          body: |
-            <!-- slides-preview-artifact -->
+          header: slide-preview
+          delete: ${{ needs.build.outputs.preview-url == '' }}
+          message: |
             `${{ needs.build.outputs.deck }}` のプレビューをビルドしました。
 
             [PDFプレビューをブラウザで開く](${{ needs.build.outputs.preview-url }})
