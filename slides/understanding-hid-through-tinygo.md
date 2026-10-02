@@ -182,20 +182,14 @@ func SendUSBPacket(b []byte) {
 
 HIDデバイスがUSB Hostとの間でやり取りする、入力などの実データ。
 
-macOSのIOKit / IOHIDManager経由で、SwiftからInput Reportをキャプチャした。
+以下は、macOSのIOKit / IOHIDManager経由でSwiftからInput Reportをキャプチャしたログ。
 
 ```text
-reportID=3 bytes=03 E9 00
-reportID=3 bytes=03 00 00
-reportID=3 bytes=03 EA 00
-reportID=3 bytes=03 00 00
+reportID=3 bytes=03 E9 00  # 右回し
+reportID=3 bytes=03 00 00  # 操作後
+reportID=3 bytes=03 EA 00  # 左回し
+reportID=3 bytes=03 00 00  # 操作後
 ```
-
-- 右回し: `03 E9 00`
-- 左回し: `03 EA 00`
-- 操作後: `03 00 00`
-
-値の意味は、後続のReport DescriptorとHID Usage Tablesで説明する。
 
 ---
 
