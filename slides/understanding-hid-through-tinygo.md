@@ -138,12 +138,10 @@ func (kb *keyboard) Down(c Keycode) error {
     msb := uint8(c >> 8)
     // 省略...
     if 0xE4 <= msb && msb <= 0xE7 {
+        // downCon()では値をkb.conに保持し、keyboardSendKeys(true)を呼び出す
         return kb.downCon(uint16(c & 0x03FF))
     }
     // 省略...
-}
-
-func (kb *keyboard) downCon(key uint16) error {} // 省略
 ```
 
 <!-- `KeyMediaVolumeInc / Dec` には `0xE400` が含まれている。 -->
@@ -152,43 +150,24 @@ func (kb *keyboard) downCon(key uint16) error {} // 省略
 [TinyGo: keycode.go](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keycode.go#L98-L99) · [keyboard.go: Down()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L280-L310)
 
 ---
-
-## downCon()で音量調節の値を保持する
+## Consumer Controlの値をUSB送信用のバイト列に変換する
 
 ```go
-func (kb *keyboard) downCon(key uint16) error {
+func (kb *keyboard) keyboardSendKeys(consumer bool) bool {
+    var b [9]byte
     // 省略...
-    for i, k := range kb.con {
-        if k == 0 {
-            kb.con[i] = key
+    if consumer {
+        b[0] = 0x03 // REPORT_ID
+        b[1] = uint8(kb.con[0])
+        b[2] = uint8((kb.con[0] & 0x0300) >> 8)
 
-            if !kb.keyboardSendKeys(true) {
-                return hid.ErrHIDReportTransfer
-            }
-            return nil
-        }
+        return kb.sendKey(consumer, b[:3])
     }
     // 省略...
-}
 ```
 
-<!-- `downCon()` は受け取った値を `kb.con` に保存し、`keyboardSendKeys(true)` を呼び出す。 -->
-
-[TinyGo: keyboard.go — downCon()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L362-L380)
-
----
-
-## Consumer Control Reportを組み立ててUSBへ送るまで
-
-`keyboardSendKeys()`はReport IDとConsumer Usageをバイト列にし、`sendKey()`へ渡す。
-
-```go
-b[0] = 0x03 // REPORT_ID
-b[1] = uint8(kb.con[0])
-b[2] = uint8((kb.con[0] & 0x0300) >> 8)
-return kb.sendKey(consumer, b[:3])
-```
-
+このバイト列、データはReportと呼ばれる。
+<!-- Consumer Controlの場合は、Report IDと保持していた値を3バイトに組み立てて`sendKey()`へ渡す。 -->
 [TinyGo: keyboardSendKeys() / downCon()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L258-L279) · [SendUSBPacket()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/hid.go#L97-L100)
 
 ---
