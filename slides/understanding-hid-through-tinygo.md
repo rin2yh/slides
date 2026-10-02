@@ -88,20 +88,26 @@ SECTION 02
 
 ---
 
-## tiny-deckからHIDを使う
+## ロータリーエンコーダーから音量を操作する
 
-ロータリーエンコーダーを回して音量を操作する。
+`ev.Delta`をロータリーエンコーダーの回転量として扱い、正負で回転方向を判定する。
 
 ```go
-keyboard.KeyMediaVolumeInc // 音量を上げる
-keyboard.KeyMediaVolumeDec // 音量を下げる
+func DispatchVolume(ev Event) {
+    kb := keyboard.Port()
+
+    switch {
+    case ev.Delta > 0:
+        kb.Press(keyboard.KeyMediaVolumeInc)
+    case ev.Delta < 0:
+        kb.Press(keyboard.KeyMediaVolumeDec)
+    }
+}
 ```
 
-TinyGoでは`keyboard`パッケージからMedia Keyを送る。
+`KeyMediaVolumeInc` / `KeyMediaVolumeDec`がConsumer Controlとして処理される。
 
-**このキーはHID仕様上の「Keyboard」ではなく「Consumer Control」。**
-
-[rin2yh/tiny-deck](https://github.com/rin2yh/tiny-deck)
+[tiny-deck: media.go](https://github.com/rin2yh/tiny-deck/blob/da05a5741dfd91e2e95381abe14ff961055a0bcd/internal/keyboard/encoder/media.go)
 
 ---
 
