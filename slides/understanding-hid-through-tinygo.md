@@ -96,7 +96,7 @@ TinyGoでは`keyboard`パッケージからMedia Keyを送る。
 
 **このキーはHID仕様上の「Keyboard」ではなく「Consumer Control」。**
 
-[tiny-deck: internal/keyboard/encoder/media.go](https://github.com/rin2yh/tiny-deck/blob/main/internal/keyboard/encoder/media.go)
+[rin2yh/tiny-deck](https://github.com/rin2yh/tiny-deck)
 
 ---
 
@@ -111,27 +111,70 @@ KeyMediaVolumeDec Keycode = 0xEA | 0xE400
 
 `Down()`は上位部分`0xE4`を見て、Consumer Control用の`downCon()`へ渡す。
 
-`0xE9` / `0xEA` は後でHID Usageとして解釈される値。
+```go
+default:
+    if 0xE4 <= msb && msb <= 0xE7 {
+        return kb.downCon(uint16(c & 0x03FF))
+    }
+```
+
+`0xE9` / `0xEA` は下位10ビットから取り出され、HID Usageとして扱われる。
 
 [TinyGo: keycode.go](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keycode.go#L98-L99) · [keyboard.go: Down / downCon](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keyboard.go#L280-L310)
 
 ---
 
-## Consumer Control Reportを組み立ててUSBへ送るまで
+## downCon()がConsumer Usageを保持する
 
-`downCon()`がUsageを保持し、`keyboardSendKeys()`がReportを組み立てる。`SendUSBPacket()`はReportをUSB INエンドポイントへ送る。
+`downCon()`はUsageを空いているスロットに記録し、Consumer Control Reportの送信を呼び出す。
 
 ```go
-// keyboardSendKeys() のConsumer Control Report
+for i, k := range kb.con {
+    if 0 == k {
+        kb.con[i] = key
+        if !kb.keyboardSendKeys(true) {
+            return hid.ErrHIDReportTransfer
+        }
+        return nil
+    }
+}
+```
+
+[TinyGo: keyboard.go — downCon()](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keyboard.go#L362-L380)
+
+---
+
+## Consumer Control Reportを組み立ててUSBへ送るまで
+
+`keyboardSendKeys()`はReport IDとConsumer Usageをバイト列にし、`sendKey()`へ渡す。
+
+```go
 b[0] = 0x03 // REPORT_ID
 b[1] = uint8(kb.con[0])
 b[2] = uint8((kb.con[0] & 0x0300) >> 8)
-
-// SendUSBPacket()
-machine.SendUSBInPacket(hidEndpoint, b)
+return kb.sendKey(consumer, b[:3])
 ```
 
 [TinyGo: keyboardSendKeys() / downCon()](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keyboard.go#L258-L279) · [SendUSBPacket()](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/hid.go#L97-L100)
+
+---
+
+## ReportをUSB INエンドポイントへ渡す
+
+`sendKey()`から`tx()`を経て、`SendUSBPacket()`がHID用USB INエンドポイントへ送る。
+
+```go
+func (kb *keyboard) sendKey(consumer bool, b []byte) bool {
+    kb.tx(b)
+    return true
+}
+
+func SendUSBPacket(b []byte) {
+    machine.SendUSBInPacket(hidEndpoint, b)
+}
+```
+
+[TinyGo: keyboard.go — sendKey()](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keyboard.go#L253-L256) · [hid.go — SendUSBPacket()](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/hid.go#L97-L100)
 
 ---
 
@@ -213,7 +256,7 @@ SECTION 03
 
 ![w:1200](./public/understanding-hid-through-tinygo/seq-device.svg)
 
-ロータリーエンコーダーの入力からReportをUSBへ送信するまでのコードを読んだ。
+TinyGoのHID実装で、Media Keyの分岐からConsumer Control Reportの送信までのコードを読んだ。
 
 ---
 
@@ -256,7 +299,7 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 - USB-IF, [Device Class Definition for HID 1.11](https://www.usb.org/document-library/device-class-definition-hid-111)
 - USB-IF, [HID Usage Tables 1.7](https://www.usb.org/documents?search=HID+usage+tables)
 - TinyGo, [keycode.go](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keycode.go) · [keyboard.go](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keyboard.go) · [hid.go](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/hid.go)
-- rin2yh, [tiny-deck](https://github.com/rin2yh/tiny-deck) · [media encoder](https://github.com/rin2yh/tiny-deck/blob/main/internal/keyboard/encoder/media.go)
+- rin2yh, [tiny-deck](https://github.com/rin2yh/tiny-deck)
 - ITF, [HIDクラス](https://itf.co.jp/tech/road-to-usb-master/hid_class)
 - おなかすいたWiki, [レポートディスクリプタ](https://wiki.onakasuita.org/pukiwiki/?%E3%83%AC%E3%83%9D%E3%83%BC%E3%83%88%E3%83%87%E3%82%A3%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%82%BF)
 - nozo, [Zenn Scrap](https://zenn.dev/nozo/scraps/3bb14d03e682af)

@@ -1,14 +1,11 @@
 %%{init: {"theme":"base","fontFamily":"Hiragino Sans, sans-serif","themeVariables":{"primaryColor":"#f0eee7","primaryTextColor":"#1b1f23","primaryBorderColor":"#9aa0a6","lineColor":"#0a7c98","secondaryColor":"#fbfaf7","tertiaryColor":"#fbfaf7","fontSize":"18px","actorBkg":"#f0eee7","actorBorder":"#9aa0a6","actorTextColor":"#1b1f23","signalColor":"#0a7c98","signalTextColor":"#1b1f23","noteBkgColor":"#d9eef2","noteTextColor":"#1b1f23","noteBorderColor":"#0a7c98"}}}%%
 sequenceDiagram
-  participant ENC as Rotary Encoder
-  participant TD as tiny-deck<br/>encoder/media.go
   participant TG as TinyGo HID
   participant USB as USB IN
   participant HOST as USB Host
 
-  ENC->>TD: Rotate right
-  TD->>TG: KeyMediaVolumeInc
-  TG->>TG: Down() → downCon()
+  TG->>TG: Down(KeyMediaVolumeInc)
+  TG->>TG: downCon()
   TG->>TG: keyboardSendKeys()
   TG->>USB: SendUSBPacket()
   USB->>HOST: Input Report · 03 E9 00
