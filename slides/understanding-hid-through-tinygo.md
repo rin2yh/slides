@@ -78,10 +78,10 @@ SECTION 01
 
 **Human Interface Devices**の略。
 
-人の操作をPCへ伝えるデバイスなどを、USB上で共通の方法で扱うための仕様。
-
+- 人の操作をPCへ伝えるデバイスなどを、USB上で共通の方法で扱うための仕様。
+- 1996年、USB-IFがHID over USB仕様を承認
+    - USB-IF: USB Implementers Forum。USBの仕様を策定/管理する非営利団体
 - 代表例：キーボード、マウス、ゲームパッド
-- データの読み方はReport Descriptorでデバイス自身が説明する
 
 [USB-IF: Human Interface Devices (HID) Specifications and Tools](https://www.usb.org/hid)
 
@@ -95,9 +95,8 @@ SECTION 02
 
 ---
 
-## ロータリーエンコーダーから音量を操作する
+## ロータリーエンコーダーから音量を操作する実装例
 
-`ev.Delta`をロータリーエンコーダーの回転量として扱い、正負で回転方向を判定する。
 
 ```go
 func DispatchVolume(ev Event) {
@@ -111,8 +110,9 @@ func DispatchVolume(ev Event) {
     }
 }
 ```
+`ev.Delta`をロータリーエンコーダーの回転量として扱い、正負で回転方向を判定する。
+`KeyMediaVolumeInc` / `KeyMediaVolumeDec`で音量調節を実行している。
 
-`KeyMediaVolumeInc` / `KeyMediaVolumeDec`がConsumer Controlとして処理される。
 
 [tiny-deck: media.go](https://github.com/rin2yh/tiny-deck/blob/da05a5741dfd91e2e95381abe14ff961055a0bcd/internal/keyboard/encoder/media.go)
 
