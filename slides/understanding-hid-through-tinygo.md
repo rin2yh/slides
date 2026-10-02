@@ -180,28 +180,32 @@ func SendUSBPacket(b []byte) {
 
 ## HID Reportとは
 
-HIDデバイスとUSB Hostの間でやり取りされる、入力・出力・状態などを伝える情報。
+HIDデバイスとUSBホストの間でやり取りされる、入力・出力・状態などを伝える情報。
 
 以下は、macOSのIOKit / IOHIDManager経由でSwiftからInput Reportをキャプチャしたログ。
 
 ```text
-reportID=3 bytes=03 E9 00  # 右回し
-reportID=3 bytes=03 00 00  # 操作後
-reportID=3 bytes=03 EA 00  # 左回し
-reportID=3 bytes=03 00 00  # 操作後
+# 右回し
+reportID=3 bytes=03 E9 00
+# 操作後
+reportID=3 bytes=03 00 00
+# 左回し
+reportID=3 bytes=03 EA 00
+# 操作後
+reportID=3 bytes=03 00 00
 ```
 
 ---
 
 ## Report Descriptorとは
 
-Report Descriptorは、Reportの形式と各フィールドの意味をUSB Hostへ伝えるデータ構造。
+Report Descriptorは、Reportの形式と各フィールドの意味をUSBホストへ伝えるデータ構造。
 
-- 複数の **Item** を組み合わせて記述する
+- 複数のItemを組み合わせて記述する
 - Usage PageやUsageでデータの用途を示す
 - Report SizeやReport Countでフィールドの大きさ・個数を示す
 
-ホストはReport Descriptorに記述された形式に従って、Reportを解釈する。
+USBホストはReport Descriptorに記述された形式に従って、Reportを解釈する。
 
 [USB-IF: Device Class Definition for HID 1.11](https://www.usb.org/document-library/device-class-definition-hid-111)
 
@@ -222,7 +226,7 @@ HIDInputDataAryAbs,
 
 - Usage PageはConsumer、Report IDは3
 - Report Size 16 × Report Count 1で、入力フィールドは16ビット
-- Inputはデバイスからホストへ送る入力データを定義する
+- InputはデバイスからUSBホストへ送る入力データを定義する
 
 [TinyGo: descriptor/hid.go — Consumer Control](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/descriptor/hid.go#L207-L218)
 
@@ -273,7 +277,7 @@ TinyGoのHID実装で、Media Keyの分岐からConsumer Control Reportの送信
 
 ---
 
-## USB Host（PC）がReportを解釈するまで
+## USBホスト（PC）がReportを解釈するまで
 
 ![w:1200](./public/understanding-hid-through-tinygo/seq-host.svg)
 
@@ -327,7 +331,7 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 | `Usage` | フィールドやCollectionの用途を示す |
 | `Report Size` | 1フィールドあたりのビット数 |
 | `Report Count` | フィールドの個数 |
-| `Input` | デバイスからホストへ送るデータを宣言 |
+| `Input` | デバイスからUSBホストへ送るデータを宣言 |
 
 値の範囲を扱うItemとして`Logical Minimum / Maximum`などもある。
 
