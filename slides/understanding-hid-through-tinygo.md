@@ -171,32 +171,34 @@ HIDでやり取りするデータをReportと呼ぶ。REPORT_ID は、Reportの�
 
 ---
 
-## ReportをUSB INエンドポイントへ渡す
-
-`sendKey()`から`tx()`を経て、`SendUSBPacket()`がHID用USB INエンドポイントへ送る。
+## ReportをUSBに送信する
 
 ```go
 func (kb *keyboard) sendKey(consumer bool, b []byte) bool {
     kb.tx(b)
     return true
 }
-
+// 省略...
+func (kb *keyboard) tx(b []byte) {
+    hid.SendUSBPacket(b)
+}
+// 省略...
 func SendUSBPacket(b []byte) {
     machine.SendUSBInPacket(hidEndpoint, b)
 }
 ```
 
+`sendKey()` → `tx()` → `SendUSBPacket()` と処理が渡され、最後にReportがUSBへ送信される。
+
 [TinyGo: keyboard.go — sendKey()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L253-L256) · [hid.go — SendUSBPacket()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/hid.go#L97-L100)
 
 ---
 
-## HID Reportとは
+## 実際に送信されるReport
 
-HIDデバイスとUSBホストの間でやり取りされる、入力・出力・状態などを伝える情報。
+ロータリーエンコーダを回しながら、Reportをキャプチャしたログ。
 
-以下は、macOSのIOKit / IOHIDManager経由でSwiftからInput Reportをキャプチャしたログ。
-
-```text
+```sh
 # 右回し
 reportID=3 bytes=03 E9 00
 # 操作後
@@ -207,11 +209,17 @@ reportID=3 bytes=03 EA 00
 reportID=3 bytes=03 00 00
 ```
 
+ログを見てよくわからないもの
+- reportID=**3**
+- bytesが表す内容
+
+<!-- scriptはswiftで実装 by codex -->
+
 ---
 
 ## Report Descriptorとは
 
-Report Descriptorは、Reportの形式と各フィールドの意味をUSBホストへ伝えるデータ構造。
+Reportの形式と各フィールドの意味をUSBホストへ伝えるデータ構造。
 
 - 複数のItemを組み合わせて記述する
 - Usage PageやUsageでデータの用途を示す
