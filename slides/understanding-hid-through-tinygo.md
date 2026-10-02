@@ -87,6 +87,18 @@ SECTION 01
 
 ---
 
+## Consumer Controlとは
+
+HIDの中で、音量や再生・停止などの操作を扱うための分類。
+
+- Volume Increment / Decrement
+- Mute
+- Play / Pause など
+
+今回扱う音量調節は、Consumer Controlに含まれる。
+
+---
+
 <!-- _class: section -->
 
 SECTION 02
@@ -117,46 +129,51 @@ func DispatchVolume(ev Event) {
 [tiny-deck: media.go](https://github.com/rin2yh/tiny-deck/blob/da05a5741dfd91e2e95381abe14ff961055a0bcd/internal/keyboard/encoder/media.go)
 
 ---
-
-## Media KeyがConsumer Controlとして処理されるまで
-
-TinyGoの`Keycode`は、キーの種類を上位ビットで表す。
+## KeyMediaVolumeInc / Dec がTinyGo内部でどう扱われるか
 
 ```go
 KeyMediaVolumeInc Keycode = 0xE9 | 0xE400
 KeyMediaVolumeDec Keycode = 0xEA | 0xE400
-```
-
-`Down()`は上位部分`0xE4`を見て、Consumer Control用の`downCon()`へ渡す。
-
-```go
-default:
+// 省略...
+func (kb *keyboard) Down(c Keycode) error {
+    msb := uint8(c >> 8)
+    // 省略...
     if 0xE4 <= msb && msb <= 0xE7 {
         return kb.downCon(uint16(c & 0x03FF))
     }
+    // 省略...
+}
+
+func (kb *keyboard) downCon(key uint16) error {} // 省略
 ```
 
-`0xE9` / `0xEA` は下位10ビットから取り出され、HID Usageとして扱われる。
+<!-- `KeyMediaVolumeInc / Dec` には `0xE400` が含まれている。 -->
+<!-- `Down()` は上位ビットを見て `downCon()` へ処理を分岐する。 -->
 
-[TinyGo: keycode.go](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keycode.go#L98-L99) · [keyboard.go: Down / downCon](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L280-L310)
+[TinyGo: keycode.go](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keycode.go#L98-L99) · [keyboard.go: Down()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L280-L310)
 
 ---
 
-## downCon()がConsumer Usageを保持する
-
-`downCon()`はUsageを空いているスロットに記録し、Consumer Control Reportの送信を呼び出す。
+## downCon()で音量調節の値を保持する
 
 ```go
-for i, k := range kb.con {
-    if 0 == k {
-        kb.con[i] = key
-        if !kb.keyboardSendKeys(true) {
-            return hid.ErrHIDReportTransfer
+func (kb *keyboard) downCon(key uint16) error {
+    // 省略...
+    for i, k := range kb.con {
+        if k == 0 {
+            kb.con[i] = key
+
+            if !kb.keyboardSendKeys(true) {
+                return hid.ErrHIDReportTransfer
+            }
+            return nil
         }
-        return nil
     }
+    // 省略...
 }
 ```
+
+<!-- `downCon()` は受け取った値を `kb.con` に保存し、`keyboardSendKeys(true)` を呼び出す。 -->
 
 [TinyGo: keyboard.go — downCon()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L362-L380)
 
