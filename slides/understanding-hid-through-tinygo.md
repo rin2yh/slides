@@ -230,7 +230,7 @@ HIDInputDataAryAbs,
 
 - Usage PageはConsumer、Report IDは3
 - Report Size 16 × Report Count 1で、入力フィールドは16ビット
-- Inputはデバイスからホストへ送るReport
+- Inputはデバイスからホストへ送る入力データを定義する
 
 [TinyGo: descriptor/hid.go — Consumer Control](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/descriptor/hid.go#L207-L218)
 
@@ -355,7 +355,7 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 
 ## 付録：`E9 00`とlittle-endian
 
-Consumer Usageは16ビット値。HID Reportでは下位バイトから並ぶ。
+今回のConsumer Control ReportではUsageを16ビットで送る。HID Reportでは下位バイトから並ぶ。
 
 ```text
 送信バイト: E9 00
