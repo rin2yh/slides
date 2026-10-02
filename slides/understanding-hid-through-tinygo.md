@@ -120,7 +120,7 @@ default:
 
 `0xE9` / `0xEA` は下位10ビットから取り出され、HID Usageとして扱われる。
 
-[TinyGo: keycode.go](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keycode.go#L98-L99) · [keyboard.go: Down / downCon](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keyboard.go#L280-L310)
+[TinyGo: keycode.go](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keycode.go#L98-L99) · [keyboard.go: Down / downCon](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L280-L310)
 
 ---
 
@@ -140,7 +140,7 @@ for i, k := range kb.con {
 }
 ```
 
-[TinyGo: keyboard.go — downCon()](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keyboard.go#L362-L380)
+[TinyGo: keyboard.go — downCon()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L362-L380)
 
 ---
 
@@ -155,7 +155,7 @@ b[2] = uint8((kb.con[0] & 0x0300) >> 8)
 return kb.sendKey(consumer, b[:3])
 ```
 
-[TinyGo: keyboardSendKeys() / downCon()](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keyboard.go#L258-L279) · [SendUSBPacket()](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/hid.go#L97-L100)
+[TinyGo: keyboardSendKeys() / downCon()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L258-L279) · [SendUSBPacket()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/hid.go#L97-L100)
 
 ---
 
@@ -174,7 +174,7 @@ func SendUSBPacket(b []byte) {
 }
 ```
 
-[TinyGo: keyboard.go — sendKey()](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keyboard.go#L253-L256) · [hid.go — SendUSBPacket()](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/hid.go#L97-L100)
+[TinyGo: keyboard.go — sendKey()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L253-L256) · [hid.go — SendUSBPacket()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/hid.go#L97-L100)
 
 ---
 
@@ -215,6 +215,27 @@ Report Descriptorは、Reportの形式と各フィールドの意味をUSB Host�
 
 ---
 
+## TinyGoのConsumer Control Descriptor
+
+TinyGoのUSB Descriptorは、Consumer ControlのInput Reportを次のItemで定義する。
+
+```go
+HIDUsagePageConsumer,
+HIDReportID(3),
+// Other Collection and range items are omitted
+HIDReportSize(16),
+HIDReportCount(1),
+HIDInputDataAryAbs,
+```
+
+- Usage PageはConsumer、Report IDは3
+- Report Size 16 × Report Count 1で、入力フィールドは16ビット
+- Inputはデバイスからホストへ送るReport
+
+[TinyGo: descriptor/hid.go — Consumer Control](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/descriptor/hid.go#L207-L218)
+
+---
+
 ## HID Usage Tables
 
 Usage TablesはUsage IDとその意味を定義する。Usage PageはUsageの分類単位で、Usageはその中の具体的な機能を示す。
@@ -233,13 +254,13 @@ Consumer Page（Usage Page `0x0C`）の抜粋。列はUsage ID、Usage Name、Us
 
 ## Descriptorを使ってReportを読む
 
-観測した3バイトを、Report DescriptorとUsage Tablesを使って解釈する。
+Report Descriptorで各バイトの役割を確認し、Usage TablesでUsageの意味を調べる。
 
 | バイト | 読み方 |
 |---|---|
-| `03` | Report ID 3 |
-| `E9 00` | Consumer Usage `0x00E9` = Volume Increment |
-| `EA 00` | Consumer Usage `0x00EA` = Volume Decrement |
+| `03` | Descriptorで定義されたReport ID 3 |
+| `E9 00` | 16ビットのUsage値 `0x00E9`。Consumer PageではVolume Increment |
+| `EA 00` | 16ビットのUsage値 `0x00EA`。Consumer PageではVolume Decrement |
 | `00 00` | Consumer Controlの押下なし |
 
 ---
@@ -280,7 +301,7 @@ SECTION 04
 
 1. ロータリーエンコーダーの入力をTinyGo側でMedia Keyとして扱う
 2. TinyGoのHID実装がConsumer Control Reportを生成してUSBへ送る
-3. USB HostがDescriptorに従ってReportを解釈する
+3. HIDドライバがDescriptorに従ってReportを解釈する
 4. OSが音量操作として処理する
 
 ---
@@ -298,7 +319,7 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 - USB-IF, [Human Interface Devices (HID) Specifications and Tools](https://www.usb.org/hid)
 - USB-IF, [Device Class Definition for HID 1.11](https://www.usb.org/document-library/device-class-definition-hid-111)
 - USB-IF, [HID Usage Tables 1.7](https://www.usb.org/documents?search=HID+usage+tables)
-- TinyGo, [keycode.go](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keycode.go) · [keyboard.go](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/keyboard/keyboard.go) · [hid.go](https://github.com/tinygo-org/tinygo/blob/dev/src/machine/usb/hid/hid.go)
+- TinyGo, [keycode.go](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keycode.go) · [keyboard.go](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go) · [hid.go](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/hid.go) · [descriptor/hid.go](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/descriptor/hid.go)
 - rin2yh, [tiny-deck](https://github.com/rin2yh/tiny-deck)
 - ITF, [HIDクラス](https://itf.co.jp/tech/road-to-usb-master/hid_class)
 - おなかすいたWiki, [レポートディスクリプタ](https://wiki.onakasuita.org/pukiwiki/?%E3%83%AC%E3%83%9D%E3%83%BC%E3%83%88%E3%83%87%E3%82%A3%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%82%BF)
