@@ -180,7 +180,7 @@ func SendUSBPacket(b []byte) {
 
 ## HID Reportとは
 
-HIDデバイスがUSB Hostとの間でやり取りする、入力などの実データ。
+HIDデバイスとUSB Hostの間でやり取りされる、入力・出力・状態などを伝える情報。
 
 以下は、macOSのIOKit / IOHIDManager経由でSwiftからInput Reportをキャプチャしたログ。
 
