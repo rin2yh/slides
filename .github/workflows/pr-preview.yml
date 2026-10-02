@@ -15,28 +15,68 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    outputs:
+      deck: ${{ steps.changes.outputs.deck }}
+      preview-url: ${{ steps.upload.outputs.artifact-url }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - uses: jdx/mise-action@f10502fc09dadecfefb962fff68ce77213930204 # v4.2.2
 
-      - uses: ./.github/actions/build-decks
+      - name: Find the changed slide deck
+        id: changes
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          mapfile -t decks < <(git diff --name-only "$BASE_SHA...$HEAD_SHA" -- 'slides/*.md')
 
-      - name: Check the built preview for broken local links
-        run: lychee --offline --no-progress dist
+          if (( ${#decks[@]} == 0 )); then
+            echo "No slide deck Markdown changed; skipping preview."
+            exit 0
+          fi
 
-      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+          if (( ${#decks[@]} != 1 )); then
+            echo "::error::PR previews support one changed slide deck per pull request."
+            exit 1
+          fi
+
+          deck="$(basename "${decks[0]}" .md)"
+          if [[ ! "$deck" =~ ^[[:alnum:]_][[:alnum:]_.-]*$ ]]; then
+            echo "::error::Unsupported slide deck filename: ${decks[0]}"
+            exit 1
+          fi
+          echo "deck=$deck" >> "$GITHUB_OUTPUT"
+
+      - name: Export the changed deck as PDF
+        if: steps.changes.outputs.deck != ''
+        env:
+          DECK: ${{ steps.changes.outputs.deck }}
+        run: |
+          mkdir -p dist
+          marp --config-file .marprc.yml \
+            "slides/${DECK}.md" \
+            --pdf \
+            --allow-local-files \
+            --output "dist/${DECK}.pdf"
+
+      - name: Upload the PDF preview
+        id: upload
+        if: steps.changes.outputs.deck != ''
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          name: slides-preview-pr-${{ github.event.pull_request.number }}
-          path: dist/
+          path: dist/${{ steps.changes.outputs.deck }}.pdf
           if-no-files-found: error
           retention-days: 14
+          archive: false
 
   comment:
     needs: build
-    if: github.event.pull_request.head.repo.full_name == github.repository
+    if: github.event.pull_request.head.repo.full_name == github.repository && needs.build.outputs.preview-url != ''
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -59,8 +99,6 @@ jobs:
           edit-mode: replace
           body: |
             <!-- slides-preview-artifact -->
-            スライドのプレビューをビルドしました。
+            `${{ needs.build.outputs.deck }}` のプレビューをビルドしました。
 
-            [Actionsの実行ページを開き、Artifactsからプレビューをダウンロード](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
-
-            ZIPを展開し、`index.html` を開いてください。
+            [PDFプレビューをブラウザで開く](${{ needs.build.outputs.preview-url }})
