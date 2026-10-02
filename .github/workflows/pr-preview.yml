@@ -41,45 +41,26 @@ jobs:
     timeout-minutes: 5
     permissions:
       issues: write
+      pull-requests: write
     steps:
-      - uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+      - name: Find the existing preview comment
+        id: find-comment
+        uses: peter-evans/find-comment@b30e6a3c0ed37e7c023ccd3f1db5c6c0b0c23aad # v4.0.0
         with:
-          script: |
-            const marker = '<!-- slides-preview-artifact -->';
-            const runUrl = `${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-            const body = [
-              marker,
-              'スライドのプレビューをビルドしました。',
-              '',
-              `[Actionsの実行ページを開き、Artifactsからプレビューをダウンロード](${runUrl})`,
-              '',
-              'ZIPを展開し、`index.html` を開いてください。'
-            ].join('\n');
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-author: github-actions[bot]
+          body-includes: '<!-- slides-preview-artifact -->'
 
-            const { owner, repo } = context.repo;
-            const issue_number = context.issue.number;
-            const comments = await github.paginate(github.rest.issues.listComments, {
-              owner,
-              repo,
-              issue_number,
-              per_page: 100
-            });
-            const existing = comments.find(comment =>
-              comment.user?.type === 'Bot' && comment.body?.includes(marker)
-            );
+      - name: Create or update the preview comment
+        uses: peter-evans/create-or-update-comment@e8674b075228eee787fea43ef493e45ece1004c9 # v5.0.0
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+          edit-mode: replace
+          body: |
+            <!-- slides-preview-artifact -->
+            スライドのプレビューをビルドしました。
 
-            if (existing) {
-              await github.rest.issues.updateComment({
-                owner,
-                repo,
-                comment_id: existing.id,
-                body
-              });
-            } else {
-              await github.rest.issues.createComment({
-                owner,
-                repo,
-                issue_number,
-                body
-              });
-            }
+            [Actionsの実行ページを開き、Artifactsからプレビューをダウンロード](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            ZIPを展開し、`index.html` を開いてください。
