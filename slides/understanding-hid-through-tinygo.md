@@ -277,17 +277,17 @@ SECTION 04
 
 ## 今回読んだコードの範囲
 
-![w:1200](./public/understanding-hid-through-tinygo/seq-device.svg)
+![w:1440](./public/understanding-hid-through-tinygo/seq-device.svg)
 
-TinyGoのHID実装で、Media Keyの分岐からConsumer Control Reportの送信までのコードを読んだ。
+<!-- TinyGoのHID実装で、Media Keyの分岐からConsumer Control Reportの送信までのコードを読んだ。 -->
 
 ---
 
 ## USBホスト（PC）がReportを解釈するまで
 
-![w:1200](./public/understanding-hid-through-tinygo/seq-host.svg)
+![w:1440](./public/understanding-hid-through-tinygo/seq-host.svg)
 
-OS内部の具体的な実装はOSごとに異なるが、HID Usageを音量操作として扱う。
+<!-- OS内部の具体的な実装はOSごとに異なるが、HID Usageを音量操作として扱う。 -->
 
 ---
 
@@ -321,6 +321,13 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 
 ---
 
+
+<!-- _class: section -->
+
+# 付録
+
+---
+
 ## Report Descriptorとは
 
 Reportの形式と各フィールドの意味をUSBホストへ伝えるデータ構造。
@@ -337,7 +344,7 @@ USBホストはReport Descriptorに記述された形式に従って、Reportを
 ---
 
 
-## 付録：Report DescriptorのItem
+## Report DescriptorのItem
 
 | Item | 役割 |
 |---|---|
@@ -351,7 +358,7 @@ USBホストはReport Descriptorに記述された形式に従って、Reportを
 
 ---
 
-## 付録：Usage PageとUsageの構造
+## Usage PageとUsageの構造
 
 - Usage Pageは大分類。例：Generic Desktop、Keyboard/Keypad、Consumer
 - Usageは、そのPage内で意味を持つ識別子
@@ -363,7 +370,7 @@ USBホストはReport Descriptorに記述された形式に従って、Reportを
 
 ---
 
-## 付録：`E9 00`とlittle-endian
+## `E9 00`とlittle-endian
 
 今回のConsumer Control ReportではUsageを16ビットで送る。HID Reportでは下位バイトから並ぶ。
 
