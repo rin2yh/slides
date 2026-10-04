@@ -371,14 +371,11 @@ USBホストはReport Descriptorに記述された形式に従って、Reportを
 
 ---
 
-## `E9 00`とlittle-endian
+## little-endianとは
 
-今回のConsumer Control ReportではUsageを16ビットで送る。HID Reportでは下位バイトから並ぶ。
+複数バイトで1つの値を表すときに、下位バイトから順に並べる方式。（逆はbig-endian）
 
-```text
-送信バイト: E9 00
-値の組立て: 0x00 × 256 + 0xE9
-Usage値:     0x00E9
-```
+- 16bit値 `0x1234`
+- little-endian: `34 12`
+- big-endian: `12 34`
 
-TinyGoの`keyboardSendKeys()`も、Usageの下位バイトを先に書き出している。
