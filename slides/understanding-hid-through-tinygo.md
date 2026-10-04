@@ -238,57 +238,22 @@ Usageを定義した表。
 
 ---
 
-## Report Descriptorとは
-
-Reportの形式と各フィールドの意味をUSBホストへ伝えるデータ構造。
-
-- 複数のItemを組み合わせて記述する
-- Usage PageやUsageでデータの用途を示す
-- Report SizeやReport Countでフィールドの大きさ・個数を示す
-
-USBホストはReport Descriptorに記述された形式に従って、Reportを解釈する。
-
-[USB-IF: Device Class Definition for HID 1.11](https://www.usb.org/document-library/device-class-definition-hid-111)
-
----
-
-## TinyGoのConsumer Control Descriptor
-
-TinyGoのUSB Descriptorは、Consumer ControlのInput Reportを次のItemで定義する。
-
-```go
-HIDUsagePageConsumer,
-HIDReportID(3),
-// Other Collection and range items are omitted
-HIDReportSize(16),
-HIDReportCount(1),
-HIDInputDataAryAbs,
-```
-
-- Usage PageはConsumer、Report IDは3
-- Report Size 16 × Report Count 1で、入力フィールドは16ビット
-- InputはデバイスからUSBホストへ送る入力データを定義する
-
-[TinyGo: descriptor/hid.go — Consumer Control](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/descriptor/hid.go#L207-L218)
-
----
-
 ## Consumer PageのUsage
 
-Consumer Page（Usage Page `0x0C`）から、今回扱うUsageを抜粋。
+<!-- Consumer Page（Usage Page `0x0C`）から、今回扱うUsageを抜粋。 -->
 
 | Usage ID | Usage Name | Usage Type | Section |
 |---|---|---|---|
 | `0xE9` | Volume Increment | RTC | 15.9 |
 | `0xEA` | Volume Decrement | RTC | 15.9 |
 
+<!-- RTCとあるが、抜粋しただけなのと今回は見なくて良いので気にしないでください。RTC: Re-trigger Control, 「値が 1 の間、イベント完了後に再度イベントを発生させる」タイプの Control -->
+
 出典：[HID Usage Tables 1.7, Consumer Page §15.9](https://www.usb.org/documents?search=HID+usage+tables)
 
 ---
 
 ## E9 00の意味
-
-Report Descriptorで各バイトの役割を確認し、Usage TablesでUsageの意味を調べる。
 
 | バイト | 読み方 |
 |---|---|
@@ -355,6 +320,22 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 - nozo, [Zenn Scrap](https://zenn.dev/nozo/scraps/3bb14d03e682af)
 
 ---
+
+## Report Descriptorとは
+
+Reportの形式と各フィールドの意味をUSBホストへ伝えるデータ構造。
+
+- 複数のItemを組み合わせて記述する
+    - Item: Report Descriptor内に並ぶ、Usage PageやReport Sizeなどの設定項目
+- Usage PageやUsageでデータの用途を示す
+- Report SizeやReport Countでフィールドの大きさ・個数を示す
+
+USBホストはReport Descriptorに記述された形式に従って、Reportを解釈する。
+
+[USB-IF: Device Class Definition for HID 1.11](https://www.usb.org/document-library/device-class-definition-hid-111)
+
+---
+
 
 ## 付録：Report DescriptorのItem
 
