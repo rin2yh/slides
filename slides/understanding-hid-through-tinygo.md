@@ -37,7 +37,6 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 2. TinyGoで入力が送信されるまで
 3. 送信されたデータの意味を理解する
 4. HIDがPCに届くまで
-5. まとめ
 
 ---
 
@@ -323,15 +322,7 @@ OS内部の具体的な実装はOSごとに異なるが、HID Usageを音量操�
 
 ---
 
-<!-- _class: section -->
-
-SECTION 05
-
-# まとめ
-
----
-
-## HIDの入力がPCで扱われるまで
+## まとめ：HIDの入力がPCで扱われるまで
 
 1. ロータリーエンコーダーの入力をTinyGo側でMedia Keyとして扱う
 2. TinyGoのHID実装がConsumer Control Reportを生成してUSBへ送る
