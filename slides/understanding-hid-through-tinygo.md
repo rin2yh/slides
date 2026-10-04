@@ -168,6 +168,7 @@ func (kb *keyboard) keyboardSendKeys(consumer bool) bool {
 <!-- kb.con[0] の値を下位バイト・上位バイトに分け、Report ID 03 と合わせて3バイトのReportを作る。 -->
 
 HIDでやり取りするデータをReportと呼ぶ。REPORT_ID は、Reportの種類を示すID。
+<!-- Reportのデータ構造: Report Descriptorは付録に入れています -->
 [TinyGo: keyboardSendKeys() / downCon()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L258-L279) · [SendUSBPacket()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/hid.go#L97-L100)
 
 ---
@@ -257,7 +258,7 @@ Usageを定義した表。
 
 | バイト | 読み方 |
 |---|---|
-| `03` | Descriptorで定義されたReport ID 3 |
+| `03` | Report ID 3 |
 | `E9 00` | 16ビットのUsage値 `0x00E9`。Consumer PageではVolume Increment |
 | `EA 00` | 16ビットのUsage値 `0x00EA`。Consumer PageではVolume Decrement |
 | `00 00` | Consumer Controlの押下なし |
