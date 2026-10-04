@@ -34,9 +34,10 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 ## 目次
 
 1. 導入
-2. TinyGoの実装からHIDを理解する
-3. HIDがPCに届くまで
-4. まとめ
+2. TinyGoで入力が送信されるまで
+3. 送信されたデータの意味を理解する
+4. HIDがPCに届くまで
+5. まとめ
 
 ---
 
@@ -102,7 +103,7 @@ HIDの中で、音量や再生・停止などのメディア関連の操作を�
 
 SECTION 02
 
-# TinyGoの実装からHIDを理解する
+# TinyGoで入力が送信されるまで
 
 ---
 
@@ -217,6 +218,14 @@ reportID=3 bytes=03 00 00
 
 ---
 
+<!-- _class: section -->
+
+SECTION 03
+
+# 送信されたデータの意味を理解する
+
+---
+
 ## Report Descriptorとは
 
 Reportの形式と各フィールドの意味をUSBホストへ伝えるデータ構造。
@@ -292,7 +301,7 @@ Report Descriptorで各バイトの役割を確認し、Usage TablesでUsageの�
 
 <!-- _class: section -->
 
-SECTION 03
+SECTION 04
 
 # HIDがPCに届くまで
 
@@ -316,7 +325,7 @@ OS内部の具体的な実装はOSごとに異なるが、HID Usageを音量操�
 
 <!-- _class: section -->
 
-SECTION 04
+SECTION 05
 
 # まとめ
 
