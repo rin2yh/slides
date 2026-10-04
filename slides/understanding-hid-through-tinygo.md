@@ -217,6 +217,27 @@ reportID=3 bytes=03 00 00
 
 ---
 
+## HID Usage Tables
+
+Usageを定義した表。
+
+- Usage: HID上の操作や機能を識別する32bitの値
+    - Usage Page: 上位16bit。関連するUsageをまとめるための値
+    - Usage ID: 下位16bit。そのUsage Page内のUsageを識別する値
+- 今回扱う音量調節は、Consumer PageのUsageとして定義
+    - Consumer Page: 音量や再生・停止などに関するUsageをまとめたUsage Page
+---
+
+## Consumer PageのUsage
+
+列はUsage ID、Usage Name、Usage Type、Section。
+
+![w:1050](./public/understanding-hid-through-tinygo/usage-tables.png)
+
+出典：[HID Usage Tables 1.7, Consumer Page §15.9](https://www.usb.org/documents?search=HID+usage+tables)
+
+---
+
 ## Report Descriptorとは
 
 Reportの形式と各フィールドの意味をUSBホストへ伝えるデータ構造。
@@ -249,22 +270,6 @@ HIDInputDataAryAbs,
 - InputはデバイスからUSBホストへ送る入力データを定義する
 
 [TinyGo: descriptor/hid.go — Consumer Control](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/descriptor/hid.go#L207-L218)
-
----
-
-## HID Usage Tables
-
-Usage TablesはUsage IDとその意味を定義する。Usage PageはUsageの分類単位で、Usageはその中の具体的な機能を示す。
-
----
-
-## Consumer PageのUsage
-
-Consumer Page（Usage Page `0x0C`）の抜粋。列はUsage ID、Usage Name、Usage Type、Section。
-
-![w:1050](./public/understanding-hid-through-tinygo/usage-tables.png)
-
-出典：[HID Usage Tables 1.7, Consumer Page §15.9](https://www.usb.org/documents?search=HID+usage+tables)
 
 ---
 
