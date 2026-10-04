@@ -297,6 +297,9 @@ Report Descriptorで各バイトの役割を確認し、Usage TablesでUsageの�
 | `EA 00` | 16ビットのUsage値 `0x00EA`。Consumer PageではVolume Decrement |
 | `00 00` | Consumer Controlの押下なし |
 
+
+<!-- E9 00 は16bitの値で、little-endianなので 0x00E9 と読む -->
+
 ---
 
 <!-- _class: section -->
