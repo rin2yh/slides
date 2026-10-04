@@ -296,7 +296,7 @@ SECTION 04
 
 1. ロータリーエンコーダーの入力をTinyGo側でMedia Keyとして扱う
 2. TinyGoのHID実装がConsumer Control Reportを生成してUSBへ送る
-3. HIDドライバがDescriptorに従ってReportを解釈する
+3. HIDドライバがReportを解釈する
 4. OSが音量操作として処理する
 
 ---
@@ -344,7 +344,6 @@ USBホストはReport Descriptorに記述された形式に従って、Reportを
 
 ---
 
-
 ## Report DescriptorのItem
 
 | Item | 役割 |
@@ -356,18 +355,6 @@ USBホストはReport Descriptorに記述された形式に従って、Reportを
 | `Input` | デバイスからUSBホストへ送るデータを宣言 |
 
 値の範囲を扱うItemとして`Logical Minimum / Maximum`などもある。
-
----
-
-## Usage PageとUsageの構造
-
-- Usage Pageは大分類。例：Generic Desktop、Keyboard/Keypad、Consumer
-- Usageは、そのPage内で意味を持つ識別子
-- 同じUsage番号でも、Usage Pageが異なれば意味は異なる
-
-したがって、`0xE9`だけでは意味が定まらない。
-
-**Consumer PageのUsage `0xE9`は、Volume Incrementを表す。**
 
 ---
 
