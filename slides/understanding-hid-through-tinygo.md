@@ -50,13 +50,13 @@ SECTION 01
 
 ## ゴール
 
-### TinyGoの実装を通して、HIDデバイスからホストへ入力が伝わるまでの基本的な仕組みを理解する
+### TinyGoの実装を通して、HIDデバイスからUSBホストへ入力が伝わるまでの基本的な仕組みを理解する
 
 ポイント
 
 - 入力がどのようなデータとして表現されるか
 - TinyGoの中で入力がどのように処理されるか
-- HIDデバイスからホストへどう伝わるか
+- HIDデバイスからUSBホストへどう伝わるか
 
 ---
 
@@ -284,20 +284,21 @@ SECTION 04
 
 ---
 
-## USBホスト（PC）がReportを解釈するまで
+## USBホストがReportを解釈するまで
 
 ![w:1440](./public/understanding-hid-through-tinygo/seq-host.svg)
-
+<!-- USBホストがReportを受け取ったあと、HIDドライバがHIDの入力として解釈する。 -->
+<!-- その結果がOS側の入力処理に渡されて、最終的にVolume Incrementとして音量変更に反映される。 -->
 <!-- OS内部の具体的な実装はOSごとに異なるが、HID Usageを音量操作として扱う。 -->
 
 ---
 
-## まとめ：HIDの入力がPCで扱われるまで
+## まとめ：HIDデバイスからUSBホストへ入力が伝わるまで
 
-1. ロータリーエンコーダーの入力をTinyGo側でMedia Keyとして扱う
-2. TinyGoのHID実装がConsumer Control Reportを生成してUSBへ送る
-3. HIDドライバがReportを解釈する
-4. OSが音量操作として処理する
+1. ロータリーエンコーダー側で入力を発生させる
+2. マイコン側でTinyGoのHID実装がConsumer Control Reportを生成してUSBへ送る
+3. PC側でHIDドライバがReportを解釈する
+4. PC側でOSが音量操作として処理する
 
 ---
 
