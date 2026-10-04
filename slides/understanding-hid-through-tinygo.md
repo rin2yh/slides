@@ -217,31 +217,6 @@ reportID=3 bytes=03 00 00
 
 ---
 
-## HID Usage Tables
-
-Usageを定義した表。
-
-- Usage: HID上の操作や機能を識別する32bitの値
-    - Usage Page: 上位16bit。関連するUsageをまとめるための値
-    - Usage ID: 下位16bit。そのUsage Page内のUsageを識別する値
-- 今回扱う音量調節は、Consumer PageのUsageとして定義
-    - Consumer Page: 音量や再生・停止などに関するUsageをまとめたUsage Page
-
----
-
-## Consumer PageのUsage
-
-Consumer Page（Usage Page `0x0C`）から、今回扱うUsageを抜粋。
-
-| Usage ID | Usage Name | Usage Type | Section |
-|---|---|---|---|
-| `0xE9` | Volume Increment | RTC | 15.9 |
-| `0xEA` | Volume Decrement | RTC | 15.9 |
-
-出典：[HID Usage Tables 1.7, Consumer Page §15.9](https://www.usb.org/documents?search=HID+usage+tables)
-
----
-
 ## Report Descriptorとは
 
 Reportの形式と各フィールドの意味をUSBホストへ伝えるデータ構造。
@@ -277,7 +252,32 @@ HIDInputDataAryAbs,
 
 ---
 
-## Descriptorを使ってReportを読む
+## HID Usage Tables
+
+Usageを定義した表。
+
+- Usage: HID上の操作や機能を識別する32bitの値
+    - Usage Page: 上位16bit。関連するUsageをまとめるための値
+    - Usage ID: 下位16bit。そのUsage Page内のUsageを識別する値
+- 今回扱う音量調節は、Consumer PageのUsageとして定義
+    - Consumer Page: 音量や再生・停止などに関するUsageをまとめたUsage Page
+
+---
+
+## Consumer PageのUsage
+
+Consumer Page（Usage Page `0x0C`）から、今回扱うUsageを抜粋。
+
+| Usage ID | Usage Name | Usage Type | Section |
+|---|---|---|---|
+| `0xE9` | Volume Increment | RTC | 15.9 |
+| `0xEA` | Volume Decrement | RTC | 15.9 |
+
+出典：[HID Usage Tables 1.7, Consumer Page §15.9](https://www.usb.org/documents?search=HID+usage+tables)
+
+---
+
+## E9 00の意味
 
 Report Descriptorで各バイトの役割を確認し、Usage TablesでUsageの意味を調べる。
 
