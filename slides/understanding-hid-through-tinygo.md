@@ -201,17 +201,17 @@ func SendUSBPacket(b []byte) {
 ```sh
 # 右回し
 reportID=3 bytes=03 E9 00
-# 操作後
+# クリア
 reportID=3 bytes=03 00 00
 # 左回し
 reportID=3 bytes=03 EA 00
-# 操作後
+# クリア
 reportID=3 bytes=03 00 00
 ```
 
 ログを見てよくわからないもの
-- reportID=**3**
-- bytesが表す内容
+- bytesの`E9 00`
+    - `03`はReport ID(スライド12枚目の`keyboardSendKeys()`を参照)
 
 <!-- scriptはswiftで実装 by codex -->
 
@@ -226,13 +226,17 @@ Usageを定義した表。
     - Usage ID: 下位16bit。そのUsage Page内のUsageを識別する値
 - 今回扱う音量調節は、Consumer PageのUsageとして定義
     - Consumer Page: 音量や再生・停止などに関するUsageをまとめたUsage Page
+
 ---
 
 ## Consumer PageのUsage
 
-列はUsage ID、Usage Name、Usage Type、Section。
+Consumer Page（Usage Page `0x0C`）から、今回扱うUsageを抜粋。
 
-![w:1050](./public/understanding-hid-through-tinygo/usage-tables.png)
+| Usage ID | Usage Name | Usage Type | Section |
+|---|---|---|---|
+| `0xE9` | Volume Increment | RTC | 15.9 |
+| `0xEA` | Volume Decrement | RTC | 15.9 |
 
 出典：[HID Usage Tables 1.7, Consumer Page §15.9](https://www.usb.org/documents?search=HID+usage+tables)
 
