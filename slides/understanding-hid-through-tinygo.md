@@ -165,6 +165,7 @@ func (kb *keyboard) keyboardSendKeys(consumer bool) bool {
     }
     // 省略...
 ```
+<!-- kb.con[0] の値を下位バイト・上位バイトに分け、Report ID 03 と合わせて3バイトのReportを作る。 -->
 
 HIDでやり取りするデータをReportと呼ぶ。REPORT_ID は、Reportの種類を示すID。
 [TinyGo: keyboardSendKeys() / downCon()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L258-L279) · [SendUSBPacket()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/hid.go#L97-L100)
