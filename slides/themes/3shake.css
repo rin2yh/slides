@@ -1,5 +1,12 @@
 /* @theme 3shake */
 
+/* 出典: nwiizo/3shake-marp-templates（@nwiizo）
+   https://github.com/nwiizo/3shake-marp-templates/tree/d99a9617a1667c00c94d42930e50cbdeaedf52b7
+   - slides/themes/3shake-2026-presentation.css は themes/3shake-2026-presentation.css を無改変で取り込んだもの
+   - 下の data URI の画像は assets/images/ の 3shake-cover.png / 3shake-logo.png / 3shake-background-full.png を縮小したもの
+   - 表紙の組み方は nwiizo/slides の 2026 年の資料を参考にした
+   取り込み時点で上流リポジトリにライセンスの記載は無い */
+
 /* 上流の 3shake-2026-presentation.css（無改変）に、このリポジトリの Markdown 記法
    （_class: cover / section / profile）の見た目だけを足す。
    上流は表紙・章扉を Markdown 側の HTML で組む前提だが、ここではデッキを dc と同じ書き方のまま保つ。
