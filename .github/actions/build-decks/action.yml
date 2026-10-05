@@ -48,5 +48,5 @@ runs:
       shell: bash
       run: |
         cp site/index.html dist/index.html
-        cp slides/theme.css dist/theme.css
+        cp slides/themes/dc.css dist/theme.css
         cp slides/public/shared/favicon.ico dist/favicon.ico

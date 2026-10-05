@@ -1,4 +1,4 @@
-theme: slides/theme.css
+themeSet: slides/themes
 html: true
 options:
   looseYAML: true

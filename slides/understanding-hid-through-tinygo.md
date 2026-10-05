@@ -1,16 +1,16 @@
 ---
 marp: true
-theme: dc
+theme: 3shake
 paginate: true
 size: 16:9
-title: TinyGoの実装からHIDを理解する
+title: TinyGoから理解するHID
 description: tiny-deckの音量操作を例に、HID Consumer Control ReportがUSBホストとOSへ届く仕組みを説明する。
 date: 2026-10-02
 ---
 
 <!-- _class: cover -->
 
-# TinyGoの実装から<br>HIDを理解する
+# TinyGoから理解するHID
 
 Rinrin — [@rin2yh](https://x.com/rin2yh)
 
@@ -22,12 +22,11 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 
 ![](./public/shared/icon.jpg)
 
-| 名前 | Rinrin |
-|---|---|
-| 所属 | 株式会社スリーシェイク |
-| 職種 | フルスタックエンジニア |
-| 趣味 | アニメ、ゲーム、キーボード |
-| ひとこと | 親知らず全部抜いてクリーンに。ジャンクフード食べたい！ |
+- 名前: Rinrin
+- 所属: 株式会社スリーシェイク
+- 職種: フルスタックエンジニア
+- 趣味: アニメ、ゲーム、キーボード
+- ひとこと: 親知らず全部抜いてクリーンに。ジャンクフード食べたい！
 
 ---
 
@@ -278,7 +277,7 @@ SECTION 04
 
 ## 今回読んだコードの範囲
 
-![w:1440](./public/understanding-hid-through-tinygo/seq-device.svg)
+![w:780](./public/understanding-hid-through-tinygo/seq-device.svg)
 
 <!-- TinyGoのHID実装で、Media Keyの分岐からConsumer Control Reportの送信までのコードを読んだ。 -->
 
