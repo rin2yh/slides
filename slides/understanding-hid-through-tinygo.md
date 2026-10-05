@@ -64,11 +64,11 @@ SECTION 01
 - HIDは深遠かつ時間の関係上、今回は一部をピックアップして話す
     - 今回はHIDの音量調節のみ
     - 他のHIDも、同様の方法で理解できるはず！
-- TinyGoの実装とHIDの仕様にフォーカスし、OS内部の実装までは深掘りしない
+- TinyGoの実装とHIDの仕様にフォーカスし、OS内部の実装までは追わない
     - デバイス側はReport生成〜USB送信まで
     - USBホストのPC側はHIDドライバによる解釈まで
 
-※ 筆者はまだHIDに明るくないので、全てを理解している訳ではなく、誤りが含まれる可能性があります。
+※ 筆者はまだHIDに明るくなく、全てを理解しているわけではありません。誤りを含む可能性があります。
 なるべく技術的な正確性を担保するよう努力していますが、もし誤りがあれば後でこっそり教えてください。
 
 ---
@@ -121,7 +121,7 @@ func DispatchVolume(ev Event) {
 }
 ```
 `ev.Delta`をロータリーエンコーダーの回転量として扱い、正負で回転方向を判定する。
-`KeyMediaVolumeInc` / `KeyMediaVolumeDec`で音量調節を実行している。
+`KeyMediaVolumeInc` / `KeyMediaVolumeDec`で音量を調節している。
 
 
 [tiny-deck: media.go](https://github.com/rin2yh/tiny-deck/blob/da05a5741dfd91e2e95381abe14ff961055a0bcd/internal/keyboard/encoder/media.go)
