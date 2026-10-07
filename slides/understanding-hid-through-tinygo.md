@@ -143,7 +143,9 @@ func (kb *keyboard) Down(c Keycode) error {
     // 省略...
 ```
 
-<!-- `Down()` は上位ビットを見て `downCon()` へ処理を分岐する。 -->
+<!-- KeyMediaVolumeInc の値は 0xE4E9。上位の 0xE4 はTinyGoが付けた「Consumer Controlのキー」という目印で、下位の 0xE9 はHIDで決められた Volume Increment の値。 -->
+<!-- Down() は上位バイトを見てキーの種類を判定する。0xE4〜0xE7 なら Consumer Control なので downCon() に渡す。 -->
+<!-- c & 0x03FF で目印を外し、0xE9 だけを kb.con（押下中の Consumer Control キーを保持する配列）に入れる。 -->
 
 [TinyGo: keycode.go](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keycode.go#L98-L99) · [keyboard.go: Down()](https://github.com/tinygo-org/tinygo/blob/7bcf6656fa321f86f892bfe8abb6a252f31d0282/src/machine/usb/hid/keyboard/keyboard.go#L280-L310)
 
