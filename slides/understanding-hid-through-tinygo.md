@@ -265,7 +265,8 @@ Usageを定義した表。
 | `00 00` | Consumer Controlの押下なし |
 
 
-<!-- E9 00 は16bitの値で、little-endianなので 0x00E9 と読む -->
+<!-- HIDではReport内の複数バイトの値をlittle-endian（下位バイトが先）で並べる（HID 1.11 §5.8）。 -->
+<!-- TinyGoも b[1] に下位、b[2] に上位を入れているので、E9 00 は 0x00E9 と読む。 -->
 
 ---
 
