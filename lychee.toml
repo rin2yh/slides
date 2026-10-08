@@ -1,0 +1,3 @@
+# 上流の 3shake-2026-presentation.css（無改変で取り込み）が持つ既定のロゴパス。
+# 実際のロゴは slides/themes/3shake.css が data URI で上書きするので、このパスは参照されない
+exclude = ['assets/images/3shake-cover\.png$']
