@@ -71,14 +71,6 @@ mise run export -- slides/<name>.md --output dist/<name>.pdf
 
 ## OGP画像を作り直す
 
-指定したデッキの先頭スライドからOGP画像を生成し、公開時と同じ `dist/<name>/og-image.png` に配置する。
-
-```bash
-mise run ogp <name>
-```
-
-例: `mise run ogp pumlv-go`。
-
-GitHub Actions で実行する場合は、Actions の「Regenerate OGP」から「Run workflow」を選び、デッキ名を入力する。生成画像は実行結果の artifact `ogp-<name>` からダウンロードできる。このワークフローは画像の生成と artifact の保存までを行い、GitHub Pages への反映は行わない。
+Actions の「Regenerate OGP」から「Run workflow」を選び、デッキ名（`slides/<name>.md` の `<name>`）を入力する。指定デッキの先頭スライドからOGP画像を生成し、実行結果の `ogp-<name>` artifact からダウンロードできる。このワークフローは画像の生成と artifact の保存までを行い、GitHub Pages への反映は行わない。
 
 `dc` と `3shake` のテーマは Noto Sans JP を Google Fonts から読み込む。OGP生成時にフォントを取得できるよう、生成環境ではネットワーク接続が必要である。

@@ -10,20 +10,6 @@ run = "marp --config-file .marprc.yml --server slides"
 description = "slides/ を dist/ にHTMLビルド: mise run build"
 run = "marp --config-file .marprc.yml"
 
-[tasks.ogp]
-description = "指定したスライドのOGP画像を dist/<name>/og-image.png に生成: mise run ogp <name>"
-run = '''
-name="{{arg(name='name')}}"
-src="slides/${name}.md"
-if [ ! -f "$src" ]; then
-  echo "slide deck not found: $src" >&2
-  exit 1
-fi
-mkdir -p "dist/${name}"
-marp --config-file .marprc.yml "$src" --image png --allow-local-files --output "dist/${name}/og-image.png"
-echo "created: dist/${name}/og-image.png"
-'''
-
 [tasks.check]
 description = "ビルド済みの dist/ に壊れた画像・リンクが無いか検査: mise run check"
 run = "lychee --offline --no-progress dist"

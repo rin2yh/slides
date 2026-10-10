@@ -35,7 +35,13 @@ jobs:
       - name: Generate OGP image
         env:
           DECK: ${{ inputs.deck }}
-        run: mise run ogp "${DECK}"
+        run: |
+          mkdir -p "dist/${DECK}"
+          marp --config-file .marprc.yml \
+            "slides/${DECK}.md" \
+            --image png \
+            --allow-local-files \
+            --output "dist/${DECK}/og-image.png"
 
       - name: Upload generated OGP image
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
