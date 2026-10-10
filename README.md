@@ -79,4 +79,4 @@ mise run ogp <name>
 
 例: `mise run ogp pumlv-go`。画像をサイトへ反映するには、生成後の `dist/` をデプロイする（GitHub Pages は `main` への push で全デッキを再ビルドする）。
 
-日本語の字形を安定させるには、OGP生成環境に Noto Sans CJK JP をインストールしておく。
+`dc` と `3shake` のテーマは Noto Sans JP を Google Fonts から読み込む。OGP生成時にフォントを取得できるよう、生成環境ではネットワーク接続が必要である。
