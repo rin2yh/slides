@@ -68,3 +68,9 @@ CD はデプロイの手前で `dist/` を [lychee](https://github.com/lycheever
 ```bash
 mise run export -- slides/<name>.md --output dist/<name>.pdf
 ```
+
+## OGP画像を作り直す
+
+Actions の「Regenerate OGP」から「Run workflow」を選び、デッキ名（`slides/<name>.md` の `<name>`）を入力する。指定デッキの先頭スライドからOGP画像を生成し、実行結果の `ogp-<name>` artifact からダウンロードできる。このワークフローは画像の生成と artifact の保存までを行い、GitHub Pages への反映は行わない。
+
+`dc` と `3shake` のテーマは Noto Sans JP を Google Fonts から読み込む。OGP生成時にフォントを取得できるよう、生成環境ではネットワーク接続が必要である。
