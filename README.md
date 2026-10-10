@@ -77,6 +77,8 @@ mise run export -- slides/<name>.md --output dist/<name>.pdf
 mise run ogp <name>
 ```
 
-例: `mise run ogp pumlv-go`。画像をサイトへ反映するには、生成後の `dist/` をデプロイする（GitHub Pages は `main` への push で全デッキを再ビルドする）。
+例: `mise run ogp pumlv-go`。
+
+GitHub Actions で実行する場合は、Actions の「Regenerate OGP」から「Run workflow」を選び、デッキ名を入力する。生成画像は実行結果の artifact `ogp-<name>` からダウンロードできる。このワークフローは画像の生成と artifact の保存までを行い、GitHub Pages への反映は行わない。
 
 `dc` と `3shake` のテーマは Noto Sans JP を Google Fonts から読み込む。OGP生成時にフォントを取得できるよう、生成環境ではネットワーク接続が必要である。
