@@ -68,3 +68,15 @@ CD はデプロイの手前で `dist/` を [lychee](https://github.com/lycheever
 ```bash
 mise run export -- slides/<name>.md --output dist/<name>.pdf
 ```
+
+## OGP画像を作り直す
+
+指定したデッキの先頭スライドからOGP画像を生成し、公開時と同じ `dist/<name>/og-image.png` に配置する。
+
+```bash
+mise run ogp <name>
+```
+
+例: `mise run ogp pumlv-go`。画像をサイトへ反映するには、生成後の `dist/` をデプロイする（GitHub Pages は `main` への push で全デッキを再ビルドする）。
+
+日本語の字形を安定させるには、OGP生成環境に Noto Sans CJK JP をインストールしておく。
