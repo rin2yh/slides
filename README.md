@@ -68,9 +68,3 @@ CD はデプロイの手前で `dist/` を [lychee](https://github.com/lycheever
 ```bash
 mise run export -- slides/<name>.md --output dist/<name>.pdf
 ```
-
-## OGP画像を作り直す
-
-Actions の「Regenerate OGP」から「Run workflow」を選び、対象スライドをドロップダウンから選択する。指定デッキのOGP画像を作り直し、既存のサイトと合わせて GitHub Pages にデプロイする。他のデッキのOGP画像は現在公開中のものを引き継ぐ。
-
-`dc` と `3shake` のテーマは Noto Sans JP を Google Fonts から読み込む。OGP生成時にフォントを取得できるよう、生成環境ではネットワーク接続が必要である。
