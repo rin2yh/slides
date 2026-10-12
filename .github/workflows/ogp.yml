@@ -4,9 +4,12 @@ on:
   workflow_dispatch:
     inputs:
       deck:
-        description: "生成するデッキ名（slides/<name>.md の <name>）"
+        description: "OGP画像を再生成するスライド"
         required: true
-        type: string
+        type: choice
+        options:
+          - pumlv-go
+          - understanding-hid-through-tinygo
 
 permissions:
   contents: read
