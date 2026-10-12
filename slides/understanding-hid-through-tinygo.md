@@ -5,7 +5,7 @@ paginate: true
 size: 16:9
 title: TinyGoから理解するHID
 description: tiny-deckの音量操作を例に、HID Consumer Control ReportがUSBホストとOSへ届く仕組みを説明する。
-date: 2026-10-02
+date: 2026-10-10
 ---
 
 <!-- _class: cover -->
