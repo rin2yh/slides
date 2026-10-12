@@ -1,6 +1,7 @@
 /* @theme 3shake-2026-presentation */
 /* 3-SHAKE 2026年プレゼンテーション共通テーマ */
 /* 構成: default → 3shake-theme相当 → 2025インラインCSS相当 → 2026固有 */
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700;900&display=swap');
 @import 'default';
 
 /* ========================================
