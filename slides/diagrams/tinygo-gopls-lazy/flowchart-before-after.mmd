@@ -1,0 +1,14 @@
+%%{init: {"theme":"base","fontFamily":"Hiragino Sans, sans-serif","flowchart":{"curve":"linear","nodeSpacing":90,"rankSpacing":110},"themeVariables":{"primaryColor":"#f0eee7","primaryTextColor":"#1b1f23","primaryBorderColor":"#9aa0a6","lineColor":"#0a7c98","secondaryColor":"#fbfaf7","tertiaryColor":"#fbfaf7","fontSize":"24px"}}}%%
+flowchart LR
+    subgraph after["修正後"]
+        direction LR
+        N2[Neovim] --> G2[gopls]
+    end
+
+    subgraph before["修正前"]
+        direction LR
+        N1[Neovim] --> L[gopls-lazy] --> G1[gopls]
+    end
+
+    classDef direct fill:#d9eef2,stroke:#0a7c98,stroke-width:3px,color:#1b1f23
+    class L,G2 direct
