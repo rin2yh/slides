@@ -186,8 +186,12 @@ SECTION 04
 **今回はgopls-lazy自体を修正せず、利用側で回避**
 
 - gopls-lazyとTinyGoを併用するケースは少ないと考えた
-- 通常の開発ではgopls-lazyを引き続き使いたい
-- `.tinygo.json` に `target` がある場合のみgoplsを直接起動
+- `.tinygo.json` に `target` がある場合のみ起動コマンドを変更
+
+| 対象 | 修正前 | 修正後 |
+|---|---|---|
+| 通常のGo | gopls-lazy | gopls-lazy |
+| **TinyGo** | gopls-lazy | **gopls** |
 
 ```lua
 local cmd = vim.deepcopy(vim.lsp.config.gopls.cmd)
@@ -195,11 +199,7 @@ cmd[#cmd] = 'gopls'
 vim.lsp.config('gopls', { cmd = cmd })
 ```
 
----
-
-## TinyGoでのgopls起動経路の変更
-
-![h:640](./public/tinygo-gopls-lazy/flowchart-before-after.svg)
+<!-- 口頭：gopls-lazy自体を修正するなら、GOROOTなど解析結果に影響する環境変数をキャッシュの識別条件に含め、異なる環境のキャッシュを使い回さないようにする必要があります。ただ、今回はgopls-lazyを修正せず、TinyGoのときだけgoplsを直接起動して回避しました。 -->
 
 
 ---
