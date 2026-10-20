@@ -1,0 +1,24 @@
+%%{init: {"theme":"base","fontFamily":"Hiragino Sans, sans-serif","themeVariables":{"primaryColor":"#f0eee7","primaryTextColor":"#1b1f23","primaryBorderColor":"#0a7c98","lineColor":"#0a7c98","secondaryColor":"#fbfaf7","tertiaryColor":"#fbfaf7","fontSize":"18px","actorBkg":"#f0eee7","actorBorder":"#9aa0a6","actorTextColor":"#1b1f23","signalColor":"#0a7c98","signalTextColor":"#1b1f23","noteBkgColor":"#d9eef2","noteTextColor":"#1b1f23","noteBorderColor":"#0a7c98"}}}%%
+sequenceDiagram
+    participant G as gopls
+    participant D as gopls-lazy graph driver
+    participant C as graph cache
+    participant P as go/packages
+
+    G->>D: パッケージ情報を要求
+    D->>C: cacheを検索
+
+    alt cacheあり
+        C-->>D: 保存済みgraph
+        D-->>G: 保存済みgraphを返す
+        opt 再検証が必要
+            D->>P: バックグラウンドで再構築
+            P-->>D: 新しいパッケージ情報
+            D->>C: cacheを更新
+        end
+    else cacheなし
+        D->>P: パッケージ情報を取得
+        P-->>D: 解析結果
+        D->>C: cacheに保存
+        D-->>G: 解析結果
+    end
