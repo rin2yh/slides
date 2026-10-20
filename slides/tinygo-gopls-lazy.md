@@ -154,7 +154,7 @@ SECTION 03
 
 **→ キャッシュの有無がパッケージ解決に影響していた**
 
-<!-- 口頭：gopls-lazyはmacOSでは通常、HOME配下のLibrary/Caches/gopls-lazyにキャッシュを保存するため、NeovimのLSP起動時にcmd_env.HOMEを変えると保存先を分けられます。比較用のLuaスクリプトを2つ用意し、nvim --headless -u NONE -l <各run.lua> で起動しました。一方のHOME配下には元のgraph-4a3715df4990c7dc.jsonのコピーを置き、もう一方は保存済みの解析結果がない状態から始めました。TinyGo用の環境変数は同じです。後者も起動後にはキャッシュが生成されています。 -->
+<!-- 口頭：gopls-lazyはHOME配下にキャッシュを保存するため、`cmd_env.HOME`を変更して保存先を分けました。キャッシュあり・なしの状態を用意し、同じTinyGo環境で解析結果を比較しました。 -->
 
 ---
 
