@@ -151,9 +151,9 @@ SECTION 03
 gopls-lazyはパッケージ情報を **graph cache** に保存し、再利用する。
 
 **検証方法**
-- 保存済みの解析結果をコピーした保存先を用意
-- 過去の解析結果がない保存先も用意
-- 同じTinyGo環境で、それぞれを使って解析
+- 保存済みの解析結果をコピーした保存先と、空の保存先を用意
+- 比較用Luaスクリプトで `vim.lsp.start()` の `cmd_env.HOME` を切り替える
+- 同じTinyGo環境でそれぞれのgopls-lazyを起動して比較
 
 **検証結果**
 
@@ -164,7 +164,7 @@ gopls-lazyはパッケージ情報を **graph cache** に保存し、再利用�
 
 **→ 保存済みの解析結果がパッケージ解決に影響していた**
 
-<!-- 口頭：gopls-lazyはmacOSでは通常、HOME配下のLibrary/Caches/gopls-lazyに解析結果を保存します。保存先を分けることで元のデータを消さずに比較できます。保存済みの解析結果をコピーした保存先と、過去の解析結果がない保存先で、TinyGo用の環境変数を揃えてmachineの解決結果を比較しました。 -->
+<!-- 口頭：gopls-lazyはmacOSでは通常、HOME配下のLibrary/Caches/gopls-lazyにgraph cacheを保存するため、NeovimのLSP起動時にcmd_env.HOMEを変えると保存先を分けられます。比較用のLuaスクリプトを2つ用意し、nvim --headless -u NONE -l <各run.lua> で起動しました。一方のHOME配下には元のgraph-4a3715df4990c7dc.jsonのコピーを置き、もう一方は保存済みの解析結果がない状態から始めました。TinyGo用の環境変数は同じです。後者も起動後にはgraph cacheが生成されています。 -->
 
 ---
 
