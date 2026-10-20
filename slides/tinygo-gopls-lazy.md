@@ -157,29 +157,31 @@ gopls-lazyはパッケージ情報を **graph cache** に保存し、再利用�
 
 **検証結果**
 
-| 保存先の状態 | `machine` の解決 |
+| 起動前のキャッシュ | `machine` の解決 |
 |---|---|
-| 保存済みの解析結果あり | 失敗 |
-| 保存済みの解析結果なし | 成功 |
+| あり | 失敗 |
+| なし | 成功 |
 
-**→ 保存済みの解析結果がパッケージ解決に影響していた**
+**→ キャッシュの有無がパッケージ解決に影響していた**
 
 <!-- 口頭：gopls-lazyはmacOSでは通常、HOME配下のLibrary/Caches/gopls-lazyにgraph cacheを保存するため、NeovimのLSP起動時にcmd_env.HOMEを変えると保存先を分けられます。比較用のLuaスクリプトを2つ用意し、nvim --headless -u NONE -l <各run.lua> で起動しました。一方のHOME配下には元のgraph-4a3715df4990c7dc.jsonのコピーを置き、もう一方は保存済みの解析結果がない状態から始めました。TinyGo用の環境変数は同じです。後者も起動後にはgraph cacheが生成されています。 -->
 
 ---
 
-## 保存済みの解析結果を確認
+## graph cacheの中身を比較
 
 **検証方法**
-- graph cacheファイルを開く
-- `machine` のパッケージ解決エラーを確認
-- エラーが参照する `GOROOT` を確認
+- キャッシュ内の `resp`（Base64形式のJSON）をデコード
+- `Packages` から `PkgPath == "machine"` の `Errors` を確認
+- エラー内のパスをTinyGoの `GOROOT` と照合
 
 **検証結果**
-- `machine` の解決エラーが保存されていた
-- 通常のGoの `GOROOT` を参照していた
+- **起動前にキャッシュあり：** Go 1.25.14の `GOROOT` を参照するエラー
+- **起動前にキャッシュなし：** 起動後に生成されたgraphの `Errors` は空
 
-**→ 通常のGo環境で生成された解析結果がTinyGoでも再利用されていた**
+**→ 通常のGo環境の解析結果がTinyGoでも再利用されていた**
+
+<!-- 口頭：graph cacheのJSONにあるrespはBase64エンコードされたJSONなので、Pythonのbase64.b64decodeとjson.loadsで取り出しました。PackagesからPkgPathがmachineの要素を探してErrorsを表示し、2つのgraphを比較しました。キャッシュありの方はGo 1.25.14のGOROOTを参照し、キャッシュなしで起動した方はErrorsが空でした。エラー中のパスはTinyGoのGOROOTとも照合しています。 -->
 
 ---
 
