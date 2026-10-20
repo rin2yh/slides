@@ -247,8 +247,6 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 - [tinygo.vim](https://github.com/sago35/tinygo.vim)
 - [rin2yh/dotfiles](https://github.com/rin2yh/dotfiles)
 
-<!-- 発表では説明しない予備スライド -->
-
 ---
 
 ## 補足：キャッシュの仕組み
@@ -256,5 +254,3 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 **保存済みキャッシュを先に返し、必要に応じてバックグラウンドで再検証する**
 
 ![h:700](./public/tinygo-gopls-lazy/seq-cache.svg)
-
-<!-- 発表では説明しない予備スライド -->
