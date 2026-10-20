@@ -230,8 +230,6 @@ vim.lsp.config('gopls', { cmd = cmd })
 | ![w:200](./public/tinygo-gopls-lazy/cfp-qr.png) | 応募用QRコード |
 |---|---|
 
-<!-- 口頭：最後にGopherCon Japan 2027のご案内です。現在CfPを募集中で、締切は10月25日です。初登壇の方も歓迎していますので、ぜひご応募ください！ -->
-
 ---
 
 <!-- _class: cover -->
@@ -258,7 +256,5 @@ Rinrin — [@rin2yh](https://x.com/rin2yh)
 **保存済みキャッシュを先に返し、必要に応じてバックグラウンドで再検証する**
 
 ![h:700](./public/tinygo-gopls-lazy/seq-cache.svg)
-
-<!-- 口頭：goplsからパッケージ情報を求められると、gopls-lazyは保存済みキャッシュを返します。必要に応じてバックグラウンドで再検証し、キャッシュを更新します。 -->
 
 <!-- 発表では説明しない予備スライド -->
