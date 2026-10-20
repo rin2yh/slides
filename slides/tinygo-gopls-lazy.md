@@ -106,10 +106,8 @@ SECTION 02
 
 | 検証方法 | `machine` の解決 |
 |---|---|
-| `go list machine` | 成功 |
-| `go list ./...` | 成功 |
 | gopls | 成功 |
-| gopls-lazy v0.4.1 | 失敗 |
+| gopls-lazy経由（v0.4.1） | 失敗 |
 
 **→ gopls-lazyを経由した場合にのみ失敗**
 
@@ -207,7 +205,7 @@ vim.lsp.config('gopls', { cmd = cmd })
 ## まとめ
 
 - TinyGoとgopls-lazyの併用でパッケージ解決に失敗
-- 通常のGo環境で作られた古い解析結果がTinyGoでも再利用されていた
+- tinygo.vimの再起動前に作られたキャッシュが、再起動後も使われていた
 - TinyGoではgoplsを直接起動して回避
 
 
