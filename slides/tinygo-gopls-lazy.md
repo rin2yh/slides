@@ -207,8 +207,6 @@ cmd[#cmd] = 'gopls'
 vim.lsp.config('gopls', { cmd = cmd })
 ```
 
-<!-- 口頭：コードでは既存の起動コマンドの末尾だけをgoplsに変更しています。TinyGo向けの環境変数の設定とLSPの再起動は、引き続き`:TinygoTarget`に任せています。 -->
-
 ---
 
 ## 修正前後で変わったgoplsの起動経路
