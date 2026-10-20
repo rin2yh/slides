@@ -12,6 +12,8 @@ date: 2026-10-20
 
 # tinygo.vimとgopls-lazyが<br>噛み合わなかった話
 
+tamachi.go #2
+
 Rinrin — [@rin2yh](https://x.com/rin2yh)
 
 ---
