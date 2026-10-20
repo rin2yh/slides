@@ -197,7 +197,7 @@ vim.lsp.config('gopls', { cmd = cmd })
 
 ---
 
-## 修正前後で変わったgoplsの起動経路
+## TinyGoでのgopls起動経路の変更
 
 ![h:640](./public/tinygo-gopls-lazy/flowchart-before-after.svg)
 
