@@ -171,8 +171,6 @@ SECTION 03
 
 **→ 通常のGo環境の解析結果がTinyGoでも再利用されていた**
 
-<!-- 口頭：キャッシュのJSONにあるrespはBase64エンコードされたJSONなので、Pythonのbase64.b64decodeとjson.loadsで取り出しました。PackagesからPkgPathがmachineの要素を探してErrorsを表示し、2つのキャッシュを比較しました。キャッシュありの方はGo 1.25.14のGOROOTを参照し、キャッシュなしで起動した方はErrorsが空でした。エラー中のパスはTinyGoのGOROOTとも照合しています。 -->
-
 ---
 
 <!-- _class: section -->
