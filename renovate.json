@@ -1,0 +1,27 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended"
+  ],
+  "enabledManagers": [
+    "github-actions",
+    "mise"
+  ],
+  "schedule": [
+    "before 4am on monday"
+  ],
+  "minimumReleaseAge": "7 days",
+  "automergeType": "pr",
+  "platformAutomerge": false,
+  "packageRules": [
+    {
+      "description": "Automatically merge minor and patch updates after the release-age check passes",
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "automerge": true
+    }
+  ],
+  "automergeStrategy": "squash"
+}
